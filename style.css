@@ -1,0 +1,310 @@
+:root {
+    --bg-color: #1a1a1a;
+    --text-color: #e0e0e0;
+    --accent-color: #64ffda;
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --font-main: 'Inter', sans-serif;
+    --link-hover: #fff;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.7;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* Gradient Mesh Background */
+.gradient-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+    background: var(--bg-color);
+}
+
+.noise {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.04"/%3E%3C/svg%3E');
+    pointer-events: none;
+    z-index: 1;
+}
+
+.gradients {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    filter: blur(80px);
+}
+
+.g1,
+.g2,
+.g3 {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.3;
+    animation: move 20s infinite alternate;
+}
+
+.g1 {
+    background: radial-gradient(circle, rgba(18, 113, 255, 0.8) 0%, rgba(0, 0, 0, 0) 50%);
+    width: 80vw;
+    height: 80vw;
+    top: -20%;
+    left: -20%;
+    animation-duration: 25s;
+}
+
+.g2 {
+    background: radial-gradient(circle, rgba(221, 74, 255, 0.8) 0%, rgba(0, 0, 0, 0) 50%);
+    width: 60vw;
+    height: 60vw;
+    bottom: -10%;
+    right: -10%;
+    animation-duration: 30s;
+    animation-delay: -5s;
+}
+
+.g3 {
+    background: radial-gradient(circle, rgba(100, 255, 218, 0.8) 0%, rgba(0, 0, 0, 0) 50%);
+    width: 50vw;
+    height: 50vw;
+    top: 40%;
+    left: 40%;
+    animation-duration: 35s;
+    animation-delay: -10s;
+}
+
+@keyframes move {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    100% {
+        transform: translate(10%, 10%);
+    }
+}
+
+/* Layout */
+.container {
+    max-width: 720px;
+    /* Narrower for better reading experience like Jean Barbier's */
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+/* Typography & Links */
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--link-hover);
+    text-decoration: underline;
+}
+
+h1,
+h2,
+h3 {
+    color: #fff;
+    font-weight: 700;
+}
+
+/* Hero */
+.hero {
+    min-height: 60vh;
+    /* Reduced height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+    margin-bottom: 3rem;
+}
+
+.name {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.03em;
+    background: linear-gradient(to right, #fff, #ccc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.intro-text {
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    font-weight: 300;
+    max-width: 600px;
+    margin-bottom: 2rem;
+}
+
+.intro-text .highlight {
+    color: #fff;
+    font-weight: 500;
+}
+
+.social-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.social-links a {
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.7);
+    transition: color 0.2s, transform 0.2s;
+}
+
+.social-links a:hover {
+    color: var(--accent-color);
+    transform: translateY(-2px);
+}
+
+.orcid-link svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    vertical-align: middle;
+}
+
+/* Glass Cards */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 0.5rem;
+    display: inline-block;
+}
+
+/* Text Content */
+.text-content p {
+    margin-bottom: 1.2rem;
+    font-size: 1.05rem;
+    opacity: 0.9;
+}
+
+.text-content p:last-child {
+    margin-bottom: 0;
+}
+
+/* Publications */
+.publication-item {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.publication-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.pub-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 0.3rem;
+    display: block;
+}
+
+.pub-authors {
+    font-size: 0.95rem;
+    opacity: 0.8;
+    margin-bottom: 0.3rem;
+}
+
+.pub-journal {
+    font-size: 0.9rem;
+    color: var(--accent-color);
+    font-style: italic;
+}
+
+.pub-links {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+}
+
+.pub-links a {
+    margin-right: 1rem;
+    opacity: 0.8;
+}
+
+/* Conferences */
+.conference-item h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.conf-meta {
+    font-size: 0.95rem;
+    color: var(--accent-color);
+    margin-bottom: 0.8rem;
+    line-height: 1.5;
+}
+
+.conf-desc {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+/* Quotes */
+.quote {
+    font-size: 1.1rem;
+    font-style: italic;
+    margin-bottom: 2rem;
+    padding-left: 1rem;
+    border-left: 3px solid var(--accent-color);
+    opacity: 0.9;
+}
+
+.quote footer {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    font-style: normal;
+    opacity: 0.7;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .container {
+        padding: 1.5rem 1rem;
+    }
+
+    .glass-card {
+        padding: 1.5rem;
+    }
+
+    .name {
+        font-size: 2.8rem;
+    }
+}
