@@ -52,6 +52,8 @@
                                 fill="#fff" />
                         </svg>
                     </a>
+                    <a href="https://phd.uniroma1.it/web/ANDREA-LADIANA_nP2239069_IT.aspx" target="_blank"
+                        title="Institutional Page"><i class="fas fa-university"></i></a>
                 </div>
             </div>
         </header>
@@ -60,26 +62,19 @@
             <h2>Research Interests</h2>
             <div class="text-content">
                 <p>
-                    My research focuses on heteroassociative neural networks, particularly Hopfield models, investigated
-                    from the perspectives of spin glass theory, human brain memory systems (cortical modules), and
-                    Hebbian learning in Machine Learning.
+                    I am broadly interested in memory systems and collective behaviour. I work with models where many
+                    simple units, when connected in the right way, can store patterns, retrieve them, and support each
+                    other’s computations. This includes classical and modern associative networks, multi-layer
+                    architectures where different modules communicate, and abstract “memory fields” that can be analysed
+                    with tools from mathematics, statistical physics, and machine learning.
                 </p>
                 <p>
-                    I have established new principles of cooperativity within these networks and pioneered the
-                    application of Federated Learning to Hopfield models, generating novel results using Random Matrix
-                    Theory.
-                </p>
-                <p>
-                    A major focus has been extending classical frameworks into the "Modern Heteroassociative Networks,"
-                    which establish a formal equivalence with Transformer Layers via a new "cross-banks split attention"
-                    mechanism. This framework has been successfully applied to Multiple Instance Learning, notably
-                    achieving state-of-the-art performance in tumor diagnostics based on immune repertoires.
-                </p>
-                <p>
-                    My interdisciplinary work further explores the dreaming mechanism for Extreme Machine Learning, uses
-                    statistical mechanics to characterize local evolutionary theories (e.g., Ghirlanda-Guerra-like
-                    identities), and applies concepts from physics, such as Weiss domains, to model geopolitics. I also
-                    conduct rigorous statistical validation of algorithmic performance across various benchmarks.
+                    A recurring theme in my work is cooperation across modules: how several interacting memories can
+                    jointly denoise signals, disentangle overlapping information, or build a shared representation, and
+                    how this behaviour changes when the system is distributed, noisy, or evolving. I like to push these
+                    ideas beyond standard neural-network settings – towards biological and immune systems, where
+                    repertoires and populations behave like diffuse memories, and towards more exploratory applications
+                    involving biomes and complex interacting populations shaped by many local interactions over time.
                 </p>
             </div>
         </section>
@@ -94,22 +89,21 @@
 
         <section id="conferences" class="glass-card">
             <h2>Conferences Organized</h2>
-            <div class="conference-item">
-                <h3><a href="https://sites.google.com/uniroma1.it/umiworkshop2025/math4aiml-umi-workshop"
-                        target="_blank">4th Workshop of UMI Group: Mathematics for Artificial Intelligence and Machine
-                        Learning</a></h3>
-                <p class="conf-meta">
-                    <i class="far fa-calendar-alt"></i> 21-23 January 2026 <br>
-                    <i class="fas fa-map-marker-alt"></i> Sapienza Università di Roma, Department of Mathematics "G.
-                    Castelnuovo"
-                </p>
-                <p class="conf-desc">
-                    Focusing on the interplay between mathematics, artificial intelligence, and machine learning.
-                </p>
+            <div id="conferences-list">
+                <!-- Upcoming conferences will be injected here -->
             </div>
+
+            <details id="past-conferences" style="display: none; margin-top: 2rem;">
+                <summary style="cursor: pointer; color: var(--accent-color); font-weight: 600;">Past Conferences
+                </summary>
+                <div id="past-conferences-list"
+                    style="margin-top: 1rem; padding-left: 1rem; border-left: 2px solid rgba(255,255,255,0.1);">
+                    <!-- Past conferences will be moved here -->
+                </div>
+            </details>
         </section>
 
-        <section id="inspirations" class="glass-card">
+        <!-- <section id="inspirations" class="glass-card">
             <h2>Inspirations</h2>
             <blockquote class="quote">
                 "The scientist does not study nature because it is useful; he studies it because he delights in it, and
@@ -120,7 +114,7 @@
                 "God used beautiful mathematics in creating the world."
                 <footer>— Paul Dirac</footer>
             </blockquote>
-        </section>
+        </section> -->
     </main>
 
     <script src="script.js"></script>

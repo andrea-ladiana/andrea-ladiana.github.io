@@ -1,39 +1,140 @@
-document.addEventListener('DOMContentLoaded', () => {
-    console.log("Website loaded successfully.");
+// Embedded Data to avoid CORS issues on local file system
+const CONFERENCES_DATA = [
+    {
+        "title": "The Role of Data Science: From Statistical to Quantum and Relative Mechanics",
+        "url": "https://sites.google.com/uniroma1.it/ecc-ds4-workshop2025/home-page",
+        "date": "19-20 January 2026",
+        "location": "Sapienza Università di Roma, Department of Mathematics \"G. Castelnuovo\", Aula Picone",
+        "description": "Una conferenza in memoria di Francesco Guerra."
+    },
+    {
+        "title": "4th Workshop of UMI Group: Mathematics for Artificial Intelligence and Machine Learning",
+        "url": "https://sites.google.com/uniroma1.it/umiworkshop2025/math4aiml-umi-workshop",
+        "date": "21-23 January 2026",
+        "location": "Sapienza Università di Roma, Department of Mathematics \"G. Castelnuovo\"",
+        "description": "Focusing on the interplay between mathematics, artificial intelligence, and machine learning."
+    }
+];
 
-    // Reveal animation
-    const cards = document.querySelectorAll('.glass-card');
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = 1;
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, { threshold: 0.1 });
+const BIBTEX_DATA = `
+@inproceedings{alessandrellibeyond,
+  title={Beyond Disorder: Unveiling Cooperativeness in Multidirectional Associative Memories},
+  author={Andrea Alessandrelli and Adriano Barra and Andrea Ladiana and Andrea Lepre and Federico Ricci-Tersenghi},
+  booktitle={New Frontiers in Associative Memories}
+}
 
-    cards.forEach(card => {
-        card.style.opacity = 0;
-        card.style.transform = 'translateY(20px)';
-        card.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-        observer.observe(card);
+@article{ALESSANDRELLI2025130871,
+title = {Supervised and unsupervised protocols for hetero-associative neural networks},
+journal = {Physica A: Statistical Mechanics and its Applications},
+volume = {676},
+pages = {130871},
+year = {2025},
+issn = {0378-4371},
+doi = {https://doi.org/10.1016/j.physa.2025.130871},
+url = {https://www.sciencedirect.com/science/article/pii/S0378437125005230},
+author = {Andrea Alessandrelli and Adriano Barra and Andrea Ladiana and Andrea Lepre and Federico Ricci-Tersenghi},
+keywords = {Statistical mechanics, Spin glass, Supervised learning, Unsupervised learning, Heteroassociative memory, Neural networks},
+abstract = {This paper introduces a learning framework for Three-Directional Associative Memory (TAM) models, extending the classical Hebbian paradigm to both supervised and unsupervised protocols within an hetero-associative setting. These neural networks consist of three interconnected layers of binary neurons interacting via generalized Hebbian synaptic couplings that allow learning, storage and retrieval of structured triplets of patterns. By relying upon glassy statistical mechanical techniques (mainly replica theory and Guerra interpolation), we analyze the emergent computational properties of these networks, at work with random (Rademacher) datasets and at the replica-symmetric level of description: we obtain a set of self-consistency equations for the order parameters that quantify the critical dataset sizes (i.e. their thresholds for learning) and describe the retrieval performance of these networks, highlighting the differences between supervised and unsupervised protocols. Numerical simulations validate our theoretical findings and demonstrate the robustness of the captured picture about TAMs also at work with structured datasets. In particular, this study provides insights into the cooperative interplay of layers, beyond that of the neurons within the layers, with potential implications for optimal design of artificial neural network architectures.}
+}
+`;
+
+// Reveal animation
+const cards = document.querySelectorAll('.glass-card');
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = 1;
+            entry.target.style.transform = 'translateY(0)';
+        }
     });
+}, { threshold: 0.1 });
 
-    // Load and Parse BibTeX
-    loadBibTeX();
+cards.forEach(card => {
+    card.style.opacity = 0;
+    card.style.transform = 'translateY(20px)';
+    card.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+    observer.observe(card);
 });
 
-async function loadBibTeX() {
-    const container = document.getElementById('bibtex-container');
+// Load and Parse BibTeX
+loadBibTeX();
+
+// Sort Conferences
+sortConferences();
+
+function sortConferences() {
+    const conferencesList = document.getElementById('conferences-list');
+    const pastConferencesContainer = document.getElementById('past-conferences');
+    const pastConferencesList = document.getElementById('past-conferences-list');
+
+    if (!conferencesList || !pastConferencesContainer || !pastConferencesList) return;
+
     try {
-        const response = await fetch('biblio.bib');
-        if (!response.ok) throw new Error('Failed to load biblio.bib');
-        const text = await response.text();
+        const conferences = CONFERENCES_DATA;
+
+        const currentDate = new Date();
+        conferencesList.innerHTML = '';
+        pastConferencesList.innerHTML = '';
+
+        conferences.forEach(conf => {
+            const div = document.createElement('div');
+            div.className = 'conference-item';
+            div.innerHTML = `
+                <h3><a href="${conf.url}" target="_blank">${conf.title}</a></h3>
+                <p class="conf-meta">
+                    <i class="far fa-calendar-alt"></i> ${conf.date} <br>
+                    <i class="fas fa-map-marker-alt"></i> ${conf.location}
+                </p>
+                <p class="conf-desc">
+                    ${conf.description}
+                </p>
+            `;
+
+            // Parse date
+            const dateMatch = conf.date.match(/(\d+)-(\d+)\s+([A-Za-z]+)\s+(\d{4})/);
+            let isPast = false;
+
+            if (dateMatch) {
+                const endDay = parseInt(dateMatch[2]);
+                const monthStr = dateMatch[3];
+                const year = parseInt(dateMatch[4]);
+                const conferenceDate = new Date(`${monthStr} ${endDay}, ${year}`);
+                conferenceDate.setHours(23, 59, 59, 999);
+
+                if (conferenceDate < currentDate) {
+                    isPast = true;
+                }
+            }
+
+            if (isPast) {
+                pastConferencesList.appendChild(div);
+            } else {
+                conferencesList.appendChild(div);
+            }
+        });
+
+        // Show past conferences container if needed
+        if (pastConferencesList.children.length > 0) {
+            pastConferencesContainer.style.display = 'block';
+        }
+
+    } catch (error) {
+        console.error('Error loading conferences:', error);
+        conferencesList.innerHTML = '<p>Error loading conferences.</p>';
+    }
+}
+
+function loadBibTeX() {
+    const container = document.getElementById('bibtex-container');
+    if (!container) return;
+
+    try {
+        const text = BIBTEX_DATA;
         const entries = parseBibTeX(text);
         renderPublications(entries, container);
     } catch (error) {
         console.error(error);
-        container.innerHTML = '<p class="error">Error loading publications. Please check biblio.bib.</p>';
+        container.innerHTML = '<p class="error">Error loading publications.</p>';
     }
 }
 
