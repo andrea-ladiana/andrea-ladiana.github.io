@@ -5,7 +5,7 @@ const CONFERENCES_DATA = [
         "url": "https://sites.google.com/uniroma1.it/ecc-ds4-workshop2025/home-page",
         "date": "19-20 January 2026",
         "location": "Sapienza Università di Roma, Department of Mathematics \"G. Castelnuovo\", Aula Picone",
-        "description": "Una conferenza in memoria di Francesco Guerra."
+        "description": "A conference in memory of Francesco Guerra."
     },
     {
         "title": "4th Workshop of UMI Group: Mathematics for Artificial Intelligence and Machine Learning",
@@ -13,6 +13,12 @@ const CONFERENCES_DATA = [
         "date": "21-23 January 2026",
         "location": "Sapienza Università di Roma, Department of Mathematics \"G. Castelnuovo\"",
         "description": "Focusing on the interplay between mathematics, artificial intelligence, and machine learning."
+    },
+    {
+        "title": "Intelligenza Artificiale: il futuro è già qui",
+        "date": "20 September 2025",
+        "location": "Centro Congressi di Ecotekne, Università del Salento, Lecce, Italy",
+        "description": "Dialogue on how artificial intelligence is transforming the future, featuring Prof. Pierluigi Contucci, Prof. Marc Mézard, and Prof. Giorgio Parisi."
     }
 ];
 
@@ -79,8 +85,12 @@ function sortConferences() {
         conferences.forEach(conf => {
             const div = document.createElement('div');
             div.className = 'conference-item';
+            const titleHtml = conf.url
+                ? `<a href="${conf.url}" target="_blank">${conf.title}</a>`
+                : `${conf.title}`;
+
             div.innerHTML = `
-                <h3><a href="${conf.url}" target="_blank">${conf.title}</a></h3>
+                <h3>${titleHtml}</h3>
                 <p class="conf-meta">
                     <i class="far fa-calendar-alt"></i> ${conf.date} <br>
                     <i class="fas fa-map-marker-alt"></i> ${conf.location}
@@ -91,13 +101,26 @@ function sortConferences() {
             `;
 
             // Parse date
-            const dateMatch = conf.date.match(/(\d+)-(\d+)\s+([A-Za-z]+)\s+(\d{4})/);
-            let isPast = false;
+            // Parse date
+            // Try range format first: "19-20 January 2026"
+            const rangeMatch = conf.date.match(/(\d+)-(\d+)\s+([A-Za-z]+)\s+(\d{4})/);
+            // Try single date format: "20 September 2025"
+            const singleMatch = conf.date.match(/^(\d+)\s+([A-Za-z]+)\s+(\d{4})$/);
 
-            if (dateMatch) {
-                const endDay = parseInt(dateMatch[2]);
-                const monthStr = dateMatch[3];
-                const year = parseInt(dateMatch[4]);
+            let isPast = false;
+            let endDay, monthStr, year;
+
+            if (rangeMatch) {
+                endDay = parseInt(rangeMatch[2]);
+                monthStr = rangeMatch[3];
+                year = parseInt(rangeMatch[4]);
+            } else if (singleMatch) {
+                endDay = parseInt(singleMatch[1]);
+                monthStr = singleMatch[2];
+                year = parseInt(singleMatch[3]);
+            }
+
+            if (rangeMatch || singleMatch) {
                 const conferenceDate = new Date(`${monthStr} ${endDay}, ${year}`);
                 conferenceDate.setHours(23, 59, 59, 999);
 
