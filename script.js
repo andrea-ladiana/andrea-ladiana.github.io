@@ -27,6 +27,7 @@ const BIBTEX_DATA = `
   title={Beyond Disorder: Unveiling Cooperativeness in Multidirectional Associative Memories},
   author={Andrea Alessandrelli and Adriano Barra and Andrea Ladiana and Andrea Lepre and Federico Ricci-Tersenghi},
   booktitle={New Frontiers in Associative Memories}
+  url = {https://openreview.net/pdf?id=o1AGK0hzJp},
 }
 
 @article{ALESSANDRELLI2025130871,
@@ -233,12 +234,28 @@ function createPublicationElement(entry) {
     const venue = entry.journal || entry.booktitle || 'Unknown Venue';
     const year = entry.year || '';
     const url = entry.url || entry.doi || '#';
+    const type = entry.type || '';
 
     let html = `
         <a href="${url}" target="_blank" class="pub-title">${title}</a>
         <p class="pub-authors">${authors}</p>
         <p class="pub-journal">${venue}${year ? ', ' + year : ''}</p>
     `;
+
+    // Add badges for type and year
+    if (type || year) {
+        html += '<div class="pub-meta-badges">';
+        if (type) {
+            const typeLabel = type === 'article' ? 'Journal' :
+                type === 'inproceedings' ? 'Conference' :
+                    type.charAt(0).toUpperCase() + type.slice(1);
+            html += `<span class="pub-badge">${typeLabel}</span>`;
+        }
+        if (year) {
+            html += `<span class="pub-badge">${year}</span>`;
+        }
+        html += '</div>';
+    }
 
     if (entry.note || entry.comment) {
         html += `<p class="pub-desc">${entry.note || entry.comment}</p>`;

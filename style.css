@@ -104,11 +104,41 @@ body {
 /* Layout */
 .container {
     max-width: 720px;
-    /* Narrower for better reading experience like Jean Barbier's */
     margin: 0 auto;
     padding: 2rem 1.5rem;
     position: relative;
     z-index: 2;
+}
+
+/* Sticky Navigation */
+.top-nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    gap: clamp(1rem, 3vw, 1.5rem);
+    padding: 0.75rem 1.5rem;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.top-nav a {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.top-nav a:hover {
+    opacity: 1;
+    color: var(--accent-color);
 }
 
 /* Typography & Links */
@@ -116,6 +146,7 @@ a {
     color: var(--accent-color);
     text-decoration: none;
     transition: color 0.2s ease;
+    text-underline-offset: 0.2em;
 }
 
 a:hover {
@@ -123,44 +154,69 @@ a:hover {
     text-decoration: underline;
 }
 
+a:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
 h1,
 h2,
 h3 {
     color: #fff;
     font-weight: 700;
+    line-height: 1.2;
+}
+
+h2 {
+    line-height: 1.3;
 }
 
 /* Hero */
 .hero {
     min-height: 60vh;
-    /* Reduced height */
     display: flex;
     flex-direction: column;
     justify-content: center;
     text-align: left;
     margin-bottom: 3rem;
+    padding-top: 2rem;
+}
+
+.hero-eyebrow {
+    font-size: clamp(0.85rem, 2vw, 1rem);
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    opacity: 0.7;
+    margin-bottom: 0.75rem;
 }
 
 .name {
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
-    margin-bottom: 1.5rem;
-    letter-spacing: -0.03em;
+    font-size: clamp(3rem, 7vw, 5rem);
+    margin-bottom: 1rem;
+    letter-spacing: -0.04em;
     background: linear-gradient(to right, #fff, #ccc);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    line-height: 1.1;
+}
+
+.hero-subtitle {
+    font-size: clamp(1rem, 2.2vw, 1.25rem);
+    font-weight: 400;
+    opacity: 0.85;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .intro-text {
-    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    font-size: clamp(1.05rem, 2.2vw, 1.2rem);
     font-weight: 300;
     max-width: 600px;
     margin-bottom: 2rem;
-}
-
-.intro-text .highlight {
-    color: #fff;
-    font-weight: 500;
+    line-height: 1.7;
 }
 
 .social-links {
@@ -194,8 +250,25 @@ h3 {
     border: 1px solid var(--glass-border);
     border-radius: 12px;
     padding: 2rem;
-    margin-bottom: 2.5rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    margin-bottom: 3rem;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.glass-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Section Kickers */
+.section-kicker {
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 0.75rem;
+    opacity: 0.6;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
 }
 
 h2 {
@@ -211,17 +284,36 @@ h2 {
     margin-bottom: 1.2rem;
     font-size: 1.05rem;
     opacity: 0.9;
+    line-height: 1.75;
 }
 
 .text-content p:last-child {
     margin-bottom: 0;
 }
 
+/* Keyword Tags */
+.keyword-tag {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(100, 255, 218, 0.08);
+    border: 1px solid rgba(100, 255, 218, 0.3);
+    font-size: 0.95em;
+    margin: 0 0.1rem;
+    transition: background 0.2s ease, border-color 0.2s ease;
+    white-space: nowrap;
+}
+
+.keyword-tag:hover {
+    background: rgba(100, 255, 218, 0.12);
+    border-color: rgba(100, 255, 218, 0.5);
+}
+
 /* Publications */
 .publication-item {
-    margin-bottom: 1.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    margin-bottom: 1.75rem;
+    padding-bottom: 1.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .publication-item:last-child {
@@ -234,20 +326,46 @@ h2 {
     font-size: 1.1rem;
     font-weight: 600;
     color: #fff;
-    margin-bottom: 0.3rem;
-    display: block;
+    margin-bottom: 0.5rem;
+    display: inline-block;
+    transition: color 0.2s ease;
+}
+
+.pub-title:hover {
+    color: var(--accent-color);
+    text-decoration: underline;
 }
 
 .pub-authors {
     font-size: 0.95rem;
     opacity: 0.8;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.4rem;
 }
 
 .pub-journal {
     font-size: 0.9rem;
     color: var(--accent-color);
     font-style: italic;
+}
+
+/* Publication Badges */
+.pub-meta-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+}
+
+.pub-badge {
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.8;
+    font-weight: 500;
 }
 
 .pub-links {
@@ -258,13 +376,39 @@ h2 {
 .pub-links a {
     margin-right: 1rem;
     opacity: 0.8;
+    transition: opacity 0.2s ease;
 }
 
-/* Conferences */
+.pub-links a:hover {
+    opacity: 1;
+}
+
+/* Details/Summary */
+details summary {
+    transition: color 0.2s ease;
+}
+
+details[open] summary {
+    margin-bottom: 1rem;
+}
+
+details summary:hover {
+    opacity: 0.8;
+}
+
+/* Conferences Timeline */
+#conferences-list,
+#past-conferences-list {
+    position: relative;
+    margin-left: 0.8rem;
+}
+
 .conference-item {
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    margin-bottom: 2.5rem;
+    padding-bottom: 2.5rem;
+    padding-left: 1.5rem;
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 .conference-item:last-child {
@@ -273,21 +417,34 @@ h2 {
     padding-bottom: 0;
 }
 
+.conference-item::before {
+    content: "";
+    position: absolute;
+    left: -6px;
+    top: 0.4rem;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: var(--accent-color);
+    box-shadow: 0 0 10px rgba(100, 255, 218, 0.5);
+}
+
 .conference-item h3 {
     font-size: 1.2rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
 }
 
 .conf-meta {
     font-size: 0.95rem;
     color: var(--accent-color);
     margin-bottom: 0.8rem;
-    line-height: 1.5;
+    line-height: 1.6;
 }
 
 .conf-desc {
     font-size: 1rem;
     opacity: 0.9;
+    line-height: 1.65;
 }
 
 /* Quotes */
@@ -319,5 +476,24 @@ h2 {
 
     .name {
         font-size: 2.8rem;
+    }
+
+    .top-nav {
+        gap: 0.75rem;
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+    }
+
+    .top-nav a {
+        font-size: 0.75rem;
+    }
+
+    .text-content p {
+        opacity: 0.95;
+    }
+
+    .keyword-tag {
+        font-size: 0.85em;
+        padding: 0.1rem 0.5rem;
     }
 }

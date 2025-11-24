@@ -7,6 +7,23 @@
     <title>Andrea Ladiana | Mathematician</title>
     <meta name="description"
         content="Personal website of Andrea Ladiana, PhD Student in Mathematics. Researching Heteroassociative Neural Networks, Hopfield Models, and Statistical Mechanics.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Andrea Ladiana | Mathematician">
+    <meta property="og:description"
+        content="PhD Student in Mathematics researching Associative Neural Networks, Hopfield Models, and Statistical Mechanics.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://andrea-ladiana.github.io">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Andrea Ladiana | Mathematician">
+    <meta name="twitter:description"
+        content="PhD Student in Mathematics researching Associative Neural Networks and Statistical Mechanics.">
+
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,12 +42,25 @@
         </div>
     </div>
 
+    <!-- Sticky Navigation -->
+    <nav class="top-nav">
+        <a href="#research">Research</a>
+        <a href="#publications">Publications</a>
+        <a href="#conferences">Conferences</a>
+        <a href="#other-interests">Other interests</a>
+        <a href="#szilard-commandments">Ten Commandments</a>
+    </nav>
+
     <main class="container">
         <header class="hero">
             <div class="hero-content">
-                <h1 class="name">Hello world!</h1>
+                <p class="hero-eyebrow">Hello world!</p>
+                <h1 class="name">Andrea Ladiana</h1>
+                <p class="hero-subtitle">
+                    PhD Student in Mathematics · Associative Neural Networks & Statistical Mechanics
+                </p>
                 <p class="intro-text">
-                    I'm <span class="highlight">Andrea Ladiana</span>, a PhD Student in Mathematics at
+                    I'm a PhD Student in Mathematics at
                     <a href="https://phd.uniroma1.it/web/ANDREA-LADIANA_nP2239069_IT.aspx" target="_blank"
                         class="link">Sapienza University of Rome</a> and member of the
                     <a href="https://www.researchgate.net/lab/Agliari-Barra-Lab-CoScienza-Adriano-Barra" target="_blank"
@@ -58,27 +88,35 @@
         </header>
 
         <section id="research" class="glass-card">
+            <p class="section-kicker">Research</p>
             <h2>Research Interests</h2>
             <div class="text-content">
                 <p>
-                    I am broadly interested in memory systems and collective behaviour. I work with models where many
+                    I am broadly interested in <span class="keyword-tag">memory systems</span> and <span
+                        class="keyword-tag">collective behaviour</span>. I work with models where many
                     simple units, when connected in the right way, can store patterns, retrieve them, and support each
-                    other's computations. This includes classical and modern associative networks, multi-layer
-                    architectures where different modules communicate, and abstract "memory fields" that can be analysed
+                    other's computations. This includes classical and modern <span class="keyword-tag">associative
+                        networks</span>, multi-layer
+                    architectures where different modules communicate, and abstract <span class="keyword-tag">memory
+                        fields</span> that can be analysed
                     with tools from mathematics, statistical physics, and machine learning.
                 </p>
                 <p>
-                    A recurring theme in my work is cooperation across modules: how several interacting memories can
+                    A recurring theme in my work is <span class="keyword-tag">cooperation across modules</span>: how
+                    several interacting memories can
                     jointly denoise signals, disentangle overlapping information, or build a shared representation, and
                     how this behaviour changes when the system is distributed, noisy, or evolving. I like to push these
-                    ideas beyond standard neural-network settings – towards biological and immune systems, where
+                    ideas beyond standard neural-network settings – towards <span class="keyword-tag">biological and
+                        immune systems</span>, where
                     repertoires and populations behave like diffuse memories, and towards more exploratory applications
-                    involving biomes and complex interacting populations shaped by many local interactions over time.
+                    involving <span class="keyword-tag">biomes</span> and complex interacting populations shaped by many
+                    local interactions over time.
                 </p>
             </div>
         </section>
 
         <section id="publications" class="glass-card">
+            <p class="section-kicker">Publications</p>
             <h2>Publications</h2>
             <div id="bibtex-container">
                 <!-- Publications will be injected here by script.js -->
@@ -97,6 +135,7 @@
         </section>
 
         <section id="conferences" class="glass-card">
+            <p class="section-kicker">Conferences</p>
             <h2>Conferences Organized</h2>
             <div id="conferences-list">
                 <!-- Upcoming conferences will be injected here -->
@@ -114,6 +153,7 @@
         </section>
 
         <section id="other-interests" class="glass-card extras-section">
+            <p class="section-kicker">Other interests</p>
             <h2>Other interests</h2>
             <div class="text-content">
                 <p>
@@ -160,6 +200,7 @@
         </section>
 
         <section id="szilard-commandments" class="glass-card szilard-commandments">
+            <p class="section-kicker">Ten Commandments</p>
             <h3>The Ten Commandments of Leó Szilárd</h3>
             <div class="text-content">
                 <p>
