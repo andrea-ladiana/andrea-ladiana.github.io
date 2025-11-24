@@ -195,37 +195,64 @@ function renderPublications(entries, container) {
         return;
     }
 
+    const olderPublicationsContainer = document.getElementById('older-publications');
+    const olderPublicationsList = document.getElementById('older-publications-list');
+
+    // Show first 10 publications in main container
+    const recentPublications = entries.slice(0, 10);
+    const olderPublications = entries.slice(10);
+
     container.innerHTML = '';
-    entries.forEach(entry => {
-        const div = document.createElement('div');
-        div.className = 'publication-item';
 
-        const title = entry.title || 'Untitled';
-        const authors = entry.author ? entry.author.replace(/ and /g, ', ') : 'Unknown Author';
-        const venue = entry.journal || entry.booktitle || 'Unknown Venue';
-        const year = entry.year || '';
-        const url = entry.url || entry.doi || '#';
-
-        let html = `
-            <a href="${url}" target="_blank" class="pub-title">${title}</a>
-            <p class="pub-authors">${authors}</p>
-            <p class="pub-journal">${venue}${year ? ', ' + year : ''}</p>
-        `;
-
-        if (entry.note || entry.comment) {
-            html += `<p class="pub-desc">${entry.note || entry.comment}</p>`;
-        }
-
-        // Add links if available
-        let links = [];
-        if (entry.url) links.push(`<a href="${entry.url}" target="_blank">[URL]</a>`);
-        if (entry.doi && !entry.url) links.push(`<a href="${entry.doi}" target="_blank">[DOI]</a>`); // Avoid duplicate if url is same
-
-        if (links.length > 0) {
-            html += `<div class="pub-links">${links.join(' ')}</div>`;
-        }
-
-        div.innerHTML = html;
+    // Render recent publications
+    recentPublications.forEach(entry => {
+        const div = createPublicationElement(entry);
         container.appendChild(div);
     });
+
+    // Render older publications if any
+    if (olderPublications.length > 0 && olderPublicationsList) {
+        olderPublicationsList.innerHTML = '';
+        olderPublications.forEach(entry => {
+            const div = createPublicationElement(entry);
+            olderPublicationsList.appendChild(div);
+        });
+
+        if (olderPublicationsContainer) {
+            olderPublicationsContainer.style.display = 'block';
+        }
+    }
+}
+
+function createPublicationElement(entry) {
+    const div = document.createElement('div');
+    div.className = 'publication-item';
+
+    const title = entry.title || 'Untitled';
+    const authors = entry.author ? entry.author.replace(/ and /g, ', ') : 'Unknown Author';
+    const venue = entry.journal || entry.booktitle || 'Unknown Venue';
+    const year = entry.year || '';
+    const url = entry.url || entry.doi || '#';
+
+    let html = `
+        <a href="${url}" target="_blank" class="pub-title">${title}</a>
+        <p class="pub-authors">${authors}</p>
+        <p class="pub-journal">${venue}${year ? ', ' + year : ''}</p>
+    `;
+
+    if (entry.note || entry.comment) {
+        html += `<p class="pub-desc">${entry.note || entry.comment}</p>`;
+    }
+
+    // Add links if available
+    let links = [];
+    if (entry.url) links.push(`<a href="${entry.url}" target="_blank">[URL]</a>`);
+    if (entry.doi && !entry.url) links.push(`<a href="${entry.doi}" target="_blank">[DOI]</a>`); // Avoid duplicate if url is same
+
+    if (links.length > 0) {
+        html += `<div class="pub-links">${links.join(' ')}</div>`;
+    }
+
+    div.innerHTML = html;
+    return div;
 }
