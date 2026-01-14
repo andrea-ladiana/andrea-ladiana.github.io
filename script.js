@@ -22,6 +22,17 @@ const CONFERENCES_DATA = [
     }
 ];
 
+// Conferences where you are invited as a speaker (same schema as CONFERENCES_DATA)
+const SPEAKER_CONFERENCES_DATA = [
+    {
+        "title": "Deep Patterns",
+        "url": "https://www.eurandom.tue.nl/event/deep-patterns/",
+        "date": "18-22 May 2026",
+        "location": "Eurandom, Metaforum, 4th floor, Eindhoven, Netherlands",
+        "description": "Workshop bringing together researchers on pattern formation and pattern recognition at the intersection of Applied Mathematics and Theoretical Physics."
+    }
+];
+
 const BIBTEX_DATA = `
 @inproceedings{alessandrellibeyond,
   title={Beyond Disorder: Unveiling Cooperativeness in Multidirectional Associative Memories},
@@ -66,26 +77,75 @@ cards.forEach(card => {
 // Load and Parse BibTeX
 loadBibTeX();
 
-// Sort Conferences
-sortConferences();
+// Load & Render Conferences (organized + invited speaker)
+loadAndRenderConferences();
 
-function sortConferences() {
-    const conferencesList = document.getElementById('conferences-list');
-    const pastConferencesContainer = document.getElementById('past-conferences');
-    const pastConferencesList = document.getElementById('past-conferences-list');
+async function loadAndRenderConferences() {
+    const data = await loadConferencesData();
 
-    if (!conferencesList || !pastConferencesContainer || !pastConferencesList) return;
+    renderConferenceTimeline({
+        data: data.organized,
+        upcomingListId: 'conferences-list',
+        pastDetailsId: 'past-conferences',
+        pastListId: 'past-conferences-list'
+    });
+
+    renderConferenceTimeline({
+        data: data.speaker,
+        upcomingListId: 'speaker-conferences-list',
+        pastDetailsId: 'past-speaker-conferences',
+        pastListId: 'past-speaker-conferences-list'
+    });
+}
+
+async function loadConferencesData() {
+    // Default fallback (works on file://)
+    let organized = Array.isArray(CONFERENCES_DATA) ? CONFERENCES_DATA : [];
+    let speaker = Array.isArray(SPEAKER_CONFERENCES_DATA) ? SPEAKER_CONFERENCES_DATA : [];
+
+    // Best-effort: load from conferences.json when served via http(s)
+    try {
+        if (typeof window !== 'undefined' && window.location && window.location.protocol !== 'file:') {
+            const response = await fetch('conferences.json', { cache: 'no-store' });
+            if (response.ok) {
+                const json = await response.json();
+
+                if (Array.isArray(json)) {
+                    // Backward compatibility: old format was a plain array of organized conferences
+                    organized = json;
+                } else if (json && typeof json === 'object') {
+                    if (Array.isArray(json.organized)) organized = json.organized;
+                    if (Array.isArray(json.speaker)) speaker = json.speaker;
+                }
+            }
+        }
+    } catch (error) {
+        // Silent fallback to embedded data
+        console.warn('Could not load conferences.json; using embedded data.', error);
+    }
+
+    return { organized, speaker };
+}
+
+function renderConferenceTimeline({ data, upcomingListId, pastDetailsId, pastListId }) {
+    const upcomingList = document.getElementById(upcomingListId);
+    const pastDetails = document.getElementById(pastDetailsId);
+    const pastList = document.getElementById(pastListId);
+
+    if (!upcomingList || !pastDetails || !pastList) return;
 
     try {
-        const conferences = CONFERENCES_DATA;
-
+        const conferences = Array.isArray(data) ? data : [];
         const currentDate = new Date();
-        conferencesList.innerHTML = '';
-        pastConferencesList.innerHTML = '';
+
+        upcomingList.innerHTML = '';
+        pastList.innerHTML = '';
+        pastDetails.style.display = 'none';
 
         conferences.forEach(conf => {
             const div = document.createElement('div');
             div.className = 'conference-item';
+
             const titleHtml = conf.url
                 ? `<a href="${conf.url}" target="_blank">${conf.title}</a>`
                 : `${conf.title}`;
@@ -101,51 +161,47 @@ function sortConferences() {
                 </p>
             `;
 
-            // Parse date
-            // Parse date
-            // Try range format first: "19-20 January 2026"
-            const rangeMatch = conf.date.match(/(\d+)-(\d+)\s+([A-Za-z]+)\s+(\d{4})/);
-            // Try single date format: "20 September 2025"
-            const singleMatch = conf.date.match(/^(\d+)\s+([A-Za-z]+)\s+(\d{4})$/);
-
-            let isPast = false;
-            let endDay, monthStr, year;
-
-            if (rangeMatch) {
-                endDay = parseInt(rangeMatch[2]);
-                monthStr = rangeMatch[3];
-                year = parseInt(rangeMatch[4]);
-            } else if (singleMatch) {
-                endDay = parseInt(singleMatch[1]);
-                monthStr = singleMatch[2];
-                year = parseInt(singleMatch[3]);
-            }
-
-            if (rangeMatch || singleMatch) {
-                const conferenceDate = new Date(`${monthStr} ${endDay}, ${year}`);
-                conferenceDate.setHours(23, 59, 59, 999);
-
-                if (conferenceDate < currentDate) {
-                    isPast = true;
-                }
-            }
-
+            const isPast = isConferenceInPast(conf.date, currentDate);
             if (isPast) {
-                pastConferencesList.appendChild(div);
+                pastList.appendChild(div);
             } else {
-                conferencesList.appendChild(div);
+                upcomingList.appendChild(div);
             }
         });
 
-        // Show past conferences container if needed
-        if (pastConferencesList.children.length > 0) {
-            pastConferencesContainer.style.display = 'block';
+        if (pastList.children.length > 0) {
+            pastDetails.style.display = 'block';
         }
-
     } catch (error) {
-        console.error('Error loading conferences:', error);
-        conferencesList.innerHTML = '<p>Error loading conferences.</p>';
+        console.error('Error rendering conferences:', error);
+        upcomingList.innerHTML = '<p>Error loading conferences.</p>';
     }
+}
+
+function isConferenceInPast(dateStr, now) {
+    if (!dateStr) return false;
+
+    // Try range format first: "19-20 January 2026"
+    const rangeMatch = dateStr.match(/(\d+)-(\d+)\s+([A-Za-z]+)\s+(\d{4})/);
+    // Try single date format: "20 September 2025"
+    const singleMatch = dateStr.match(/^(\d+)\s+([A-Za-z]+)\s+(\d{4})$/);
+
+    let endDay, monthStr, year;
+    if (rangeMatch) {
+        endDay = parseInt(rangeMatch[2]);
+        monthStr = rangeMatch[3];
+        year = parseInt(rangeMatch[4]);
+    } else if (singleMatch) {
+        endDay = parseInt(singleMatch[1]);
+        monthStr = singleMatch[2];
+        year = parseInt(singleMatch[3]);
+    } else {
+        return false;
+    }
+
+    const endDate = new Date(`${monthStr} ${endDay}, ${year}`);
+    endDate.setHours(23, 59, 59, 999);
+    return endDate < now;
 }
 
 function loadBibTeX() {

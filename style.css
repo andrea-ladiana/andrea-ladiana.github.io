@@ -398,7 +398,9 @@ details summary:hover {
 
 /* Conferences Timeline */
 #conferences-list,
-#past-conferences-list {
+#past-conferences-list,
+#speaker-conferences-list,
+#past-speaker-conferences-list {
     position: relative;
     margin-left: 0.8rem;
 }
