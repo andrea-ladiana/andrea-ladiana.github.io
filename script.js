@@ -25,6 +25,13 @@ const CONFERENCES_DATA = [
 // Conferences where you are invited as a speaker (same schema as CONFERENCES_DATA)
 const SPEAKER_CONFERENCES_DATA = [
     {
+        "title": "ICLR 2026",
+        "url": "https://iclr.cc/",
+        "date": "23-27 April 2026",
+        "location": "Riocentro Convention and Event Center, Rio de Janeiro, Brazil",
+        "description": "The International Conference on Learning Representations (ICLR) is the premier gathering of professionals dedicated to the advancement of the branch of artificial intelligence called representation learning, but generally referred to as deep learning."
+    },
+    {
         "title": "Deep Patterns",
         "url": "https://www.eurandom.tue.nl/event/deep-patterns/",
         "date": "18-22 May 2026",
@@ -37,7 +44,8 @@ const BIBTEX_DATA = `
 @inproceedings{alessandrellibeyond,
   title={Beyond Disorder: Unveiling Cooperativeness in Multidirectional Associative Memories},
   author={Andrea Alessandrelli and Adriano Barra and Andrea Ladiana and Andrea Lepre and Federico Ricci-Tersenghi},
-  booktitle={New Frontiers in Associative Memories}
+  booktitle={ICLR 2025: New Frontiers in Associative Memories}
+  year={2025},
   url = {https://openreview.net/pdf?id=o1AGK0hzJp},
 }
 
@@ -53,6 +61,14 @@ url = {https://www.sciencedirect.com/science/article/pii/S0378437125005230},
 author = {Andrea Alessandrelli and Adriano Barra and Andrea Ladiana and Andrea Lepre and Federico Ricci-Tersenghi},
 keywords = {Statistical mechanics, Spin glass, Supervised learning, Unsupervised learning, Heteroassociative memory, Neural networks},
 abstract = {This paper introduces a learning framework for Three-Directional Associative Memory (TAM) models, extending the classical Hebbian paradigm to both supervised and unsupervised protocols within an hetero-associative setting. These neural networks consist of three interconnected layers of binary neurons interacting via generalized Hebbian synaptic couplings that allow learning, storage and retrieval of structured triplets of patterns. By relying upon glassy statistical mechanical techniques (mainly replica theory and Guerra interpolation), we analyze the emergent computational properties of these networks, at work with random (Rademacher) datasets and at the replica-symmetric level of description: we obtain a set of self-consistency equations for the order parameters that quantify the critical dataset sizes (i.e. their thresholds for learning) and describe the retrieval performance of these networks, highlighting the differences between supervised and unsupervised protocols. Numerical simulations validate our theoretical findings and demonstrate the robustness of the captured picture about TAMs also at work with structured datasets. In particular, this study provides insights into the cooperative interplay of layers, beyond that of the neurons within the layers, with potential implications for optimal design of artificial neural network architectures.}
+}
+
+@inproceedings{ladiana2026thermodynamic,
+  title={Thermodynamic Binding: Freezing Chimeric States in Multi-Modal Associative Memories},
+  author={Andrea Ladiana and Elena Agliari and Adriano Barra and Andrea Lepre},
+  booktitle={ICLR 2026: New Frontiers in Associative Memories},
+  year={2026},
+  url={https://openreview.net/forum?id=ZTnAvMRFyU}
 }
 `;
 

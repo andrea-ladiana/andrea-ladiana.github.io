@@ -23,6 +23,13 @@
     ],
     "speaker": [
         {
+            "title": "ICLR 2026",
+            "url": "https://iclr.cc/",
+            "date": "23-27 April 2026",
+            "location": "Riocentro Convention and Event Center, Rio de Janeiro, Brazil",
+            "description": "The International Conference on Learning Representations (ICLR) is the premier gathering of professionals dedicated to the advancement of the branch of artificial intelligence called representation learning, but generally referred to as deep learning."
+        },
+        {
             "title": "Deep Patterns",
             "url": "https://www.eurandom.tue.nl/event/deep-patterns/",
             "date": "18-22 May 2026",
