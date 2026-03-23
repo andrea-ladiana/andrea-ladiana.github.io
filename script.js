@@ -54,6 +54,7 @@ const BIBTEX_DATA = `
   author = {Andrea Alessandrelli and Fabrizio Durante and Andrea Ladiana and Andrea Lepre},
   journal = {Neural Networks},
   year = {2026},
+  url={https://arxiv.org/pdf/2603.19902},
   note = {[Submitted]}
 }
 
