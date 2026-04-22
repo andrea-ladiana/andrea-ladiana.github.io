@@ -58,6 +58,22 @@ const BIBTEX_DATA = `
   note = {[Submitted]}
 }
 
+@article{rollo2026feddqkl,
+    title = {FedDQKL: A Federated Learning aggregation method with Data-Quality-driven client weighting and Kullback-Leibler-based calibration},
+    author = {Davide Rollo and Mattia Cotardo and Andrea Ladiana and Andrea Lepre and Teodoro Montanaro and Fabrizio Durante and Elisabetta Mangino and Luigi Patrono},
+    journal = {Future Generation Computer Systems},
+    year = {2026},
+    note = {[Submitted to Future Generation Computer Systems]}
+}
+
+@article{ladiana2026retrieval,
+    title = {Retrieval of Real-Valued Sequences via Ising Encoding and Hetero-Associative Dynamics},
+    author = {Andrea Ladiana},
+    journal = {Transactions on Machine Learning Research},
+    year = {2026},
+    note = {[Submitted to Transactions on Machine Learning Research]}
+}
+
 @inproceedings{ladiana2026thermodynamic,
   title={Thermodynamic Binding: Freezing Chimeric States in Multi-Modal Associative Memories},
   author={Andrea Ladiana and Elena Agliari and Adriano Barra and Andrea Lepre},
@@ -314,11 +330,13 @@ function createPublicationElement(entry) {
     const authors = entry.author ? entry.author.replace(/ and /g, ', ') : 'Unknown Author';
     const venue = entry.journal || entry.booktitle || 'Unknown Venue';
     const year = entry.year || '';
-    const url = entry.url || entry.doi || '#';
+    const publicationLink = entry.url || entry.doi || '';
     const type = entry.type || '';
 
     let html = `
-        <a href="${url}" target="_blank" class="pub-title">${title}</a>
+        ${publicationLink
+            ? `<a href="${publicationLink}" target="_blank" class="pub-title">${title}</a>`
+            : `<span class="pub-title">${title}</span>`}
         <p class="pub-authors">${authors}</p>
         <p class="pub-journal">${venue}${year ? ', ' + year : ''}</p>
     `;
