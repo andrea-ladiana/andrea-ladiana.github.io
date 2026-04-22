@@ -49,15 +49,6 @@ const BIBTEX_DATA = `
   url = {https://openreview.net/pdf?id=o1AGK0hzJp},
 }
 
-@article{alessandrelli2026federated,
-  title = {A Federated Many-to-One Hopfield model for associative Neural Networks},
-  author = {Andrea Alessandrelli and Fabrizio Durante and Andrea Ladiana and Andrea Lepre},
-  journal = {Neural Networks},
-  year = {2026},
-  url={https://arxiv.org/pdf/2603.19902},
-  note = {[Submitted]}
-}
-
 @article{rollo2026feddqkl,
     title = {FedDQKL: A Federated Learning aggregation method with Data-Quality-driven client weighting and Kullback-Leibler-based calibration},
     author = {Davide Rollo and Mattia Cotardo and Andrea Ladiana and Andrea Lepre and Teodoro Montanaro and Fabrizio Durante and Elisabetta Mangino and Luigi Patrono},
@@ -72,6 +63,15 @@ const BIBTEX_DATA = `
     journal = {Transactions on Machine Learning Research},
     year = {2026},
     note = {[Submitted to Transactions on Machine Learning Research]}
+}
+
+@article{alessandrelli2026federated,
+    title = {A Federated Many-to-One Hopfield model for associative Neural Networks},
+    author = {Andrea Alessandrelli and Fabrizio Durante and Andrea Ladiana and Andrea Lepre},
+    journal = {Neural Networks},
+    year = {2026},
+    url={https://arxiv.org/pdf/2603.19902},
+    note = {[Submitted]}
 }
 
 @inproceedings{ladiana2026thermodynamic,
