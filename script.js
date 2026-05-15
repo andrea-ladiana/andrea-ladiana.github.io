@@ -50,19 +50,20 @@ const BIBTEX_DATA = `
 }
 
 @article{rollo2026feddqkl,
-    title = {FedDQKL: A Federated Learning aggregation method with Data-Quality-driven client weighting and Kullback-Leibler-based calibration},
-    author = {Davide Rollo and Mattia Cotardo and Andrea Ladiana and Andrea Lepre and Teodoro Montanaro and Fabrizio Durante and Elisabetta Mangino and Luigi Patrono},
-    journal = {Future Generation Computer Systems},
-    year = {2026},
-    note = {[Submitted to Future Generation Computer Systems]}
+  title = {FedDQKL: A Federated Learning aggregation method with Data-Quality-driven client weighting and Kullback-Leibler-based calibration},
+  author = {Davide Rollo and Mattia Cotardo and Andrea Ladiana and Andrea Lepre and Teodoro Montanaro and Fabrizio Durante and Elisabetta Mangino and Luigi Patrono},
+  journal = {Future Generation Computer Systems},
+  year = {2026},
+  note = {[Submitted]}
 }
 
 @article{ladiana2026retrieval,
-    title = {Retrieval of Real-Valued Sequences via Ising Encoding and Hetero-Associative Dynamics},
-    author = {Andrea Ladiana},
-    journal = {Transactions on Machine Learning Research},
-    year = {2026},
-    note = {[Submitted to Transactions on Machine Learning Research]}
+  title = {Finite-size scaling of hetero-associative retrieval in continuous-signal-driven Ising spin systems},
+  author = {Andrea Ladiana},
+  journal = {},
+  year = {2026},
+  url={https://arxiv.org/abs/2605.14059},
+  note = {[Submitted]}
 }
 
 @article{alessandrelli2026federated,
@@ -94,6 +95,16 @@ url = {https://www.sciencedirect.com/science/article/pii/S0378437125005230},
 author = {Andrea Alessandrelli and Adriano Barra and Andrea Ladiana and Andrea Lepre and Federico Ricci-Tersenghi},
 keywords = {Statistical mechanics, Spin glass, Supervised learning, Unsupervised learning, Heteroassociative memory, Neural networks},
 abstract = {This paper introduces a learning framework for Three-Directional Associative Memory (TAM) models, extending the classical Hebbian paradigm to both supervised and unsupervised protocols within an hetero-associative setting. These neural networks consist of three interconnected layers of binary neurons interacting via generalized Hebbian synaptic couplings that allow learning, storage and retrieval of structured triplets of patterns. By relying upon glassy statistical mechanical techniques (mainly replica theory and Guerra interpolation), we analyze the emergent computational properties of these networks, at work with random (Rademacher) datasets and at the replica-symmetric level of description: we obtain a set of self-consistency equations for the order parameters that quantify the critical dataset sizes (i.e. their thresholds for learning) and describe the retrieval performance of these networks, highlighting the differences between supervised and unsupervised protocols. Numerical simulations validate our theoretical findings and demonstrate the robustness of the captured picture about TAMs also at work with structured datasets. In particular, this study provides insights into the cooperative interplay of layers, beyond that of the neurons within the layers, with potential implications for optimal design of artificial neural network architectures.}
+}
+
+@article{barra2026dreaming,
+  title = {Do Hopfield Networks Dream of Stored Patterns? A Statistical-Mechanical Theory of Dreaming in Multidirectional Associative Memories},
+  author = {Adriano Barra and Fabrizio Durante and Andrea Ladiana and Michela Marra Solazzo},
+  journal = {Neural Networks},
+  year = {2026},
+  url = {https://arxiv.org/abs/2605.13721},
+  note = {[Submitted]},
+  abstract = {We introduce the Dreaming L-directional Associative Memory (DLAM), a multi-layer Hebbian architecture in which off-line dreaming and supervised heteroassociative coupling coexist within a single energy function, placing our approach within the framework of energy-based models (EBMs). The replica-symmetric free energy, derived via the Guerra interpolation scheme, yields self-consistency equations governing the order parameters across the control-parameter space. The effective local field decomposes into signal, intra-layer dreaming noise, and inter-layer noise. Dreaming improves retrieval by differentially attenuating high-eigenvalue interference modes of the empirical correlation matrix, suppressing inter-pattern crosstalk while preserving the signal. Dreaming and inter-layer coupling prove synergistic, opening retrieval regions unreachable by either mechanism alone, as confirmed by Monte Carlo simulations for L=3. Their interplay is most pronounced on pattern disentanglement: given a mixture state as input, the network splits the constituent patterns one-per-layer, recovering each modality-specific pattern from a common cue that simultaneously blends noisy evidence from all sensory channels. Phase diagrams are planar projections of the hyperspace (α,β,ρ,t)-where α is the storage load, β the fast-noise inverse temperature, ρ the dataset entropy, and t the sleeping time. In the (ρ,t)-plane, the diagrams reveal a data-computation trade-off: off-line consolidation substitutes for additional training data, extending to heteroassociative architectures a phenomenon previously established for autoassociative networks. Enriching the standard Hopfield model with heteroassociativity and dreaming gives rise to EBMs capable of complex tasks beyond classical pattern recognition, contributing to a modern theory of neural information processing.}
 }
 `;
 
