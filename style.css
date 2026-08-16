@@ -310,6 +310,32 @@ h2 {
 }
 
 /* Publications */
+.pub-note {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: -0.8rem;
+    margin-bottom: 1.75rem;
+    font-style: italic;
+}
+
+.pub-note .ca-star {
+    font-size: 1.1em;
+}
+
+.ca-star {
+    color: var(--accent-color);
+    font-weight: 700;
+    margin-left: 1px;
+}
+
+.author-self {
+    color: #fff;
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: rgba(100, 255, 218, 0.5);
+    text-underline-offset: 3px;
+}
+
 .publication-item {
     margin-bottom: 1.75rem;
     padding-bottom: 1.75rem;
@@ -338,8 +364,9 @@ h2 {
 
 .pub-authors {
     font-size: 0.95rem;
-    opacity: 0.8;
+    opacity: 0.85;
     margin-bottom: 0.4rem;
+    line-height: 1.5;
 }
 
 .pub-journal {
@@ -352,6 +379,7 @@ h2 {
 .pub-meta-badges {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 0.4rem;
     margin-top: 0.5rem;
     font-size: 0.75rem;
@@ -364,8 +392,24 @@ h2 {
     border: 1px solid rgba(255, 255, 255, 0.1);
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    opacity: 0.8;
+    opacity: 0.85;
     font-weight: 500;
+}
+
+.pub-badge.ca-badge {
+    background: rgba(100, 255, 218, 0.12);
+    border-color: rgba(100, 255, 218, 0.35);
+    color: var(--accent-color);
+    opacity: 1;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.pub-badge.pub-badge-status {
+    background: rgba(255, 255, 255, 0.08);
+    color: #e0e0e0;
 }
 
 .pub-links {

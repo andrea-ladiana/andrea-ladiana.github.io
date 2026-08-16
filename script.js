@@ -41,70 +41,104 @@ const SPEAKER_CONFERENCES_DATA = [
 ];
 
 const BIBTEX_DATA = `
-@inproceedings{alessandrellibeyond,
-  title={Beyond Disorder: Unveiling Cooperativeness in Multidirectional Associative Memories},
-  author={Andrea Alessandrelli and Adriano Barra and Andrea Ladiana and Andrea Lepre and Federico Ricci-Tersenghi},
-  booktitle={ICLR 2025: New Frontiers in Associative Memories}, 
-  year={2025},
-  url = {https://openreview.net/pdf?id=o1AGK0hzJp},
-}
-
 @article{rollo2026feddqkl,
   title = {FedDQKL: A Federated Learning aggregation method with Data-Quality-driven client weighting and Kullback-Leibler-based calibration},
-  author = {Davide Rollo and Mattia Cotardo and Andrea Ladiana and Andrea Lepre and Teodoro Montanaro and Fabrizio Durante and Elisabetta Mangino and Luigi Patrono},
-  journal = {Future Generation Computer Systems},
+  author = {Davide Rollo and Mattia Cotardo and Andrea Ladiana and Andrea Lepre and Teodoro Montanaro and Fabrizio Durante and Elisabetta Mangino and Luigi Patrono*},
+  journal = {submitted to Array},
   year = {2026},
+  note = {[Submitted]}
+}
+
+@article{ladiana2026origami,
+  title = {Geometric spin glasses: origami flat-foldability as a deterministic frustrated spin model},
+  author = {Andrea Ladiana*},
+  journal = {submitted to Proceedings of the National Academy of Sciences (PNAS)},
+  year = {2026},
+  note = {[Submitted]}
+}
+
+@article{ladiana2026berker,
+  title = {The Exact Laplacian Spectrum of the Berker--Ostlund Diamond Lattice},
+  author = {Andrea Ladiana*},
+  journal = {submitted to Journal of Physics A: Mathematical and Theoretical},
+  year = {2026},
+  note = {[Submitted]}
+}
+
+@article{albanese2026semisupervised,
+  title = {Semi-supervised Hopfield model: Theoretical and Numerical results},
+  author = {Luca Albanese and Andrea Ladiana and Andrea Lepre*},
+  journal = {submitted to Physica A: Statistical Mechanics and its Applications},
+  year = {2026},
+  url = {https://arxiv.org/abs/2607.28173},
+  note = {[Submitted]}
+}
+
+@article{alessandrelli2026federated,
+  title = {A Federated Many-to-One Hopfield model for associative Neural Networks},
+  author = {Andrea Alessandrelli* and Fabrizio Durante and Andrea Ladiana and Andrea Lepre},
+  journal = {submitted to Neural Networks},
+  year = {2026},
+  url = {https://arxiv.org/abs/2603.19902},
+  note = {[Submitted]}
+}
+
+@article{barra2026dreaming,
+  title = {Do Hopfield Networks Dream of Stored Patterns? A Statistical-Mechanical Theory of Dreaming in Multidirectional Associative Memories},
+  author = {Adriano Barra and Fabrizio Durante and Andrea Ladiana* and Michela Marra Solazzo},
+  journal = {submitted to Neural Networks},
+  year = {2026},
+  url = {https://arxiv.org/abs/2605.13721},
+  note = {[Submitted]}
+}
+
+@article{agliari2026exponential,
+  title = {Exponential Capacity in Multilayer Hetero-Associative Neural Networks},
+  author = {Elena Agliari and Adriano Barra and Andrea Ladiana* and Andrea Lepre},
+  journal = {submitted to Neural Networks},
+  year = {2026},
+  url = {https://arxiv.org/abs/2607.29554},
   note = {[Submitted]}
 }
 
 @article{ladiana2026retrieval,
   title = {Finite-size scaling of hetero-associative retrieval in continuous-signal-driven Ising spin systems},
-  author = {Andrea Ladiana},
-  journal = {},
+  author = {Andrea Ladiana*},
+  journal = {arXiv preprint},
   year = {2026},
-  url={https://arxiv.org/abs/2605.14059},
-  note = {[Submitted]}
-}
-
-@article{alessandrelli2026federated,
-    title = {A Federated Many-to-One Hopfield model for associative Neural Networks},
-    author = {Andrea Alessandrelli and Fabrizio Durante and Andrea Ladiana and Andrea Lepre},
-    journal = {Neural Networks},
-    year = {2026},
-    url={https://arxiv.org/pdf/2603.19902},
-    note = {[Submitted]}
+  url = {https://arxiv.org/abs/2605.14059},
+  note = {[arXiv preprint]}
 }
 
 @inproceedings{ladiana2026thermodynamic,
-  title={Thermodynamic Binding: Freezing Chimeric States in Multi-Modal Associative Memories},
-  author={Andrea Ladiana and Elena Agliari and Adriano Barra and Andrea Lepre},
-  booktitle={ICLR 2026: New Frontiers in Associative Memories},
-  year={2026},
-  url={https://openreview.net/forum?id=ZTnAvMRFyU}
+  title = {Thermodynamic Binding: Freezing Chimeric States in Multi-Modal Associative Memories},
+  author = {Elena Agliari and Adriano Barra and Andrea Ladiana* and Andrea Lepre},
+  booktitle = {proceedings of the New Frontiers in Associative Memories Workshop (ICLR, 2026)},
+  year = {2026},
+  url = {https://openreview.net/forum?id=ZTnAvMRFyU},
+  note = {[Workshop Proceedings]}
+}
+
+@inproceedings{alessandrellibeyond,
+  title = {Beyond Disorder: Unveiling Cooperativeness in Multidirectional Associative Memories},
+  author = {Andrea Alessandrelli* and Adriano Barra and Andrea Ladiana and Andrea Lepre and Federico Ricci-Tersenghi},
+  booktitle = {proceedings of the New Frontiers in Associative Memories Workshop (ICLR, Singapore, 2025)},
+  year = {2025},
+  url = {https://openreview.net/pdf?id=o1AGK0hzJp},
+  note = {[In press]}
 }
 
 @article{ALESSANDRELLI2025130871,
-title = {Supervised and unsupervised protocols for hetero-associative neural networks},
-journal = {Physica A: Statistical Mechanics and its Applications},
-volume = {676},
-pages = {130871},
-year = {2025},
-issn = {0378-4371},
-doi = {https://doi.org/10.1016/j.physa.2025.130871},
-url = {https://www.sciencedirect.com/science/article/pii/S0378437125005230},
-author = {Andrea Alessandrelli and Adriano Barra and Andrea Ladiana and Andrea Lepre and Federico Ricci-Tersenghi},
-keywords = {Statistical mechanics, Spin glass, Supervised learning, Unsupervised learning, Heteroassociative memory, Neural networks},
-abstract = {This paper introduces a learning framework for Three-Directional Associative Memory (TAM) models, extending the classical Hebbian paradigm to both supervised and unsupervised protocols within an hetero-associative setting. These neural networks consist of three interconnected layers of binary neurons interacting via generalized Hebbian synaptic couplings that allow learning, storage and retrieval of structured triplets of patterns. By relying upon glassy statistical mechanical techniques (mainly replica theory and Guerra interpolation), we analyze the emergent computational properties of these networks, at work with random (Rademacher) datasets and at the replica-symmetric level of description: we obtain a set of self-consistency equations for the order parameters that quantify the critical dataset sizes (i.e. their thresholds for learning) and describe the retrieval performance of these networks, highlighting the differences between supervised and unsupervised protocols. Numerical simulations validate our theoretical findings and demonstrate the robustness of the captured picture about TAMs also at work with structured datasets. In particular, this study provides insights into the cooperative interplay of layers, beyond that of the neurons within the layers, with potential implications for optimal design of artificial neural network architectures.}
-}
-
-@article{barra2026dreaming,
-  title = {Do Hopfield Networks Dream of Stored Patterns? A Statistical-Mechanical Theory of Dreaming in Multidirectional Associative Memories},
-  author = {Adriano Barra and Fabrizio Durante and Andrea Ladiana and Michela Marra Solazzo},
-  journal = {Neural Networks},
-  year = {2026},
-  url = {https://arxiv.org/abs/2605.13721},
-  note = {[Submitted]},
-  abstract = {We introduce the Dreaming L-directional Associative Memory (DLAM), a multi-layer Hebbian architecture in which off-line dreaming and supervised heteroassociative coupling coexist within a single energy function, placing our approach within the framework of energy-based models (EBMs). The replica-symmetric free energy, derived via the Guerra interpolation scheme, yields self-consistency equations governing the order parameters across the control-parameter space. The effective local field decomposes into signal, intra-layer dreaming noise, and inter-layer noise. Dreaming improves retrieval by differentially attenuating high-eigenvalue interference modes of the empirical correlation matrix, suppressing inter-pattern crosstalk while preserving the signal. Dreaming and inter-layer coupling prove synergistic, opening retrieval regions unreachable by either mechanism alone, as confirmed by Monte Carlo simulations for L=3. Their interplay is most pronounced on pattern disentanglement: given a mixture state as input, the network splits the constituent patterns one-per-layer, recovering each modality-specific pattern from a common cue that simultaneously blends noisy evidence from all sensory channels. Phase diagrams are planar projections of the hyperspace (α,β,ρ,t)-where α is the storage load, β the fast-noise inverse temperature, ρ the dataset entropy, and t the sleeping time. In the (ρ,t)-plane, the diagrams reveal a data-computation trade-off: off-line consolidation substitutes for additional training data, extending to heteroassociative architectures a phenomenon previously established for autoassociative networks. Enriching the standard Hopfield model with heteroassociativity and dreaming gives rise to EBMs capable of complex tasks beyond classical pattern recognition, contributing to a modern theory of neural information processing.}
+  title = {Supervised and Unsupervised Learning Protocols in Hetero-associative Neural Networks},
+  author = {Andrea Alessandrelli and Adriano Barra and Andrea Ladiana* and Andrea Lepre and Federico Ricci-Tersenghi},
+  journal = {Physica A: Statistical Mechanics and its Applications},
+  volume = {676},
+  pages = {130871},
+  year = {2025},
+  issn = {0378-4371},
+  doi = {https://doi.org/10.1016/j.physa.2025.130871},
+  url = {https://www.sciencedirect.com/science/article/pii/S0378437125005230},
+  note = {[Published]}
 }
 `;
 
@@ -272,30 +306,37 @@ function loadBibTeX() {
 
 function parseBibTeX(input) {
     const entries = [];
-    // Simple regex-based parser for standard BibTeX
-    // Matches @type{key, field={value}, ...}
-    const entryRegex = /@(\w+)\s*{\s*([^,]+),([^@]+)}/g;
-    let match;
+    const entryBlocks = input.split(/(?=@\w+\s*\{)/);
 
-    while ((match = entryRegex.exec(input)) !== null) {
-        const type = match[1];
-        const key = match[2];
-        const body = match[3];
+    for (const block of entryBlocks) {
+        const trimmed = block.trim();
+        if (!trimmed.startsWith('@')) continue;
 
+        const headerMatch = trimmed.match(/^@(\w+)\s*\{\s*([^,]+),/);
+        if (!headerMatch) continue;
+
+        const type = headerMatch[1].toLowerCase();
+        const key = headerMatch[2].trim();
         const entry = { type, key };
 
-        // Parse fields
-        const fieldRegex = /(\w+)\s*=\s*{([^}]+)}/g;
-        let fieldMatch;
-        while ((fieldMatch = fieldRegex.exec(body)) !== null) {
-            entry[fieldMatch[1].toLowerCase()] = fieldMatch[2].trim();
+        const body = trimmed.slice(headerMatch[0].length);
+        const fieldRegex = /([a-zA-Z_]+)\s*=\s*\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}|([a-zA-Z_]+)\s*=\s*"([^"]*)"/g;
+        let match;
+        while ((match = fieldRegex.exec(body)) !== null) {
+            const fieldName = (match[1] || match[3]).toLowerCase();
+            const fieldValue = (match[2] !== undefined ? match[2] : match[4]).trim();
+            entry[fieldName] = fieldValue;
         }
 
         entries.push(entry);
     }
 
-    // Sort by year descending (if available)
-    return entries.sort((a, b) => (b.year || 0) - (a.year || 0));
+    // Sort: 2026 first, then 2025
+    return entries.sort((a, b) => {
+        const yearA = parseInt(a.year) || 0;
+        const yearB = parseInt(b.year) || 0;
+        return yearB - yearA;
+    });
 }
 
 function renderPublications(entries, container) {
@@ -307,9 +348,9 @@ function renderPublications(entries, container) {
     const olderPublicationsContainer = document.getElementById('older-publications');
     const olderPublicationsList = document.getElementById('older-publications-list');
 
-    // Show first 10 publications in main container
-    const recentPublications = entries.slice(0, 10);
-    const olderPublications = entries.slice(10);
+    // Show up to 20 publications in the main container (so all current entries are directly visible)
+    const recentPublications = entries.slice(0, 20);
+    const olderPublications = entries.slice(20);
 
     container.innerHTML = '';
 
@@ -330,6 +371,8 @@ function renderPublications(entries, container) {
         if (olderPublicationsContainer) {
             olderPublicationsContainer.style.display = 'block';
         }
+    } else if (olderPublicationsContainer) {
+        olderPublicationsContainer.style.display = 'none';
     }
 }
 
@@ -337,44 +380,76 @@ function createPublicationElement(entry) {
     const div = document.createElement('div');
     div.className = 'publication-item';
 
-    const title = entry.title || 'Untitled';
-    const authors = entry.author ? entry.author.replace(/ and /g, ', ') : 'Unknown Author';
-    const venue = entry.journal || entry.booktitle || 'Unknown Venue';
+    const title = entry.title ? entry.title.replace(/--/g, '–') : 'Untitled';
+    const venue = entry.journal || entry.booktitle || '';
     const year = entry.year || '';
     const publicationLink = entry.url || entry.doi || '';
     const type = entry.type || '';
 
+    // Parse authors and handle Corresponding Author (*)
+    let isLadianaCA = false;
+    let authorsHtml = 'Unknown Author';
+
+    if (entry.author) {
+        const authorsList = entry.author.split(/\s+and\s+/i);
+        const formattedAuthors = authorsList.map(auth => {
+            const isCA = auth.includes('*') || auth.includes('^');
+            const cleanName = auth.replace(/[\*\$\^]/g, '').trim();
+            const isLadiana = /Andrea\s+Ladiana|A\.\s*Ladiana/i.test(cleanName);
+
+            if (isLadiana && isCA) {
+                isLadianaCA = true;
+            }
+
+            const starHtml = isCA ? '<span class="ca-star" title="Corresponding Author">*</span>' : '';
+            if (isLadiana) {
+                return `<strong class="author-self">Andrea Ladiana${starHtml}</strong>`;
+            }
+            return `${cleanName}${starHtml}`;
+        });
+        authorsHtml = formattedAuthors.join(', ');
+    }
+
     let html = `
         ${publicationLink
-            ? `<a href="${publicationLink}" target="_blank" class="pub-title">${title}</a>`
+            ? `<a href="${publicationLink}" target="_blank" rel="noopener" class="pub-title">${title}</a>`
             : `<span class="pub-title">${title}</span>`}
-        <p class="pub-authors">${authors}</p>
-        <p class="pub-journal">${venue}${year ? ', ' + year : ''}</p>
+        <p class="pub-authors">${authorsHtml}</p>
+        ${venue ? `<p class="pub-journal">${venue}${year ? ', ' + year : ''}</p>` : ''}
     `;
 
-    // Add badges for type and year
-    if (type || year) {
-        html += '<div class="pub-meta-badges">';
-        if (type) {
-            const typeLabel = type === 'article' ? 'Journal' :
-                type === 'inproceedings' ? 'Conference' :
-                    type.charAt(0).toUpperCase() + type.slice(1);
-            html += `<span class="pub-badge">${typeLabel}</span>`;
-        }
-        if (year) {
-            html += `<span class="pub-badge">${year}</span>`;
-        }
-        html += '</div>';
+    // Metadata badges
+    html += '<div class="pub-meta-badges">';
+    if (type) {
+        const typeLabel = type === 'article' ? 'Journal' :
+            type === 'inproceedings' ? 'Conference' :
+                type.charAt(0).toUpperCase() + type.slice(1);
+        html += `<span class="pub-badge">${typeLabel}</span>`;
     }
-
-    if (entry.note || entry.comment) {
-        html += `<p class="pub-desc">${entry.note || entry.comment}</p>`;
+    if (year) {
+        html += `<span class="pub-badge">${year}</span>`;
     }
+    if (isLadianaCA) {
+        html += `<span class="pub-badge ca-badge" title="Andrea Ladiana is Corresponding Author"><i class="fas fa-envelope"></i> Corresponding Author</span>`;
+    }
+    if (entry.note) {
+        const cleanNote = entry.note.replace(/^\[|\]$/g, '').trim();
+        html += `<span class="pub-badge pub-badge-status">${cleanNote}</span>`;
+    }
+    html += '</div>';
 
-    // Add links if available
+    // Links
     let links = [];
-    if (entry.url) links.push(`<a href="${entry.url}" target="_blank">[URL]</a>`);
-    if (entry.doi && !entry.url) links.push(`<a href="${entry.doi}" target="_blank">[DOI]</a>`); // Avoid duplicate if url is same
+    if (entry.url) {
+        let label = 'Link';
+        if (entry.url.includes('arxiv.org')) label = 'arXiv';
+        else if (entry.url.includes('openreview.net')) label = 'OpenReview';
+        else if (entry.url.includes('sciencedirect.com') || entry.url.includes('doi.org')) label = 'ScienceDirect';
+        links.push(`<a href="${entry.url}" target="_blank" rel="noopener">[${label}]</a>`);
+    }
+    if (entry.doi && !entry.url) {
+        links.push(`<a href="${entry.doi}" target="_blank" rel="noopener">[DOI]</a>`);
+    }
 
     if (links.length > 0) {
         html += `<div class="pub-links">${links.join(' ')}</div>`;
