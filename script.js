@@ -40,6 +40,17 @@ const SPEAKER_CONFERENCES_DATA = [
     }
 ];
 
+/*
+Temporarily hidden (finding new venue after PNAS rejection):
+@article{ladiana2026origami,
+  title = {Geometric spin glasses: origami flat-foldability as a deterministic frustrated spin model},
+  author = {Andrea Ladiana*},
+  journal = {submitted to Proceedings of the National Academy of Sciences (PNAS)},
+  year = {2026},
+  note = {[Submitted]}
+}
+*/
+
 const BIBTEX_DATA = `
 @article{rollo2026feddqkl,
   title = {FedDQKL: A Federated Learning aggregation method with Data-Quality-driven client weighting and Kullback-Leibler-based calibration},
@@ -49,29 +60,27 @@ const BIBTEX_DATA = `
   note = {[Submitted]}
 }
 
-@article{ladiana2026origami,
-  title = {Geometric spin glasses: origami flat-foldability as a deterministic frustrated spin model},
-  author = {Andrea Ladiana*},
-  journal = {submitted to Proceedings of the National Academy of Sciences (PNAS)},
-  year = {2026},
-  note = {[Submitted]}
-}
-
 @article{ladiana2026berker,
   title = {The Exact Laplacian Spectrum of the Berker--Ostlund Diamond Lattice},
   author = {Andrea Ladiana*},
-  journal = {submitted to Journal of Physics A: Mathematical and Theoretical},
+  journal = {Journal of Physics A: Mathematical and Theoretical},
   year = {2026},
-  note = {[Submitted]}
+  doi = {https://doi.org/10.1088/1751-8121/aea3c9},
+  url = {https://iopscience.iop.org/article/10.1088/1751-8121/aea3c9},
+  note = {[Published]}
 }
 
 @article{albanese2026semisupervised,
   title = {Semi-supervised Hopfield model: Theoretical and Numerical results},
   author = {Luca Albanese and Andrea Ladiana and Andrea Lepre*},
-  journal = {submitted to Physica A: Statistical Mechanics and its Applications},
+  journal = {Physica A: Statistical Mechanics and its Applications},
+  pages = {132009},
   year = {2026},
-  url = {https://arxiv.org/abs/2607.28173},
-  note = {[Submitted]}
+  issn = {0378-4371},
+  doi = {https://doi.org/10.1016/j.physa.2026.132009},
+  url = {https://www.sciencedirect.com/science/article/pii/S0378437126007454},
+  eprint = {https://arxiv.org/abs/2607.28173},
+  note = {[Published]}
 }
 
 @article{alessandrelli2026federated,
@@ -444,8 +453,14 @@ function createPublicationElement(entry) {
         let label = 'Link';
         if (entry.url.includes('arxiv.org')) label = 'arXiv';
         else if (entry.url.includes('openreview.net')) label = 'OpenReview';
-        else if (entry.url.includes('sciencedirect.com') || entry.url.includes('doi.org')) label = 'ScienceDirect';
+        else if (entry.url.includes('sciencedirect.com')) label = 'ScienceDirect';
+        else if (entry.url.includes('iopscience.iop.org')) label = 'IOPscience';
+        else if (entry.url.includes('doi.org')) label = 'DOI';
         links.push(`<a href="${entry.url}" target="_blank" rel="noopener">[${label}]</a>`);
+    }
+    if (entry.eprint) {
+        const arxivUrl = entry.eprint.startsWith('http') ? entry.eprint : `https://arxiv.org/abs/${entry.eprint}`;
+        links.push(`<a href="${arxivUrl}" target="_blank" rel="noopener">[arXiv]</a>`);
     }
     if (entry.doi && !entry.url) {
         links.push(`<a href="${entry.doi}" target="_blank" rel="noopener">[DOI]</a>`);
