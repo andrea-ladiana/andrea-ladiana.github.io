@@ -72,7 +72,7 @@ const BIBTEX_DATA = `
 
 @article{albanese2026semisupervised,
   title = {Semi-supervised Hopfield model: Theoretical and Numerical results},
-  author = {Luca Albanese and Andrea Ladiana and Andrea Lepre*},
+  author = {Linda Albanese and Andrea Ladiana and Andrea Lepre*},
   journal = {Physica A: Statistical Mechanics and its Applications},
   pages = {132009},
   year = {2026},
