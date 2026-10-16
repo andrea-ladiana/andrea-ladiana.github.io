@@ -31,6 +31,44 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Schema.org JSON-LD for Academic / Scholarly Profile -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Andrea Ladiana",
+      "jobTitle": "PhD Student in Mathematics",
+      "worksFor": {
+        "@type": "CollegeOrUniversity",
+        "name": "Sapienza Università di Roma",
+        "url": "https://www.uniroma1.it"
+      },
+      "memberOf": {
+        "@type": "Organization",
+        "name": "Agliari-Barra Lab 'CoScienza'",
+        "url": "https://www.researchgate.net/lab/Agliari-Barra-Lab-CoScienza-Adriano-Barra"
+      },
+      "url": "https://andrea-ladiana.github.io",
+      "sameAs": [
+        "https://orcid.org/0009-0005-5078-9817",
+        "https://github.com/andrea-ladiana",
+        "https://www.researchgate.net/profile/Andrea-Ladiana",
+        "https://phd.uniroma1.it/web/ANDREA-LADIANA_nP2239069_IT.aspx"
+      ],
+      "knowsAbout": [
+        "Associative Neural Networks",
+        "Hopfield Models",
+        "Statistical Mechanics",
+        "Cellular Automata",
+        "Mathematical Physics",
+        "Graph Laplacian & Fractals",
+        "Federated Learning",
+        "Origami Mathematics"
+      ],
+      "description": "PhD Student in Mathematics at Sapienza University of Rome researching Associative Neural Networks, Hopfield Models, and Statistical Mechanics."
+    }
+    </script>
 </head>
 
 <body>
@@ -132,9 +170,43 @@
         </section>
 
         <section id="publications" class="glass-card">
-            <p class="section-kicker">Publications</p>
-            <h2>Publications</h2>
+            <div class="pub-section-header">
+                <div>
+                    <p class="section-kicker">Publications</p>
+                    <h2>Publications</h2>
+                </div>
+                <div class="pub-header-actions">
+                    <a href="biblio.bib" download="andrea_ladiana_publications.bib" class="pub-download-btn" title="Download complete .bib file">
+                        <i class="fas fa-file-arrow-down"></i> Download .bib
+                    </a>
+                </div>
+            </div>
             <p class="pub-note"><span class="ca-star">*</span> indicates Corresponding Author</p>
+
+            <!-- Publication Filters -->
+            <div class="pub-filters-wrap" aria-label="Filter Publications">
+                <div class="pub-filter-row">
+                    <span class="pub-filter-label"><i class="fas fa-filter"></i> Type:</span>
+                    <div class="pub-filter-group" id="filter-type-group">
+                        <button type="button" class="pub-filter-btn active" data-filter-type="all">All (<span id="pub-count-all">0</span>)</button>
+                        <button type="button" class="pub-filter-btn" data-filter-type="journal">Journals</button>
+                        <button type="button" class="pub-filter-btn" data-filter-type="submitted">Preprints / Submitted</button>
+                        <button type="button" class="pub-filter-btn" data-filter-type="conference">Conferences</button>
+                        <button type="button" class="pub-filter-btn" data-filter-type="ca"><i class="fas fa-envelope"></i> Corresponding</button>
+                    </div>
+                </div>
+                <div class="pub-filter-row">
+                    <span class="pub-filter-label"><i class="fas fa-tags"></i> Topic:</span>
+                    <div class="pub-filter-group" id="filter-topic-group">
+                        <button type="button" class="pub-filter-btn active" data-filter-topic="all">All Topics</button>
+                        <button type="button" class="pub-filter-btn" data-filter-topic="associative">Associative Networks</button>
+                        <button type="button" class="pub-filter-btn" data-filter-topic="statmech">Statistical Mechanics</button>
+                        <button type="button" class="pub-filter-btn" data-filter-topic="federated">Federated Learning</button>
+                        <button type="button" class="pub-filter-btn" data-filter-topic="graphs">Graph Theory</button>
+                    </div>
+                </div>
+            </div>
+
             <div id="bibtex-container">
                 <!-- Publications will be injected here by script.js -->
                 <p class="loading">Loading publications...</p>
@@ -189,6 +261,15 @@
             <h2>Projects</h2>
             <div class="projects-grid">
                 <a href="lenia/" class="project-card">
+                    <div class="project-card-visual" aria-hidden="true">
+                        <div class="lenia-visual-rings">
+                            <span class="ring r1"></span>
+                            <span class="ring r2"></span>
+                            <span class="ring r3"></span>
+                            <span class="soliton-core"></span>
+                        </div>
+                        <div class="visual-tag"><i class="fas fa-circle-play"></i> Live Simulator</div>
+                    </div>
                     <div class="project-card-header">
                         <span class="project-badge"><i class="fas fa-atom"></i> Simulation</span>
                         <span class="project-arrow"><i class="fas fa-arrow-up-right-from-square"></i></span>
@@ -302,6 +383,11 @@
             </div>
         </section>
     </main>
+
+    <!-- Floating Back to Top Button -->
+    <button id="back-to-top" class="back-to-top" aria-label="Back to top" title="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
 
     <script src="script.js"></script>
 </body>

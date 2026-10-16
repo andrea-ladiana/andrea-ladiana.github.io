@@ -57,6 +57,7 @@ const BIBTEX_DATA = `
   author = {Davide Rollo and Mattia Cotardo and Andrea Ladiana and Andrea Lepre and Teodoro Montanaro and Fabrizio Durante and Elisabetta Mangino and Luigi Patrono*},
   journal = {submitted to Array},
   year = {2026},
+  keywords = {Federated Learning, Machine Learning},
   note = {[Submitted]}
 }
 
@@ -67,6 +68,7 @@ const BIBTEX_DATA = `
   year = {2026},
   doi = {https://doi.org/10.1088/1751-8121/aea3c9},
   url = {https://iopscience.iop.org/article/10.1088/1751-8121/aea3c9},
+  keywords = {Graph Theory, Mathematical Physics},
   note = {[Published]}
 }
 
@@ -80,6 +82,7 @@ const BIBTEX_DATA = `
   doi = {https://doi.org/10.1016/j.physa.2026.132009},
   url = {https://www.sciencedirect.com/science/article/pii/S0378437126007454},
   eprint = {https://arxiv.org/abs/2607.28173},
+  keywords = {Associative Networks, Statistical Mechanics},
   note = {[Published]}
 }
 
@@ -89,6 +92,7 @@ const BIBTEX_DATA = `
   journal = {submitted to Neural Networks},
   year = {2026},
   url = {https://arxiv.org/abs/2603.19902},
+  keywords = {Associative Networks, Federated Learning},
   note = {[Submitted]}
 }
 
@@ -103,6 +107,7 @@ const BIBTEX_DATA = `
   doi = {https://doi.org/10.1016/j.neunet.2026.109729},
   url = {https://www.sciencedirect.com/science/article/pii/S0893608026011846},
   eprint = {https://arxiv.org/abs/2605.13721},
+  keywords = {Associative Networks, Statistical Mechanics},
   note = {[Published]}
 }
 
@@ -112,6 +117,7 @@ const BIBTEX_DATA = `
   journal = {submitted to Neural Networks},
   year = {2026},
   url = {https://arxiv.org/abs/2607.29554},
+  keywords = {Associative Networks},
   note = {[Submitted]}
 }
 
@@ -121,6 +127,7 @@ const BIBTEX_DATA = `
   journal = {arXiv preprint},
   year = {2026},
   url = {https://arxiv.org/abs/2605.14059},
+  keywords = {Statistical Mechanics, Associative Networks},
   note = {[arXiv preprint]}
 }
 
@@ -130,6 +137,7 @@ const BIBTEX_DATA = `
   booktitle = {proceedings of the New Frontiers in Associative Memories Workshop (ICLR, 2026)},
   year = {2026},
   url = {https://openreview.net/forum?id=ZTnAvMRFyU},
+  keywords = {Associative Networks, Statistical Mechanics},
   note = {[Workshop Proceedings]}
 }
 
@@ -139,6 +147,7 @@ const BIBTEX_DATA = `
   booktitle = {proceedings of the New Frontiers in Associative Memories Workshop (ICLR, Singapore, 2025)},
   year = {2025},
   url = {https://openreview.net/pdf?id=o1AGK0hzJp},
+  keywords = {Associative Networks, Statistical Mechanics},
   note = {[In press]}
 }
 
@@ -152,6 +161,7 @@ const BIBTEX_DATA = `
   issn = {0378-4371},
   doi = {https://doi.org/10.1016/j.physa.2025.130871},
   url = {https://www.sciencedirect.com/science/article/pii/S0378437125005230},
+  keywords = {Associative Networks, Statistical Mechanics},
   note = {[Published]}
 }
 `;
@@ -304,23 +314,50 @@ function isConferenceInPast(dateStr, now) {
     return endDate < now;
 }
 
-function loadBibTeX() {
+// Global state for publications
+let allPublicationEntries = [];
+let currentTypeFilter = 'all';
+let currentTopicFilter = 'all';
+
+async function loadBibTeX() {
     const container = document.getElementById('bibtex-container');
     if (!container) return;
 
+    let text = BIBTEX_DATA;
+    // Dynamic fetch from biblio.bib when served over http(s)
     try {
-        const text = BIBTEX_DATA;
-        const entries = parseBibTeX(text);
-        renderPublications(entries, container);
+        if (typeof window !== 'undefined' && window.location && window.location.protocol !== 'file:') {
+            const res = await fetch('biblio.bib', { cache: 'no-store' });
+            if (res.ok) {
+                const fetchedText = await res.text();
+                if (fetchedText && fetchedText.trim().length > 0) {
+                    text = fetchedText;
+                }
+            }
+        }
+    } catch (e) {
+        console.warn('Could not load biblio.bib dynamically; using embedded data.', e);
+    }
+
+    try {
+        allPublicationEntries = parseBibTeX(text);
+        initPublicationFilters();
+        renderFilteredPublications();
     } catch (error) {
-        console.error(error);
+        console.error('Error loading publications:', error);
         container.innerHTML = '<p class="error">Error loading publications.</p>';
     }
 }
 
 function parseBibTeX(input) {
     const entries = [];
-    const entryBlocks = input.split(/(?=@\w+\s*\{)/);
+    // Strip comment lines (% ...)
+    const cleanedInput = input
+        .split('\n')
+        .filter(line => !line.trim().startsWith('%'))
+        .join('\n');
+
+    const entryBlocks = cleanedInput.split(/(?=@\w+\s*\{)/);
 
     for (const block of entryBlocks) {
         const trimmed = block.trim();
@@ -331,7 +368,11 @@ function parseBibTeX(input) {
 
         const type = headerMatch[1].toLowerCase();
         const key = headerMatch[2].trim();
-        const entry = { type, key };
+
+        // Safety exclusion: ensure unpublished/hidden origami manuscript never renders
+        if (key === 'ladiana2026origami' || key.toLowerCase().includes('origami')) continue;
+
+        const entry = { type, key, rawBibtex: trimmed };
 
         const body = trimmed.slice(headerMatch[0].length);
         const fieldRegex = /([a-zA-Z_]+)\s*=\s*\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}|([a-zA-Z_]+)\s*=\s*"([^"]*)"/g;
@@ -342,10 +383,26 @@ function parseBibTeX(input) {
             entry[fieldName] = fieldValue;
         }
 
+        // Determine if Andrea Ladiana is Corresponding Author
+        let isLadianaCA = false;
+        if (entry.author) {
+            const authorsList = entry.author.split(/\s+and\s+/i);
+            for (const auth of authorsList) {
+                const isCA = auth.includes('*') || auth.includes('^');
+                const cleanName = auth.replace(/[\*\$\^]/g, '').trim();
+                const isLadiana = /Andrea\s+Ladiana|A\.\s*Ladiana/i.test(cleanName);
+                if (isLadiana && isCA) {
+                    isLadianaCA = true;
+                    break;
+                }
+            }
+        }
+        entry.isLadianaCA = isLadianaCA;
+
         entries.push(entry);
     }
 
-    // Sort: 2026 first, then 2025
+    // Sort by publication year descending
     return entries.sort((a, b) => {
         const yearA = parseInt(a.year) || 0;
         const yearB = parseInt(b.year) || 0;
@@ -353,41 +410,92 @@ function parseBibTeX(input) {
     });
 }
 
-function renderPublications(entries, container) {
-    if (entries.length === 0) {
-        container.innerHTML = '<p>No publications found.</p>';
+function initPublicationFilters() {
+    const typeGroup = document.getElementById('filter-type-group');
+    const topicGroup = document.getElementById('filter-topic-group');
+
+    if (typeGroup) {
+        typeGroup.querySelectorAll('.pub-filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                typeGroup.querySelectorAll('.pub-filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentTypeFilter = btn.dataset.filterType || 'all';
+                renderFilteredPublications();
+            });
+        });
+    }
+
+    if (topicGroup) {
+        topicGroup.querySelectorAll('.pub-filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                topicGroup.querySelectorAll('.pub-filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentTopicFilter = btn.dataset.filterTopic || 'all';
+                renderFilteredPublications();
+            });
+        });
+    }
+}
+
+function matchesFilters(entry) {
+    // Type Filter
+    if (currentTypeFilter !== 'all') {
+        const note = (entry.note || '').toLowerCase();
+        const type = (entry.type || '').toLowerCase();
+
+        if (currentTypeFilter === 'journal') {
+            if (type !== 'article' || !note.includes('published')) return false;
+        } else if (currentTypeFilter === 'submitted') {
+            if (!note.includes('submitted') && !note.includes('arxiv')) return false;
+        } else if (currentTypeFilter === 'conference') {
+            if (type !== 'inproceedings' && !note.includes('workshop') && !note.includes('press')) return false;
+        } else if (currentTypeFilter === 'ca') {
+            if (!entry.isLadianaCA) return false;
+        }
+    }
+
+    // Topic Filter
+    if (currentTopicFilter !== 'all') {
+        const kws = (entry.keywords || '').toLowerCase();
+        const title = (entry.title || '').toLowerCase();
+
+        if (currentTopicFilter === 'associative') {
+            if (!kws.includes('associative') && !title.includes('associative') && !title.includes('hopfield') && !title.includes('dlam')) return false;
+        } else if (currentTopicFilter === 'statmech') {
+            if (!kws.includes('statistical mechanics') && !title.includes('statistical-mechanical') && !title.includes('ising') && !title.includes('spin') && !title.includes('thermodynamic')) return false;
+        } else if (currentTopicFilter === 'federated') {
+            if (!kws.includes('federated') && !title.includes('federated') && !title.includes('feddqkl')) return false;
+        } else if (currentTopicFilter === 'graphs') {
+            if (!kws.includes('graph') && !kws.includes('fractal') && !title.includes('laplacian') && !title.includes('lattice')) return false;
+        }
+    }
+
+    return true;
+}
+
+function renderFilteredPublications() {
+    const container = document.getElementById('bibtex-container');
+    const olderContainer = document.getElementById('older-publications');
+    if (!container) return;
+
+    // Update total count indicator
+    const countAllEl = document.getElementById('pub-count-all');
+    if (countAllEl) countAllEl.textContent = allPublicationEntries.length;
+
+    const filtered = allPublicationEntries.filter(matchesFilters);
+
+    if (olderContainer) olderContainer.style.display = 'none';
+
+    if (filtered.length === 0) {
+        container.innerHTML = '<div class="pub-empty-msg"><i class="fas fa-search"></i> No publications match the selected filters.</div>';
         return;
     }
 
-    const olderPublicationsContainer = document.getElementById('older-publications');
-    const olderPublicationsList = document.getElementById('older-publications-list');
-
-    // Show up to 20 publications in the main container (so all current entries are directly visible)
-    const recentPublications = entries.slice(0, 20);
-    const olderPublications = entries.slice(20);
-
     container.innerHTML = '';
-
-    // Render recent publications
-    recentPublications.forEach(entry => {
+    filtered.forEach(entry => {
         const div = createPublicationElement(entry);
         container.appendChild(div);
     });
-
-    // Render older publications if any
-    if (olderPublications.length > 0 && olderPublicationsList) {
-        olderPublicationsList.innerHTML = '';
-        olderPublications.forEach(entry => {
-            const div = createPublicationElement(entry);
-            olderPublicationsList.appendChild(div);
-        });
-
-        if (olderPublicationsContainer) {
-            olderPublicationsContainer.style.display = 'block';
-        }
-    } else if (olderPublicationsContainer) {
-        olderPublicationsContainer.style.display = 'none';
-    }
 }
 
 function createPublicationElement(entry) {
@@ -400,20 +508,14 @@ function createPublicationElement(entry) {
     const publicationLink = entry.url || entry.doi || '';
     const type = entry.type || '';
 
-    // Parse authors and handle Corresponding Author (*)
-    let isLadianaCA = false;
+    // Authors formatting
     let authorsHtml = 'Unknown Author';
-
     if (entry.author) {
         const authorsList = entry.author.split(/\s+and\s+/i);
         const formattedAuthors = authorsList.map(auth => {
             const isCA = auth.includes('*') || auth.includes('^');
             const cleanName = auth.replace(/[\*\$\^]/g, '').trim();
             const isLadiana = /Andrea\s+Ladiana|A\.\s*Ladiana/i.test(cleanName);
-
-            if (isLadiana && isCA) {
-                isLadianaCA = true;
-            }
 
             const starHtml = isCA ? '<span class="ca-star" title="Corresponding Author">*</span>' : '';
             if (isLadiana) {
@@ -443,16 +545,23 @@ function createPublicationElement(entry) {
     if (year) {
         html += `<span class="pub-badge">${year}</span>`;
     }
-    if (isLadianaCA) {
+    if (entry.isLadianaCA) {
         html += `<span class="pub-badge ca-badge" title="Andrea Ladiana is Corresponding Author"><i class="fas fa-envelope"></i> Corresponding Author</span>`;
     }
     if (entry.note) {
         const cleanNote = entry.note.replace(/^\[|\]$/g, '').trim();
         html += `<span class="pub-badge pub-badge-status">${cleanNote}</span>`;
     }
+    if (entry.keywords) {
+        const kws = entry.keywords.split(',').map(k => k.trim()).filter(Boolean);
+        kws.forEach(kw => {
+            html += `<span class="pub-badge pub-badge-topic">${kw}</span>`;
+        });
+    }
     html += '</div>';
 
-    // Links
+    // Actions: Links & Copy BibTeX
+    html += '<div class="pub-actions">';
     let links = [];
     if (entry.url) {
         let label = 'Link';
@@ -475,9 +584,63 @@ function createPublicationElement(entry) {
         html += `<div class="pub-links">${links.join(' ')}</div>`;
     }
 
+    // Copy BibTeX Button
+    html += `<button type="button" class="pub-btn-bibtex" data-key="${entry.key}" title="Copy BibTeX citation"><i class="fas fa-quote-right"></i> BibTeX</button>`;
+    html += '</div>';
+
     div.innerHTML = html;
     return div;
 }
+
+// Copy BibTeX to clipboard with visual feedback
+function copyBibTeX(key, button) {
+    const entry = allPublicationEntries.find(e => e.key === key);
+    if (!entry) return;
+
+    const textToCopy = entry.rawBibtex || '';
+    const doFeedback = () => {
+        const originalHtml = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        button.classList.add('copied');
+        setTimeout(() => {
+            button.innerHTML = originalHtml;
+            button.classList.remove('copied');
+        }, 2000);
+    };
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(textToCopy).then(doFeedback).catch(() => {
+            fallbackCopyText(textToCopy, doFeedback);
+        });
+    } else {
+        fallbackCopyText(textToCopy, doFeedback);
+    }
+}
+
+function fallbackCopyText(text, callback) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+        document.execCommand('copy');
+        if (callback) callback();
+    } catch (e) {
+        console.error('Copy failed:', e);
+    }
+    document.body.removeChild(textarea);
+}
+
+// Global click delegation for Copy BibTeX
+document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.pub-btn-bibtex');
+    if (btn) {
+        const key = btn.dataset.key;
+        copyBibTeX(key, btn);
+    }
+});
 
 // Dropdown menu interactivity for Projects
 (function initProjectsDropdown() {
@@ -507,3 +670,60 @@ function createPublicationElement(entry) {
         }
     });
 })();
+
+// Scrollspy for top navigation
+(function initScrollspy() {
+    const navLinks = document.querySelectorAll('.top-nav a[href^="#"]');
+    if (!navLinks.length) return;
+
+    const sections = Array.from(navLinks)
+        .map(link => document.querySelector(link.getAttribute('href')))
+        .filter(Boolean);
+
+    function onScroll() {
+        const scrollPos = window.scrollY + 120;
+        let currentSectionId = null;
+
+        for (let i = sections.length - 1; i >= 0; i--) {
+            const section = sections[i];
+            if (section.offsetTop <= scrollPos) {
+                currentSectionId = section.getAttribute('id');
+                break;
+            }
+        }
+
+        navLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (currentSectionId && href === `#${currentSectionId}`) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+})();
+
+// Floating Back to Top Button
+(function initBackToTop() {
+    const btn = document.getElementById('back-to-top');
+    if (!btn) return;
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 350) {
+            btn.classList.add('visible');
+        } else {
+            btn.classList.remove('visible');
+        }
+    }, { passive: true });
+
+    btn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+})();
+
