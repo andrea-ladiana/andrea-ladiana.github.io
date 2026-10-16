@@ -473,3 +473,32 @@ function createPublicationElement(entry) {
     div.innerHTML = html;
     return div;
 }
+
+// Dropdown menu interactivity for Projects
+(function initProjectsDropdown() {
+    const dropdown = document.getElementById('projects-dropdown');
+    const btn = document.getElementById('projects-dropdown-btn');
+
+    if (!dropdown || !btn) return;
+
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = dropdown.classList.toggle('active');
+        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!dropdown.contains(e.target)) {
+            dropdown.classList.remove('active');
+            btn.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && dropdown.classList.contains('active')) {
+            dropdown.classList.remove('active');
+            btn.setAttribute('aria-expanded', 'false');
+            btn.focus();
+        }
+    });
+})();

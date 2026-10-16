@@ -44,10 +44,25 @@
     </div>
 
     <!-- Sticky Navigation -->
-    <nav class="top-nav">
+    <nav class="top-nav" aria-label="Main Navigation">
         <a href="#research">Research</a>
         <a href="#publications">Publications</a>
         <a href="#conferences">Conferences</a>
+        <div class="nav-dropdown" id="projects-dropdown">
+            <button type="button" class="nav-dropdown-btn" id="projects-dropdown-btn" aria-expanded="false" aria-haspopup="true">
+                <span>Projects</span>
+                <i class="fas fa-chevron-down nav-chevron" aria-hidden="true"></i>
+            </button>
+            <div class="nav-dropdown-menu" id="projects-dropdown-menu" role="menu" aria-labelledby="projects-dropdown-btn">
+                <a href="lenia/" class="dropdown-item" role="menuitem">
+                    <div class="dropdown-item-header">
+                        <span class="dropdown-item-title">Lenia in a Bath</span>
+                        <i class="fas fa-arrow-up-right-from-square dropdown-external-icon"></i>
+                    </div>
+                    <span class="dropdown-item-desc">Continuous Cellular Automaton Simulator</span>
+                </a>
+            </div>
+        </div>
         <a href="#other-interests">Other interests</a>
         <a href="#szilard-commandments">Ten Commandments</a>
     </nav>
@@ -167,6 +182,31 @@
                     <!-- Past invited-speaker conferences will be moved here -->
                 </div>
             </details>
+        </section>
+
+        <section id="projects" class="glass-card">
+            <p class="section-kicker">Interactive &amp; Computational</p>
+            <h2>Projects</h2>
+            <div class="projects-grid">
+                <a href="lenia/" class="project-card">
+                    <div class="project-card-header">
+                        <span class="project-badge"><i class="fas fa-atom"></i> Simulation</span>
+                        <span class="project-arrow"><i class="fas fa-arrow-up-right-from-square"></i></span>
+                    </div>
+                    <h3 class="project-title">Lenia in a Bath</h3>
+                    <p class="project-desc">
+                        An interactive cellular automaton continuous in space, time, and state. Features Chan's Lenia with a noise temperature &theta; and a probe field <em>h</em>, running in the browser with statistical mechanics instruments (Lyapunov exponents, lifetimes, and phase maps).
+                    </p>
+                    <div class="project-tags">
+                        <span class="keyword-tag">Cellular Automata</span>
+                        <span class="keyword-tag">Statistical Mechanics</span>
+                        <span class="keyword-tag">Interactive Simulation</span>
+                    </div>
+                    <div class="project-cta">
+                        Launch Simulator <i class="fas fa-arrow-right"></i>
+                    </div>
+                </a>
+            </div>
         </section>
 
         <section id="other-interests" class="glass-card extras-section">

@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lenia in a heat bath</title>
+<meta name="description" content="An interactive Lenia with a noise temperature: the model, the parameters and the creatures of our study of Lenia with the tools of statistical mechanics.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="assets/img/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/lenia.css?v=2026-10-16m">
+<script>
+  // theme before first paint (the choice is a per-viewer convenience, it may be absent)
+  try { const t = localStorage.getItem("lenia-theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="#top" aria-label="Lenia in a heat bath, top of the page">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11" fill="none" stroke="currentColor" stroke-width="2.2" opacity=".35"/><ellipse cx="18" cy="16" rx="5.5" ry="7.5" fill="currentColor"/></svg>
+      <span>Lenia <em>in a heat bath</em></span>
+    </a>
+    <nav class="nav" aria-label="Sections">
+      <a href="../" title="Back to Andrea Ladiana's personal website" style="font-weight: 500; opacity: 0.9;">← Main Site</a>
+      <a href="#simulator">Simulator</a>
+      <a href="#try">Things to try</a>
+      <a href="#labs">Labs</a>
+      <a href="#grid">The grid</a>
+      <a href="#map">Phase map</a>
+      <a href="#species">Species</a>
+      <a href="#model">The model</a>
+    </nav>
+    <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch between light and dark theme" title="Theme">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z" fill="currentColor"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+<section class="hero wrap">
+  <p class="eyebrow">Cellular automata · statistical mechanics</p>
+  <h1>Lenia in a heat bath</h1>
+  <p class="lede">Lenia is a cellular automaton that is continuous in space, time and state. From one smooth local rule, localised <span class="c-creature">creatures</span> arise that travel, split and react. We add a <span class="c-bath">noise temperature ϑ</span> and a probe field <i>h</i>, and ask the questions a statistical physicist asks of any object: how it responds, whether it is chaotic, how it dies and how long that takes. This page runs the model we study, with the parameters of our protocol, in your browser.</p>
+  <ul class="facts">
+    <li><b>R = 13, T = 10</b> one-ring exponential kernel</li>
+    <li><b>Orbium window</b> 0.1245 &lt; μ &lt; 0.1619</li>
+    <li><b>float64</b> checked against our Python code to 10⁻¹⁴</li>
+    <li><b>135 species</b> from Chan's catalogue</li>
+  </ul>
+</section>
+
+<!-- ======================================================================= simulator -->
+<section id="simulator" class="sim wrap" aria-label="Simulator">
+
+  <div class="sim-stage">
+    <div class="stage-head">
+      <div class="seg" role="tablist" aria-label="Field shown" id="view-tabs">
+        <button role="tab" data-view="A" aria-selected="true" title="The state A(x) (key 1)">A</button>
+        <button role="tab" data-view="U" title="The neighbourhood density U = K∗A (key 2)">K∗A</button>
+        <button role="tab" data-view="G" title="The growth G(K∗A): violet grows, grey decays (key 3)">G</button>
+        <button role="tab" data-view="dA" title="The change of A in the last step, per time unit (key 4)">ΔA</button>
+        <button role="tab" data-view="V" title="The leading perturbation (tangent vector) of the λ meter (key 5)">δA</button>
+        <button role="tab" data-view="K" title="The kernel K, centred (key 6)">K</button>
+      </div>
+      <div class="stage-toggles">
+        <label class="tog" title="Keep the creature at the centre of the view (display only; key F)"><input type="checkbox" id="opt-follow" checked><span>Follow</span></label>
+        <label class="tog" title="Centroid, heading and the kernel ring"><input type="checkbox" id="opt-overlay" checked><span>Marks</span></label>
+        <label class="tog" title="Draw the lattice cells (when they are large enough to see)"><input type="checkbox" id="opt-grid"><span>Grid</span></label>
+      </div>
+    </div>
+
+    <div class="canvas-box" id="canvas-box">
+      <canvas id="world" aria-label="The Lenia world"></canvas>
+      <canvas id="overlay" aria-hidden="true"></canvas>
+      <div class="hud" aria-live="off">
+        <span id="hud-t">t = 0</span>
+        <span id="hud-rate"></span>
+      </div>
+      <div class="hud hud-top" id="hud-view"></div>
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </div>
+
+    <div class="transport">
+      <button class="btn btn-primary" id="btn-run" type="button" title="Run or pause (Space)"><span class="ico-play" aria-hidden="true"></span><span class="lbl">Pause</span></button>
+      <button class="btn" id="btn-step" type="button" title="One step (→)">Step</button>
+      <button class="btn" id="btn-reset" type="button" title="Reload the current creature (R)">Reset</button>
+      <label class="speed">Speed
+        <select id="speed" title="Simulated time units per second of real time">
+          <option value="1">1 ×</option>
+          <option value="3">3 ×</option>
+          <option value="10" selected>10 ×</option>
+          <option value="30">30 ×</option>
+          <option value="0">max</option>
+        </select>
+      </label>
+      <span class="spacer"></span>
+      <button class="btn btn-ghost" id="btn-share" type="button" title="Copy a link that reopens this creature, rule and bath">Share link</button>
+      <button class="btn btn-ghost" id="btn-png" type="button" title="Save the current view as a PNG image">Save image</button>
+    </div>
+  </div>
+
+  <aside class="sim-panel" aria-label="Controls">
+    <div class="group">
+      <div class="group-head"><h2>Creature</h2></div>
+      <div class="creature-card">
+        <div class="creature-name" id="cr-name">Orbium</div>
+        <div class="creature-meta" id="cr-meta"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" id="btn-library" type="button">Library…</button>
+        <button class="btn" id="btn-orbium" type="button" title="The protocol's Orbium: R = 13, μ = 0.15, σ = 0.015, relaxed 1000 steps on 128²">Orbium</button>
+        <button class="btn" id="btn-patch" type="button" title="A random Voronoi noise patch, as in the phase map of Hudcová et al.">Patch</button>
+        <button class="btn" id="btn-clear" type="button" title="Empty the world (keep the rule)">Clear</button>
+      </div>
+      <div class="row-inline">
+        <label for="patch-side">patch side</label>
+        <select id="patch-side"><option>10</option><option>20</option><option>30</option><option>40</option><option selected>50</option><option>60</option><option>70</option><option>80</option><option>90</option></select>
+        <label for="brush">brush</label>
+        <select id="brush"><option value="off">off</option><option value="paint">paint</option><option value="erase">erase</option></select>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-head"><h2>Rule</h2><span class="hint">G(K∗A; μ, σ)</span></div>
+      <div class="ctl">
+        <div class="ctl-top"><label for="mu">μ <span class="sub">growth centre</span></label><input class="num" id="mu-num" type="text" inputmode="decimal" spellcheck="false" aria-label="mu, exact value"></div>
+        <div class="slider-wrap"><div class="band" id="mu-band"></div><input type="range" id="mu" min="0.05" max="0.55" step="0.0005"></div>
+        <div class="ctl-note" id="mu-note"></div>
+      </div>
+      <div class="ctl">
+        <div class="ctl-top"><label for="sigma">σ <span class="sub">growth width</span></label><input class="num" id="sigma-num" type="text" inputmode="decimal" spellcheck="false" aria-label="sigma, exact value"></div>
+        <div class="slider-wrap"><input type="range" id="sigma" min="0.002" max="0.12" step="0.0005"></div>
+      </div>
+      <div class="rule-mini">
+        <canvas class="chart" id="c-growth" aria-label="Growth function with the distribution of K∗A on living cells"></canvas>
+        <canvas class="chart" id="c-kernel" aria-label="Radial profile of the kernel"></canvas>
+        <p class="ctl-note" id="i-rule-hint"></p>
+      </div>
+      <div class="grid2">
+        <div class="ctl">
+          <div class="ctl-top"><label for="R" title="kernel radius, in cells">R <span class="sub">radius, cells</span></label></div>
+          <input class="num wide" id="R" type="text" inputmode="decimal" spellcheck="false">
+          <label class="check" title="Rescale the world with R (as Chan's zoom): the creature keeps its shape"><input type="checkbox" id="R-rescale" checked><span>rescale the world</span></label>
+        </div>
+        <div class="ctl">
+          <div class="ctl-top"><label for="T" title="Lenia's time resolution: steps per unit of time (not the temperature)">T <span class="sub">steps / time</span></label></div>
+          <select id="T" class="wide"><option>1</option><option>2</option><option>5</option><option selected>10</option><option>15</option><option>20</option><option>40</option><option>80</option></select>
+        </div>
+        <div class="ctl">
+          <div class="ctl-top"><label for="peaks" title="heights of the kernel rings">β <span class="sub">rings</span></label></div>
+          <input class="num wide" id="peaks" type="text" value="1" spellcheck="false" title="Heights of the kernel rings, e.g. 1 or 1,1/3 or 1/2,1,2/3">
+        </div>
+        <div class="ctl">
+          <div class="ctl-top"><label for="N" title="side of the torus, in cells">N <span class="sub">torus side</span></label></div>
+          <select id="N" class="wide"></select>
+        </div>
+        <div class="ctl">
+          <div class="ctl-top"><label for="core">kernel core</label></div>
+          <select id="core" class="wide"><option value="exponential">exponential</option><option value="polynomial">polynomial</option><option value="rectangular">rectangular</option><option value="gaussian">gaussian</option></select>
+        </div>
+        <div class="ctl">
+          <div class="ctl-top"><label for="growth">growth</label></div>
+          <select id="growth" class="wide"><option value="gaussian">gaussian</option><option value="polynomial">polynomial</option><option value="step">step</option></select>
+        </div>
+      </div>
+    </div>
+
+    <div class="group group-bath">
+      <div class="group-head"><h2>Bath</h2><span class="hint">√(2ϑ dt) ξ  and  h</span></div>
+      <div class="ctl">
+        <div class="ctl-top"><label for="temp">ϑ <span class="sub">noise temperature</span></label><output id="temp-out" class="num-out"></output></div>
+        <div class="slider-wrap"><div class="marks" id="temp-marks"></div><input type="range" id="temp" min="-6.2" max="-1" step="0.01" class="bath"></div>
+        <div class="ctl-note" id="temp-note"></div>
+      </div>
+      <div class="ctl">
+        <div class="ctl-top"><label for="h">h <span class="sub">uniform probe field</span></label><output id="h-out" class="num-out"></output></div>
+        <div class="slider-wrap"><input type="range" id="h" min="-0.2" max="0.2" step="0.005" class="bath"></div>
+      </div>
+      <div class="row-inline">
+        <label for="seed">seed</label>
+        <input class="num" id="seed" type="text" inputmode="numeric" spellcheck="false">
+        <button class="btn btn-small" id="btn-seed" type="button" title="New random seed">new</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- instruments -->
+  <div class="sim-inst" aria-label="Instruments">
+    <article class="inst">
+      <header><h3>Creature</h3><span class="tag" id="i-shape">—</span></header>
+      <dl class="kv">
+        <div><dt>mass <i>m</i></dt><dd id="i-mass">—</dd></div>
+        <div><dt>components</dt><dd id="i-nc">—</dd></div>
+        <div><dt>speed</dt><dd id="i-speed">—</dd></div>
+        <div><dt>heading</dt><dd id="i-heading">—</dd></div>
+      </dl>
+      <canvas class="chart" id="c-mass" aria-label="Mass against time"></canvas>
+      <canvas class="chart" id="c-speed" aria-label="Speed against time"></canvas>
+    </article>
+
+    <article class="inst">
+      <header><h3>Lifetime</h3><span class="tag" id="i-life-tag">—</span></header>
+      <p class="inst-note">E4's death criterion, every 10 steps on the largest component above 0.1: a split, or a mass or gyration radius leaving ±25% of the reference.</p>
+      <div class="meters" id="life-meters">
+        <div class="meter"><span class="c-creature">m / m<sub>ref</sub></span><div class="bar"><i id="m-mass"></i><b></b></div><output id="o-mass">—</output></div>
+        <div class="meter"><span class="c-muted">R<sub>g</sub> / R<sub>g,ref</sub></span><div class="bar"><i id="m-rg"></i><b></b></div><output id="o-rg">—</output></div>
+      </div>
+      <canvas class="chart" id="c-life" aria-label="Mass and gyration radius relative to the reference, against time"></canvas>
+      <p class="inst-status" id="i-life">—</p>
+      <p class="inst-note" id="i-kramers"></p>
+      <div class="btn-row"><button class="btn btn-small" id="btn-rearm" type="button" title="Take the present state as the new reference">Set reference now</button></div>
+    </article>
+
+    <article class="inst">
+      <header><h3>Two frames</h3><span class="tag" id="i-frame-tag">—</span></header>
+      <p class="inst-note">How much of the anchor state survives, seen from the <span class="c-lab">laboratory</span> and from the <span class="c-creature">creature's moving frame</span> (best translation, below the cell). Dashed: the same against a random-phase copy of the anchor (<a href="#model">more</a>).</p>
+      <dl class="kv kv3">
+        <div><dt>q<sub>cm</sub> <span class="sub">moving frame</span></dt><dd id="i-qcm">—</dd></div>
+        <div><dt>q<sub>lab</sub> <span class="sub">laboratory</span></dt><dd id="i-qlab">—</dd></div>
+        <div><dt>moved</dt><dd id="i-moved">—</dd></div>
+      </dl>
+      <canvas class="chart tall" id="c-frame" aria-label="Laboratory and co-moving overlaps against the time since the anchor"></canvas>
+      <p class="inst-status" id="i-frame-read">—</p>
+      <div class="btn-row"><button class="btn btn-small" id="btn-anchor" type="button" title="Take the present state as the new anchor">New anchor</button></div>
+    </article>
+
+
+  </div>
+
+  <div class="sim-lower" aria-label="More instruments">
+    <article class="inst">
+      <header><h3>Chaos</h3><label class="tog small"><input type="checkbox" id="opt-lyap"><span>measure λ</span></label></header>
+      <p class="inst-note">Largest Lyapunov exponent from the exact tangent map of one step (E3), after a warm-up of 60 time units. It settles slowly: E3 averaged 300.</p>
+      <dl class="kv">
+        <div><dt>λ <span class="sub">per time unit</span></dt><dd id="i-lam">off</dd></div>
+        <div><dt>measured</dt><dd id="i-lam-ref">—</dd></div>
+      </dl>
+      <canvas class="chart tall" id="c-lam" aria-label="Running estimate of the Lyapunov exponent"></canvas>
+    </article>
+
+    <article class="inst">
+      <header><h3>Lattice</h3><span class="tag" id="i-lock">—</span></header>
+      <p class="inst-note">Advance per step δ, and the sub-cell position of the centroid coloured by mass: a regular creature draws a curve, a chaotic one fills the square (E11, E12).</p>
+      <div class="lattice-row">
+        <canvas class="phase" id="c-phase" aria-label="Sub-cell position of the centroid"></canvas>
+        <dl class="kv kv-col">
+          <div><dt>δ<sub>y</sub> <span class="sub">cells per step</span></dt><dd id="i-dy">—</dd></div>
+          <div><dt>δ<sub>x</sub></dt><dd id="i-dx">—</dd></div>
+          <div><dt>window</dt><dd id="i-dwin">—</dd></div>
+        </dl>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ======================================================================= things to try -->
+<section id="try" class="section wrap">
+  <div class="section-head">
+    <h2>Things to try</h2>
+    <p>Each card loads a state and a setting from our experiments, with the numbers we measured. The simulator above runs them; nothing here is a recording.</p>
+  </div>
+  <div class="cards" id="scenarios"></div>
+</section>
+
+<!-- ======================================================================= labs -->
+<section id="labs" class="section wrap">
+  <div class="section-head">
+    <h2>Labs</h2>
+    <p>Four experiments of the project, run here with the protocol of the campaign and shown next to what the cluster measured. They run in a background thread, so the simulator keeps working; the random numbers are not numpy's, so a run agrees with the campaign within its statistical error, not draw by draw.</p>
+  </div>
+  <div class="seg lab-tabs" role="tablist" aria-label="Labs" id="lab-tabs">
+    <button role="tab" data-tab="kramers" aria-selected="true">Kramers</button>
+    <button role="tab" data-tab="fdt">Fluctuation–dissipation</button>
+    <button role="tab" data-tab="rheology">Rheology</button>
+    <button role="tab" data-tab="edges">Window edges</button>
+  </div>
+
+  <div class="lab-panel" id="kramers" role="tabpanel">
+    <p class="lab-intro">A creature in a bath is metastable: sooner or later a fluctuation makes it split, explode or fade. If the escape is a Kramers process, lifetimes are exponentially distributed and their mean grows as ⟨τ⟩ ≈ τ₀ e<sup>ΔΦ/ϑ</sup>. Run independent replicas of the current creature at the current μ and ϑ, with the death criterion of E4, and compare with the cluster (128 replicas per point).</p>
+  <div class="kramers">
+    <div class="k-controls card">
+      <div class="ctl">
+        <label for="k-point">E4 point <span class="sub">sets μ and ϑ in the simulator</span></label>
+        <select id="k-point" class="wide"></select>
+      </div>
+      <div class="grid2">
+        <div class="ctl"><label for="k-n">replicas</label><select id="k-n" class="wide"><option>8</option><option selected>16</option><option>32</option><option>64</option><option>128</option></select></div>
+        <div class="ctl"><label for="k-tmax">up to (steps)</label><select id="k-tmax" class="wide"><option>500</option><option>1000</option><option selected>2000</option><option>5000</option><option>10000</option><option>20000</option></select></div>
+      </div>
+      <div class="ctl">
+        <span class="lbl-like">start from</span>
+        <label class="radio"><input type="radio" name="k-start" value="e4" checked><span>the E4 reference at this μ, when there is one</span></label>
+        <label class="radio"><input type="radio" name="k-start" value="relax"><span>the current creature, relaxed 1000 steps without noise</span></label>
+        <label class="radio"><input type="radio" name="k-start" value="asis"><span>the current state, as it is</span></label>
+      </div>
+      <p class="k-rule" id="k-rule"></p>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="k-start" type="button">Start</button>
+        <button class="btn" id="k-stop" type="button" disabled>Stop</button>
+      </div>
+      <div class="progress" aria-hidden="true"><i id="k-progress"></i></div>
+      <p class="inst-note" id="k-status">Runs in a background thread; the simulator keeps working.</p>
+    </div>
+    <div class="k-replicas card">
+      <h3>Replicas <span class="hint" id="k-alive"></span></h3>
+      <canvas id="k-thumbs" aria-label="The replicas: dimmed when dead"></canvas>
+    </div>
+    <div class="k-plots card">
+      <h3>Survival</h3>
+      <canvas class="chart tall" id="k-surv" aria-label="Kaplan–Meier survival curve"></canvas>
+      <p class="k-result" id="k-result"></p>
+      <h3>Arrhenius <span class="hint">E4, five μ near the upper edge</span></h3>
+      <canvas class="chart tall" id="k-arr" aria-label="ln τ against 1/ϑ"></canvas>
+    </div>
+  </div>
+  </div>
+
+  <div class="lab-panel" id="fdt" role="tabpanel" hidden>
+    <p class="lab-intro">The fluctuation–dissipation theorem ties the response of a system at equilibrium to its spontaneous fluctuations: ϑχ(t, t<sub>w</sub>) = C(t, t) − C(t, t<sub>w</sub>), a straight line of slope one in the plane of the two. Lenia is not a gradient dynamics, so the line is a question. This is experiment E2: at a fixed final time t*, for a ladder of earlier times t<sub>w</sub>, three replicas leave the state at t<sub>w</sub> with the same noise and static fields 0 and ∓(h/2)ε, where ε = ±1 is a random cut; their difference is the response χ, the unperturbed one gives the correlation C. The void at ϑ = 0.05 obeys the theorem in the continuum and calibrates the instrument; the Orbium shows what a travelling solid does.</p>
+    <div class="labgrid">
+      <div class="k-controls card">
+        <div class="ctl"><label for="fd-proto">protocol</label><select id="fd-proto" class="wide"></select></div>
+        <div class="grid2">
+          <div class="ctl"><label for="fd-mu">μ <span class="sub">Orbium, patch</span></label><select id="fd-mu" class="wide"></select></div>
+          <div class="ctl"><label for="fd-tstar">t* <span class="sub">steps</span></label><select id="fd-tstar" class="wide"><option selected>300</option><option>1000</option></select></div>
+          <div class="ctl"><label for="fd-h">h <span class="sub">probe</span></label><select id="fd-h" class="wide"><option selected>0.05</option><option>0.025</option></select></div>
+          <div class="ctl"><label for="fd-B">samples</label><select id="fd-B" class="wide"><option>4</option><option>8</option><option>16</option><option>32</option><option>64</option></select></div>
+        </div>
+        <p class="k-rule" id="fd-rule"></p>
+        <div class="btn-row"><button class="btn btn-primary" id="fd-start" type="button">Start</button><button class="btn" id="fd-stop" type="button" disabled>Stop</button></div>
+        <div class="progress" aria-hidden="true"><i id="fd-progress"></i></div>
+        <p class="inst-note" id="fd-status">Filled points: this page; hollow points and dashed lines: E2 on the cluster, same protocol.</p>
+      </div>
+      <div class="card"><h3>The FD plot <span class="hint">dashed: the theorem</span></h3><canvas class="chart tall2" id="fd-plot" aria-label="Integrated response against one minus the correlation"></canvas></div>
+      <div class="card"><h3>Correlation <span class="hint"><span class="c-lab">laboratory</span>, <span class="c-creature">co-moving</span></span></h3><canvas class="chart tall2" id="fd-corr" aria-label="Laboratory and co-moving correlations against the time lag"></canvas></div>
+      <div class="card fd-read-card"><h3>Reading <span class="hint">the rules of our FD analysis</span></h3><div id="fd-read"></div></div>
+      <div class="card"><h3>The thermometer on the void <span class="hint">|a₁ − 1| against T</span></h3><canvas class="chart tall" id="fd-a1" aria-label="Deviation of the slope from one against the time resolution"></canvas><p class="inst-note">Hollow: E2 (0.31, 0.089, 0.029 at T = 10, 40, 160). Run the three void protocols to add your points: the violation is the time step's, and falls as T grows.</p></div>
+    </div>
+  </div>
+
+  <div class="lab-panel" id="rheology" role="tabpanel" hidden>
+    <p class="lab-intro">Experiment E5, exploratory: the probe field oscillates, h(t) = (h₀/2) sin(ωt) ε on the ± replicas with shared noise, and the response is split into the part in phase with the field, χ′(ω), and the part a quarter of a period behind, χ″(ω), the one that dissipates. One discarded period, then eight measured ones, at seven frequencies; the three states of the campaign.</p>
+    <div class="labgrid">
+      <div class="k-controls card">
+        <div class="ctl"><label for="rh-state">state</label><select id="rh-state" class="wide"></select></div>
+        <div class="grid2">
+          <div class="ctl"><label for="rh-B">samples</label><select id="rh-B" class="wide"><option>2</option><option selected>4</option><option>8</option><option>16</option></select></div>
+          <div class="ctl"><span class="lbl-like">periods</span><label class="check"><input type="checkbox" id="rh-long" checked><span>include 256 steps</span></label></div>
+        </div>
+        <p class="k-rule" id="rh-rule"></p>
+        <div class="btn-row"><button class="btn btn-primary" id="rh-start" type="button">Start</button><button class="btn" id="rh-stop" type="button" disabled>Stop</button></div>
+        <div class="progress" aria-hidden="true"><i id="rh-progress"></i></div>
+        <p class="inst-note" id="rh-status">Filled points with error bars: this page; hollow points: E5 (16 samples).</p>
+      </div>
+      <div class="card"><h3>χ′(ω) <span class="hint">in phase</span></h3><canvas class="chart tall2" id="rh-chi1" aria-label="In-phase response against frequency"></canvas></div>
+      <div class="card"><h3>χ″(ω) <span class="hint">out of phase, dissipative</span></h3><canvas class="chart tall2" id="rh-chi2" aria-label="Out-of-phase response against frequency"></canvas></div>
+      <div class="card fd-read-card"><h3>Numbers</h3><div id="rh-table"></div><p class="inst-note">In the void, χ″ peaks near ω ≈ 8 per time unit. The Orbium responds about three times less than the void at low frequency, with its dissipative peak near ω ≈ 1; the patch below the window keeps a large dissipative part at all but the highest frequency. No prediction was written for E5: these are observations.</p></div>
+    </div>
+  </div>
+
+  <div class="lab-panel" id="edges" role="tabpanel" hidden>
+    <p class="lab-intro">Experiment E6: where does the Orbium's window end? The predicate Π(μ) asks whether the Orbium, relaxed at μ = 0.15 and brought to μ, is still one localised, moving creature with a steady mass after 2000 deterministic steps. Each edge is found by halving a bracket down to 5·10⁻⁴, then checked at a different sub-cell position: an end that changes answer marks the edge “unconfirmed”. Near the edge closest to 0.15, the branch m(μ) tells the kind of bifurcation: a saddle-node approaches its critical mass as |μ_c − μ|<sup>1/2</sup>.</p>
+    <div class="labgrid">
+      <div class="k-controls card">
+        <div class="ctl"><label for="ed-R">resolution</label><select id="ed-R" class="wide"></select></div>
+        <label class="check"><input type="checkbox" id="ed-branch" checked><span>the branch m(μ) near the closest edge</span></label>
+        <label class="check"><input type="checkbox" id="ed-grid"><span>the monotonicity grid (25 more probes)</span></label>
+        <p class="k-rule" id="ed-rule"></p>
+        <div class="btn-row"><button class="btn btn-primary" id="ed-start" type="button">Start</button><button class="btn" id="ed-stop" type="button" disabled>Stop</button></div>
+        <div class="progress" aria-hidden="true"><i id="ed-progress"></i></div>
+        <p class="inst-note" id="ed-status">At R = 13 the page retraces the campaign's bisection probe by probe and lands on the same edges.</p>
+      </div>
+      <div class="card"><h3>The bisection <span class="hint"><span class="c-creature">●</span> Π true, <span class="c-muted">●</span> false; dashed: E6</span></h3><canvas class="chart tall2" id="ed-bisect" aria-label="Probes of the bisection"></canvas></div>
+      <div class="card"><h3>The branch <span class="hint">filled: here, hollow: E6</span></h3><canvas class="chart tall2" id="ed-branch-chart" aria-label="Mass against the distance from the edge"></canvas></div>
+      <div class="card fd-read-card"><h3>Edges</h3><div id="ed-read"></div><p class="inst-note">The branch mass is the mass of the final state; close to the edge it oscillates by about 1%, so the fit of γ is fragile (the campaign found 0.70 ± 0.48).</p></div>
+      <div class="card"><h3>The barrier between the edges <span class="hint">ΔΦ(μ) from the Kramers fits (E4)</span></h3><canvas class="chart tall" id="ed-barrier" aria-label="Quasi-potential barrier against mu"></canvas><p class="inst-note">The escape barrier does not vanish at the upper edge as a saddle-node would require: it is a hump. Near the lower edge almost every recorded death was a fragment breaking off, so those two points measure the barrier for shedding, not for extinction.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================================= the grid -->
+<section id="grid" class="section wrap">
+  <div class="section-head">
+    <h2>The grid, measured</h2>
+    <p>The same creature at different resolutions R, prepared as in the experiments (the seed rescaled, 1000 relaxation steps, N = 8R). Its largest Lyapunov exponent jumps from one resolution to the next (E10), while its advance per step grows smoothly, except where it locks to the grid: δ<sub>y</sub> = 1 cell per step over a whole interval around R = 23, a devil's staircase, where the creature is regular (E12). Click a point to load the creature at that resolution, with the λ meter on.</p>
+  </div>
+  <div class="grid-maps">
+    <div class="card"><h3>λ(R) <span class="hint"><span class="c-lab">●</span> E10, four copies and their mean; <span class="c-creature">●</span> E12 fine scans</span></h3><canvas class="chart tall2" id="grid-lam" aria-label="Lyapunov exponent against the resolution"></canvas></div>
+    <div class="card"><h3>Advance per step <span class="hint"><span class="c-lab">δ<sub>y</sub></span>, <span class="c-bath">δ<sub>x</sub></span>; <span class="c-creature">●</span> locked to p/q (E12)</span></h3><canvas class="chart tall2" id="grid-adv" aria-label="Advance per step against the resolution"></canvas></div>
+  </div>
+  <p class="inst-note" id="grid-status"></p>
+</section>
+
+<!-- ======================================================================= phase map -->
+<section id="map" class="section wrap">
+  <div class="section-head">
+    <h2>Phase map</h2>
+    <p>What random blobs of noise become across the (μ, σ) plane, after Hudcová, Dušek, Tuccio and Hongler (2026): our experiment E1, 41 × 41 rules, 9 patch sizes × 64 patches each, 7000 deterministic steps on a 100 × 100 torus. Click a cell to load its rule and a fresh patch of the chosen side.</p>
+  </div>
+  <div class="map-grid">
+    <div class="card map-card">
+      <canvas id="phase-map" aria-label="Phase map in the plane of mu and sigma"></canvas>
+      <div class="map-tip" id="map-tip" role="status"></div>
+    </div>
+    <div class="map-legend">
+      <ul class="legend" id="map-legend"></ul>
+      <p class="inst-note">Class d needs only one unclassified trajectory out of 576, so isolated pixels are rare events, not phases. Counting compact creatures and travelling belts, 400 of the 436 unclassified trajectories of the replica run E1b were things that travel, and 400 of the 401 movers were unclassified: in practice, ‘unclassified’ means ‘something that travels’.</p>
+      <div class="row-inline"><label for="map-side">patch side on click</label><select id="map-side"><option>10</option><option>20</option><option>30</option><option>40</option><option selected>50</option><option>60</option><option>70</option><option>80</option><option>90</option></select></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================================= species -->
+<section id="species" class="section wrap">
+  <div class="section-head">
+    <h2>Species</h2>
+    <p>One species per genus from Bert Chan's catalogue: the 135 with the Orbium's kernel and growth, T = 10 and R ≤ 27, each at its own parameters, screened by our experiment E9. Screen: 2000 steps from the catalogue pattern. λ: four copies at different sub-cell positions. Window: the edges in μ at the species' own σ, and the fate just outside each edge. Click a row to load the species.</p>
+  </div>
+  <div class="table-tools">
+    <input type="search" id="sp-search" placeholder="Search a name or code" aria-label="Search species">
+    <div class="chips" id="sp-chips" role="group" aria-label="Filter by screen outcome"></div>
+  </div>
+  <div class="table-wrap card">
+    <table class="table" id="sp-table">
+      <thead><tr>
+        <th data-k="name">Species</th><th data-k="R" class="n">R</th><th data-k="b">β</th><th data-k="mu" class="n">μ</th><th data-k="sigma" class="n">σ</th>
+        <th data-k="kind">Screen</th><th data-k="lam" class="n">λ</th><th data-k="win">μ window and fates</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ======================================================================= model -->
+<section id="model" class="section wrap prose">
+  <div class="section-head"><h2>The model</h2></div>
+  <div class="model-grid">
+    <div>
+      <h3>One step</h3>
+      <p>The world is an <i>N</i> × <i>N</i> torus of cells, each holding a value <i>A</i>(<i>x</i>) between 0 and 1. Every step each cell looks at a weighted average of <i>A</i> over a ring of radius <i>R</i> around itself, grows if that average is close to μ and decays otherwise:</p>
+      <math display="block"><mi>A</mi><mo stretchy="false">←</mo><msub><mi mathvariant="normal">clip</mi><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">]</mo></mrow></msub><mrow><mo>[</mo><mi>A</mi><mo>+</mo><mi>d</mi><mi>t</mi><mrow><mo>(</mo><mi>G</mi><mo stretchy="false">(</mo><mi>K</mi><mo>∗</mo><mi>A</mi><mo stretchy="false">)</mo><mo>+</mo><mi>h</mi><mo>)</mo></mrow><mo>+</mo><msqrt><mn>2</mn><mi>ϑ</mi><mspace width="0.1em"/><mi>d</mi><mi>t</mi></msqrt><mspace width="0.15em"/><mi>ξ</mi><mo>]</mo></mrow><mo>,</mo><mspace width="1em"/><mi>d</mi><mi>t</mi><mo>=</mo><mfrac><mn>1</mn><mi>T</mi></mfrac></math>
+      <p>with ξ independent standard Gaussian numbers, one per cell and per step. With ϑ = 0 and <i>h</i> = 0 this is Chan's rule (2019). Two letters must not be confused: <i>T</i> is Lenia's time resolution (steps per unit of time), ϑ the temperature of the bath. The factor √(2ϑ <i>dt</i>) is the Euler–Maruyama recipe that makes ϑ a temperature in the sense of the fluctuation–dissipation theorem.</p>
+      <h3>The ring and the bell</h3>
+      <math display="block"><mi>K</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>∝</mo><msub><mi>β</mi><mrow><mo stretchy="false">⌊</mo><mi>B</mi><mi>r</mi><mo stretchy="false">⌋</mo></mrow></msub><mspace width="0.1em"/><msub><mi>K</mi><mi>C</mi></msub><mo stretchy="false">(</mo><mi>B</mi><mi>r</mi><mspace width="0.2em"/><mi mathvariant="normal">mod</mi><mspace width="0.2em"/><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mspace width="0.6em"/><mi>r</mi><mo>=</mo><mfrac><mrow><mo stretchy="false">|</mo><mi>x</mi><mo stretchy="false">|</mo></mrow><mi>R</mi></mfrac><mo>,</mo><mspace width="0.6em"/><msub><mi>K</mi><mi>C</mi></msub><mo stretchy="false">(</mo><mi>r</mi><mo stretchy="false">)</mo><mo>=</mo><msup><mi>e</mi><mrow><mn>4</mn><mo>−</mo><mn>1</mn><mo>/</mo><mo stretchy="false">(</mo><mi>r</mi><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>r</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow></msup></math>
+      <math display="block"><mi>G</mi><mo stretchy="false">(</mo><mi>u</mi><mo stretchy="false">)</mo><mo>=</mo><mn>2</mn><mspace width="0.1em"/><mi>exp</mi><mrow><mo>(</mo><mo>−</mo><mfrac><msup><mrow><mo stretchy="false">(</mo><mi>u</mi><mo>−</mo><mi>μ</mi><mo stretchy="false">)</mo></mrow><mn>2</mn></msup><mrow><mn>2</mn><msup><mi>σ</mi><mn>2</mn></msup></mrow></mfrac><mo>)</mo></mrow><mo>−</mo><mn>1</mn></math>
+      <p>The kernel has <i>B</i> concentric rings of heights β<sub>1</sub>…β<sub>B</sub>, is normalised to unit sum, and is measured from the cell centre. A cell grows only if about μ of its ring is alive, give or take a few σ; the Orbium's values (μ = 0.15, σ = 0.015) are a very narrow taste, which is why creatures are rare and fragile.</p>
+      <h3>Two frames</h3>
+      <p>A travelling creature breaks the symmetry of translations without standing still. Compare the state with itself at an earlier anchor time <i>t</i><sub>w</sub>:</p>
+      <math display="block"><msub><mi>q</mi><mi>lab</mi></msub><mo>=</mo><mfrac><mrow><mo stretchy="false">⟨</mo><mi>A</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>,</mo><mi>A</mi><mo stretchy="false">(</mo><msub><mi>t</mi><mi>w</mi></msub><mo stretchy="false">)</mo><mo stretchy="false">⟩</mo></mrow><mrow><mo stretchy="false">‖</mo><mi>A</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo stretchy="false">‖</mo><mspace width="0.1em"/><mo stretchy="false">‖</mo><mi>A</mi><mo stretchy="false">(</mo><msub><mi>t</mi><mi>w</mi></msub><mo stretchy="false">)</mo><mo stretchy="false">‖</mo></mrow></mfrac><mo>,</mo><mspace width="1em"/><msub><mi>q</mi><mi>cm</mi></msub><mo>=</mo><munder><mi>max</mi><mi>d</mi></munder><mfrac><mrow><mo stretchy="false">⟨</mo><mi>A</mi><mo stretchy="false">(</mo><mi>t</mi><mo>,</mo><mo>·</mo><mo>+</mo><mi>d</mi><mo stretchy="false">)</mo><mo>,</mo><mi>A</mi><mo stretchy="false">(</mo><msub><mi>t</mi><mi>w</mi></msub><mo stretchy="false">)</mo><mo stretchy="false">⟩</mo></mrow><mrow><mo stretchy="false">‖</mo><mi>A</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo stretchy="false">‖</mo><mspace width="0.1em"/><mo stretchy="false">‖</mo><mi>A</mi><mo stretchy="false">(</mo><msub><mi>t</mi><mi>w</mi></msub><mo stretchy="false">)</mo><mo stretchy="false">‖</mo></mrow></mfrac></math>
+      <p>In the laboratory the overlap vanishes as soon as the creature has moved by its own size, as in a liquid; in its own moving frame it stays, as in a solid: a sliding solid. The best translation <i>d</i> is found below the cell, by Newton steps on the cross-correlation seen as a Fourier series. A maximum over translations is biased upwards even for unrelated fields (an extreme-value statistic), so the instrument also shows the same maximum against a random-phase copy of the anchor, with the same spectrum and no structure: small for a compact creature, large for a texture. The reading uses the 0.70 rule of our fluctuation–dissipation analysis (E2). The moving frame follows translations only, so a creature that rotates or pulsates loses its overlap in both frames.</p>
+    </div>
+    <div>
+      <h3>What the bath does</h3>
+      <p>Far from any creature <i>K</i>∗<i>A</i> ≈ 0, so <i>G</i> = −1: every empty cell loses <i>dt</i> = 0.1 per step, while a kick of the noise is √(2ϑ <i>dt</i>), 0.014 at ϑ = 10⁻³. The clip resets the rest to zero, and <b>the void stays exactly empty</b> at the temperatures a creature survives. At ϑ = 0.05 the kicks match the decay and each empty cell becomes a ball bouncing on a floor. That system obeys the fluctuation–dissipation theorem in the continuum,</p>
+      <math display="block"><mi>ϑ</mi><mspace width="0.1em"/><mi>χ</mi><mo stretchy="false">(</mo><mi>t</mi><mo>,</mo><msub><mi>t</mi><mi>w</mi></msub><mo stretchy="false">)</mo><mo>=</mo><mi>C</mi><mo stretchy="false">(</mo><mi>t</mi><mo>,</mo><mi>t</mi><mo stretchy="false">)</mo><mo>−</mo><mi>C</mi><mo stretchy="false">(</mo><mi>t</mi><mo>,</mo><msub><mi>t</mi><mi>w</mi></msub><mo stretchy="false">)</mo><mo>,</mo></math>
+      <p>and is where we calibrated the instrument: at <i>T</i> = 10 it reads a 30% violation (<i>a</i>₁ = 1.30), which falls to 3% at <i>T</i> = 160. A violation measured on a creature at <i>T</i> = 10 has to be compared with that baseline.</p>
+      <h3>Escape and chaos</h3>
+      <p>A creature is a metastable state of the noisy dynamics. Lenia is not a gradient system, so instead of an energy there is a quasi-potential Φ, but the Kramers law still reads</p>
+      <math display="block"><mo stretchy="false">⟨</mo><mi>τ</mi><mo stretchy="false">⟩</mo><mo>≃</mo><msub><mi>τ</mi><mn>0</mn></msub><mspace width="0.1em"/><msup><mi>e</mi><mrow><mi>Δ</mi><mi>Φ</mi><mo>/</mo><mi>ϑ</mi></mrow></msup><mo>,</mo></math>
+      <p>and the largest Lyapunov exponent comes from the exact linearisation of one step, with <i>M</i> = 0 on the cells the clip pins at 0 or 1:</p>
+      <math display="block"><mi>δ</mi><msup><mi>A</mi><mo>′</mo></msup><mo>=</mo><mi>M</mi><mo>⊙</mo><mrow><mo>[</mo><mi>δ</mi><mi>A</mi><mo>+</mo><mi>d</mi><mi>t</mi><mspace width="0.1em"/><msup><mi>G</mi><mo>′</mo></msup><mo stretchy="false">(</mo><mi>U</mi><mo stretchy="false">)</mo><mo>⊙</mo><mo stretchy="false">(</mo><mi>K</mi><mo>∗</mo><mi>δ</mi><mi>A</mi><mo stretchy="false">)</mo><mo>]</mo></mrow><mo>,</mo><mspace width="0.6em"/><mi>λ</mi><mo>=</mo><munder><mi>lim</mi><mrow><mi>t</mi><mo>→</mo><mi>∞</mi></mrow></munder><mfrac><mn>1</mn><mi>t</mi></mfrac><mi>ln</mi><mfrac><mrow><mo stretchy="false">‖</mo><mi>δ</mi><mi>A</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo stretchy="false">‖</mo></mrow><mrow><mo stretchy="false">‖</mo><mi>δ</mi><mi>A</mi><mo stretchy="false">(</mo><mn>0</mn><mo stretchy="false">)</mo><mo stretchy="false">‖</mo></mrow></mfrac></math>
+      <p>A travelling creature has a free position, a neutral direction: its exponent should be zero. At <i>R</i> = 13 it is (λ = −0.002). On finer grids it is often weakly positive, erratically in <i>R</i>: the trace of the creature's motion through the lattice.</p>
+    </div>
+  </div>
+  <div class="notes">
+    <h3>About this implementation</h3>
+    <p>The engine (<code>assets/js/core.js</code>) is a line-by-line port of our Python package: the same kernels, growth functions, step order (growth, field, noise, clip), tangent map, circular centroid, components on the torus (8-connected, threshold 0.1, at least 5 cells) and death criterion. It runs in float64 with a mixed-radix FFT, so every torus size of the protocol is available (100, 104, 128, 208…). Against the Python code, a single step agrees to 10⁻¹⁵, the Orbium after 1000 steps to 10⁻¹⁴ and the co-moving overlap to 10⁻¹⁴, and the exponents, advances and speeds of the instruments match the campaign's. The labs are ports of the campaign's scripts: the reading of the FD plot gives E2's numbers and labels exactly on E2's own data, the bisection of E6 at R = 13 retraces the campaign probe by probe to the same edges, and the rheology of the void matches E5 to four digits. Lifetimes in the bath, with 128 replicas as on the cluster, fall within the 95% intervals of the E4 points we re-ran (for example 972 [814, 1170] steps against 956 [801, 1151] at μ = 0.1539, ϑ = 4.17·10⁻³). The random numbers are not numpy's: a seed reproduces a run on this page, not a run of the campaign, and a lab run with few replicas fluctuates as much as its interval says. The address bar always holds a link to what the simulator shows (creature, rule, bath, view); “Share link” copies it. Loading one of the cards above puts its own short link there, for example <code>?try=locked</code>.</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <p><b>Lenia in a heat bath</b> · Andrea Ladiana · 2026</p>
+    <p>Lenia is by Bert Wang-Chak Chan, <i>Lenia — Biology of Artificial Life</i>, Complex Systems 28 (2019) 251. The species patterns come from his catalogue, <a href="https://github.com/Chakazul/Lenia">github.com/Chakazul/Lenia</a> (MIT licence); his own interactive version is at <a href="https://chakazul.github.io/Lenia/JavaScript/Lenia.html">chakazul.github.io/Lenia</a>. The phase classification follows B. Hudcová, Dušek, Tuccio and C. Hongler, <i>Visualizing the Structure of Lenia Parameter Space</i>, <a href="https://arxiv.org/abs/2601.01932">arXiv:2601.01932</a>.</p>
+    <p>Typeface: a renamed subset of Fira Sans (Mozilla Foundation, Telefónica, Carrois), SIL Open Font License 1.1, see <a href="assets/fonts/OFL.txt">OFL.txt</a>.</p>
+  </div>
+</footer>
+
+<dialog id="library" aria-labelledby="lib-title">
+  <form method="dialog" class="lib">
+    <header class="lib-head">
+      <h2 id="lib-title">Library</h2>
+      <input type="search" id="lib-search" placeholder="Search a species, a code, a genus" aria-label="Search the library">
+      <button class="icon-btn" value="close" aria-label="Close the library">✕</button>
+    </header>
+    <div class="lib-body" id="lib-body"></div>
+  </form>
+</dialog>
+
+<script src="assets/data/lenia-data.js?v=2026-10-16m"></script>
+<script src="assets/js/core.js?v=2026-10-16m"></script>
+<script src="assets/js/lab.js?v=2026-10-16m"></script>
+<script src="assets/js/experiments.js?v=2026-10-16m"></script>
+<script src="assets/js/charts.js?v=2026-10-16m"></script>
+<script src="assets/js/app.js?v=2026-10-16m"></script>
+<script src="assets/js/sections.js?v=2026-10-16m"></script>
+<script src="assets/js/labs.js?v=2026-10-16m"></script>
+</body>
+</html>

@@ -141,6 +141,245 @@ body {
     color: var(--accent-color);
 }
 
+/* Navigation Dropdown */
+.nav-dropdown {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.nav-dropdown-btn {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font-family: inherit;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.8;
+    transition: opacity 0.2s ease, color 0.2s ease;
+    color: var(--text-color);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.nav-dropdown-btn:hover,
+.nav-dropdown:hover .nav-dropdown-btn,
+.nav-dropdown.active .nav-dropdown-btn {
+    opacity: 1;
+    color: var(--accent-color);
+}
+
+.nav-chevron {
+    font-size: 0.65em;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-dropdown:hover .nav-chevron,
+.nav-dropdown.active .nav-chevron {
+    transform: rotate(180deg);
+}
+
+/* Invisible bridge so moving cursor down to menu doesn't lose hover */
+.nav-dropdown::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 0.6rem;
+}
+
+.nav-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 50%;
+    transform: translateX(-50%) translateY(-6px);
+    background: rgba(18, 18, 22, 0.94);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04);
+    border-radius: 12px;
+    padding: 0.45rem;
+    width: max-content;
+    min-width: 250px;
+    max-width: 320px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.2s ease;
+    z-index: 100;
+}
+
+.nav-dropdown:hover .nav-dropdown-menu,
+.nav-dropdown:focus-within .nav-dropdown-menu,
+.nav-dropdown.active .nav-dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+}
+
+.nav-dropdown-menu .dropdown-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.65rem 0.85rem;
+    border-radius: 8px;
+    text-transform: none;
+    letter-spacing: normal;
+    text-decoration: none;
+    color: var(--text-color);
+    background: transparent;
+    opacity: 1;
+    transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.nav-dropdown-menu .dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateX(2px);
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.dropdown-item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.dropdown-item-title {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #fff;
+    transition: color 0.15s ease;
+}
+
+.nav-dropdown-menu .dropdown-item:hover .dropdown-item-title {
+    color: var(--accent-color);
+}
+
+.dropdown-external-icon {
+    font-size: 0.75rem;
+    opacity: 0.6;
+    color: var(--accent-color);
+}
+
+.dropdown-item-desc {
+    font-size: 0.76rem;
+    opacity: 0.7;
+    line-height: 1.35;
+    color: var(--text-color);
+}
+
+/* Projects Section */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.project-card {
+    display: block;
+    padding: 1.6rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    text-decoration: none;
+    color: var(--text-color);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                border-color 0.25s ease, 
+                box-shadow 0.25s ease,
+                background 0.25s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(100, 255, 218, 0.4);
+    background: rgba(255, 255, 255, 0.04);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35), 0 0 20px rgba(100, 255, 218, 0.08);
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+.project-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.9rem;
+}
+
+.project-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(100, 255, 218, 0.12);
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+.project-arrow {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.95rem;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.project-card:hover .project-arrow {
+    color: var(--accent-color);
+    transform: translate(2px, -2px);
+}
+
+.project-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 0.6rem;
+    transition: color 0.2s ease;
+}
+
+.project-card:hover .project-title {
+    color: var(--accent-color);
+}
+
+.project-desc {
+    font-size: 0.95rem;
+    opacity: 0.85;
+    line-height: 1.6;
+    margin-bottom: 1.2rem;
+}
+
+.project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1.2rem;
+}
+
+.project-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    transition: gap 0.2s ease;
+}
+
+.project-card:hover .project-cta {
+    gap: 0.75rem;
+}
+
 /* Typography & Links */
 a {
     color: var(--accent-color);
@@ -532,6 +771,23 @@ details summary:hover {
 
     .top-nav a {
         font-size: 0.75rem;
+    }
+
+    .nav-dropdown-btn {
+        font-size: 0.75rem;
+    }
+
+    .nav-dropdown-menu {
+        left: 50%;
+        transform: translateX(-50%) translateY(-6px);
+        max-width: calc(100vw - 2rem);
+        min-width: 240px;
+    }
+
+    .nav-dropdown:hover .nav-dropdown-menu,
+    .nav-dropdown:focus-within .nav-dropdown-menu,
+    .nav-dropdown.active .nav-dropdown-menu {
+        transform: translateX(-50%) translateY(0);
     }
 
     .text-content p {
