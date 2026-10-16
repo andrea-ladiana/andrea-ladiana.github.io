@@ -1087,7 +1087,25 @@
   App.frameAnchor = () => frameAnchor();
 
   // ================================================================== start
-  window.addEventListener("resize", () => { S.dirty = true; lastCharts = 0; });
+  function fitCanvasBox() {
+    const box = $("#canvas-box");
+    if (!box || !box.parentElement) return;
+    const availW = box.parentElement.clientWidth;
+    const availH = Math.max(180, window.innerHeight - 170);
+    const size = Math.floor(Math.min(availW, availH));
+    if (size > 0 && (box.offsetWidth !== size || box.offsetHeight !== size)) {
+      box.style.width = size + "px";
+      box.style.height = size + "px";
+      S.dirty = true;
+    }
+  }
+
+  fitCanvasBox();
+  window.addEventListener("resize", () => { fitCanvasBox(); S.dirty = true; lastCharts = 0; });
+  if (typeof ResizeObserver !== "undefined") {
+    const stage = $(".sim-stage");
+    if (stage) new ResizeObserver(() => fitCanvasBox()).observe(stage);
+  }
   $('#view-tabs [data-view="V"]').disabled = true;
   load(orbiumSpec(), { quiet: true });
   setRunning(true);

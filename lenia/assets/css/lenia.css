@@ -135,9 +135,9 @@ h1, h2, h3 { font-weight: 600; letter-spacing: -.01em; line-height: 1.2; margin:
 .tog { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; color: var(--ink-2); cursor: pointer; user-select: none; padding: 5px 9px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
 .tog input { accent-color: var(--creature); margin: 0; width: 14px; height: 14px; }
 .tog.small { padding: 3px 7px; font-size: 12.5px; border-radius: 6px; }
-.canvas-box { position: relative; width: 100%; aspect-ratio: 1 / 1; max-height: calc(100vh - 170px); margin: 0 auto; background: var(--world-bg); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); touch-action: none; }
+.canvas-box { position: relative; width: min(100%, calc(100vh - 170px)); height: min(100%, calc(100vh - 170px)); aspect-ratio: 1 / 1; max-width: 100%; max-height: calc(100vh - 170px); margin: 0 auto; background: var(--world-bg); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); touch-action: none; }
 @supports not (aspect-ratio: 1 / 1) { .canvas-box { height: 0; padding-bottom: 100%; } }
-.canvas-box canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.canvas-box canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; }
 #world { image-rendering: pixelated; image-rendering: crisp-edges; }
 .canvas-box.brush { cursor: crosshair; }
 .hud { position: absolute; left: 10px; bottom: 9px; display: flex; gap: 10px; font-size: 12.5px; color: var(--ink-2); background: color-mix(in srgb, var(--surface) 82%, transparent); padding: 3px 8px; border-radius: 6px; font-variant-numeric: tabular-nums; pointer-events: none; }
