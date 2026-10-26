@@ -27,6 +27,10 @@ const FLAG_LABEL = {
   solo_studenti: "Riservato a studenti/ragazze", spese_incluse: "Spese incluse",
 };
 
+const RISK_RANK = { nessuno: 0, basso: 1, medio: 2, alto: 3 };
+const RISK_COLOR = { alto: "#d73027", medio: "#f08c00", basso: "#8a94a6" };
+const riskOf = r => r.risk || { level: "nessuno", score: 0, signals: [] }; // dati esportati prima dei segnali di rischio
+
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const safeUrl = u => (/^https?:\/\//i.test(u || "") ? u : "#");
@@ -53,7 +57,8 @@ function renderLegend() {
   const line = (t, pal, cls) => `<div class="lg-line"><span class="t">${t}</span>${pal.items.map(i =>
     `<span class="lg-item"><span class="dot ${cls}" style="${cls === "fill" ? `background:${i[1]}` : `border-color:${i[1]}`}"></span>${i[2]}</span>`).join("")}</div>`;
   $("legend").innerHTML = line(`Riempimento = ${main.title}`, main, "fill") + line(`Bordo = ${ring.title}`, ring, "ring") +
-    `<div class="note">Bordo tratteggiato = posizione approssimata al quartiere · marker quadrato = bilocale.</div>`;
+    `<div class="note">Bordo tratteggiato = posizione approssimata al quartiere · marker quadrato = bilocale · ` +
+    `<b style="color:${RISK_COLOR.medio}">!</b> / <b style="color:${RISK_COLOR.alto}">!</b> = rischio medio / alto.</div>`;
 }
 
 /* ------------------------------------------------------------------ mappa */
@@ -82,6 +87,7 @@ function pinIcon(rec, active) {
   const main = colorOf(rec, state.mode), ring = colorOf(rec, RING_FOR[state.mode]);
   const cls = ["pin", main.dark ? "dark" : "", active ? "active" : "", rec.geo_precision === "zone" ? "approx" : "",
     rec.kind === "bilocale" ? "bilo" : "",
+    RISK_RANK[riskOf(rec).level] >= 2 ? `risk ${riskOf(rec).level}` : "",
     state.favs.has(rec.uid) ? "fav" : ""].join(" ");
   return L.divIcon({
     html: `<div class="${cls}" style="background:${main.color};border-color:${ring.color}">${Math.round(rec.price_total)}</div>`,
@@ -113,6 +119,9 @@ function buildOverlays(meta) {
 const val = id => $(id).value;
 function passes(r) {
   if (!$("showProblems").checked && r.hidden_by_default) return false;
+  if (r.paid_service) {
+    if (!$("showPaid").checked) return false; // la casella ha la precedenza sul livello di rischio (sono tutti "alto")
+  } else if (val("riskMax") !== "tutti" && RISK_RANK[riskOf(r).level] >= RISK_RANK[val("riskMax")]) return false;
   if (!state.kinds.has(r.kind)) return false;
   if (r.price_total > +val("priceMax")) return false;
   if (r.quality < +val("qualityMin")) return false;
@@ -172,11 +181,12 @@ function renderList() {
   const ol = $("list");
   if (!state.filtered.length) { ol.innerHTML = '<li class="empty">Nessun annuncio con questi filtri.</li>'; return; }
   ol.innerHTML = state.filtered.map(r => {
-    const q = colorOf(r, "quality");
+    const q = colorOf(r, "quality"), lv = riskOf(r).level;
+    const rk = r.paid_service ? '<span class="rk alto">⚠ banca dati</span> · ' : RISK_RANK[lv] >= 2 ? `<span class="rk ${lv}">⚠ rischio ${lv}</span> · ` : "";
     return `<li data-uid="${esc(r.uid)}" class="${r.uid === state.selected ? "sel" : ""}">
       <span class="p">${eur(r.price_total)}</span>
       <span><div class="t">${r.kind === "bilocale" ? "Bilo · " : ""}${esc(r.zone || r.address || r.title)}${r.surface ? ` · ${r.surface} m²` : ""}</div>
-      <div class="m">${r.commute_min} min · ${esc(r.commute_mode)}${r.geo_precision === "zone" ? " · pos. approx" : ""}${state.favs.has(r.uid) ? " · ★" : ""}</div></span>
+      <div class="m">${rk}${r.commute_min} min · ${esc(r.commute_mode)}${r.geo_precision === "zone" ? " · pos. approx" : ""}${state.favs.has(r.uid) ? " · ★" : ""}</div></span>
       <span class="q" style="background:${q.color};${q.dark ? "color:#1c2330" : ""}">${r.quality}</span></li>`;
   }).join("");
 }
@@ -228,6 +238,12 @@ function renderCard(r) {
     : "Nessuna stazione metro entro 1,3 km";
   const brk = r.quality_breakdown.map(b => `<div class="bar"><span>${esc(b.voce)}</span><div class="tr"><div class="fl" style="width:${Math.round(b.punti / b.max * 100)}%"></div></div><b>${b.punti}/${b.max}</b></div>`).join("");
   const warn = r.problems.length ? `<div class="box warn"><h3>Attenzione</h3><ul>${r.problems.map(p => `<li>${esc(p)}</li>`).join("")}</ul></div>` : "";
+  const rs = riskOf(r);
+  const risk = rs.signals.length ? `<div class="box risk-box ${esc(rs.level)}"><h3>Segnali di rischio · ${esc(rs.level)}</h3>
+      <ul>${rs.signals.map(s => `<li><b>${esc(s.label)}.</b> ${esc(s.detail)}</li>`).join("")}</ul>
+      <div class="note">Non pagare nulla (caparra, «quota», «blocco») prima di aver visto la casa, conosciuto il proprietario e firmato un contratto da registrare.</div></div>` : "";
+  const riskBadge = RISK_RANK[rs.level] >= 1
+    ? `<span class="badge" style="background:${RISK_COLOR[rs.level]}">${r.paid_service ? "Banca dati a pagamento" : `Rischio ${esc(rs.level)}`}</span>` : "";
   const links = r.sources.map((s, i) => `<a class="btn ${i ? "alt" : ""}" href="${esc(safeUrl(s.url))}" target="_blank" rel="noopener noreferrer">${esc(s.label)}${r.sources.length > 1 ? ` · ${eur(s.price)}` : ""} ↗</a>`).join("");
   const gmaps = `https://www.google.com/maps/dir/?api=1&origin=${r.lat},${r.lng}&destination=41.9029,12.5163&travelmode=transit`;
   $("card").innerHTML = `
@@ -243,6 +259,7 @@ function renderCard(r) {
         <span class="badge" style="background:${pr.color};${txt(pr)}">${esc(pr.label)}</span>
         <span class="badge" style="background:${cm.color};${txt(cm)}">~${r.commute_min} min</span>
         ${r.inside_gra ? "" : '<span class="badge" style="background:#6a7486">Fuori GRA</span>'}
+        ${riskBadge}
       </div>
       <div class="grid">
         <div><span>Superficie</span>${r.surface ? r.surface + " m²" : "n.d."}${r.price_per_m2 ? ` · ${r.price_per_m2} €/m²` : ""}</div>
@@ -258,6 +275,7 @@ function renderCard(r) {
         <div>${metroLine}</div>
         <div class="note">A piedi ${r.walk_min} min · bus/altro ~${r.bus_min} min · distanza ${r.dist_sapienza_km} km. Migliore: <b>${esc(r.commute_mode)}</b>. Stima da modello, non un orario reale.</div>
       </div>
+      ${risk}
       ${warn}
       <div class="box"><h3>Come si calcola la qualità</h3>${brk}</div>
       ${r.description ? `<div class="box"><h3>Descrizione dell'annuncio</h3><div class="desc">${esc(r.description)}</div></div>` : ""}
@@ -285,8 +303,10 @@ function setupControls() {
     for (const [uid, m] of state.markers) m.setIcon(pinIcon(state.data.find(x => x.uid === uid), uid === state.selected));
   }));
   for (const id of ["priceMax", "qualityMin", "commuteMax", "surfaceMin"]) $(id).addEventListener("input", () => refresh());
-  for (const id of ["onlyGra", "onlyMetro", "onlyPrecise", "onlyFav", "showProblems"]) $(id).addEventListener("change", () => refresh());
+  for (const id of ["onlyGra", "onlyMetro", "onlyPrecise", "onlyFav", "showProblems", "showPaid"]) $(id).addEventListener("change", () => refresh());
   $("sort").addEventListener("change", () => refresh());
+  $("riskMax").addEventListener("change", () => refresh());
+  $("paidCount").textContent = `(${state.data.filter(r => r.paid_service).length})`;
   let t; $("search").addEventListener("input", () => { clearTimeout(t); t = setTimeout(() => refresh(), 200); });
 
   const srcs = [...new Set(state.data.flatMap(r => r.sources.map(s => [s.source, s.label].join("|"))))].sort();
@@ -311,7 +331,8 @@ function setupControls() {
   });
   $("reset").addEventListener("click", () => {
     $("priceMax").value = state.priceCap; $("qualityMin").value = 0; $("commuteMax").value = 120; $("surfaceMin").value = 0; $("search").value = "";
-    for (const id of ["onlyMetro", "onlyPrecise", "onlyFav", "showProblems"]) $(id).checked = false;
+    for (const id of ["onlyMetro", "onlyPrecise", "onlyFav", "showProblems", "showPaid"]) $(id).checked = false;
+    $("riskMax").value = "alto";
     $("onlyGra").checked = true; state.sources.clear(); state.lines.clear();
     state.kinds = new Set(["monolocale", "bilocale"]);
     document.querySelectorAll(".chip.on").forEach(c => { c.classList.remove("on"); c.style.background = ""; c.style.borderColor = ""; });

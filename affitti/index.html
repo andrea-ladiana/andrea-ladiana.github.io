@@ -9,7 +9,7 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='52'%3E%F0%9F%8F%A0%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
-  <link rel="stylesheet" href="assets/css/affitti.css?v=a95b3c87e6">
+  <link rel="stylesheet" href="assets/css/affitti.css?v=c0b9f2360d">
 </head>
 <body>
   <div id="app">
@@ -46,7 +46,14 @@
           <label><input type="checkbox" id="onlyPrecise"> Solo posizione precisa</label>
           <label><input type="checkbox" id="onlyFav"> Solo preferiti ★</label>
           <label><input type="checkbox" id="showProblems"> Mostra anche stanze, uso ufficio, stagionali</label>
+          <label><input type="checkbox" id="showPaid"> Mostra anche i servizi a pagamento («banca dati») <span class="cnt" id="paidCount"></span></label>
         </div>
+        <label class="row sel-row">Annunci sospetti
+          <select id="riskMax">
+            <option value="alto" selected>Nascondi rischio alto</option>
+            <option value="medio">Nascondi rischio medio e alto</option>
+            <option value="tutti">Mostra tutti</option>
+          </select></label>
         <div class="chips" id="kinds"><span class="chip-title">Tipologia:</span>
           <span class="chip on" data-kind="monolocale">Monolocali</span><span class="chip on" data-kind="bilocale">Bilocali (zona est/sud-est)</span></div>
         <div class="chips" id="sources"></div>
@@ -95,7 +102,7 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-  <script>window.DATA_BASE = "assets/data/"; window.ENCRYPTED_DATA = "assets/data/data.enc.json?v=d8976456e2";</script>
-  <script src="assets/js/affitti.js?v=0957769e2b"></script>
+  <script>window.DATA_BASE = "assets/data/"; window.ENCRYPTED_DATA = "assets/data/data.enc.json?v=276272c082";</script>
+  <script src="assets/js/affitti.js?v=aca0b9863f"></script>
 </body>
 </html>
