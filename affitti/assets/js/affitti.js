@@ -57,8 +57,14 @@ function renderLegend() {
 }
 
 /* ------------------------------------------------------------------ mappa */
+// stessa condizione del CSS: telefono (schermo stretto) o telefono in orizzontale
+const mobileQuery = window.matchMedia("(max-width: 860px), (pointer: coarse) and (max-height: 520px)");
+const isMobile = () => mobileQuery.matches;
+if (isMobile()) $("app").classList.add("collapsed"); // cassetto chiuso fin dall'inizio, anche dietro la schermata password
+
 const map = L.map("map", { zoomControl: false, preferCanvas: true }).setView([41.9, 12.52], 12);
-L.control.zoom({ position: "bottomleft" }).addTo(map);
+// su telefono i controlli stanno in alto a destra: in basso c'è la card a foglio
+L.control.zoom({ position: isMobile() ? "topright" : "bottomleft" }).addTo(map);
 L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19, attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
 }).addTo(map);
@@ -100,7 +106,7 @@ function buildOverlays(meta) {
   metro.addTo(map);
   const gra = meta.gra.ring.length
     ? L.polygon(meta.gra.ring, { color: "#6a7486", weight: 2, dashArray: "6 6", fill: false, interactive: false }).addTo(map) : null;
-  L.control.layers(null, { "Metro A/B/B1/C": metro, ...(gra ? { "GRA": gra } : {}), "Sapienza": sap }, { position: "bottomleft", collapsed: true }).addTo(map);
+  L.control.layers(null, { "Metro A/B/B1/C": metro, ...(gra ? { "GRA": gra } : {}), "Sapienza": sap }, { position: isMobile() ? "topright" : "bottomleft", collapsed: true }).addTo(map);
 }
 
 /* ------------------------------------------------------------------ filtri */
@@ -137,6 +143,8 @@ function refresh(fit = false) {
   $("commuteMaxVal").textContent = val("commuteMax") === "120" ? "qualsiasi" : `≤ ${val("commuteMax")} min`;
   $("surfaceMinVal").textContent = val("surfaceMin") === "0" ? "qualsiasi" : `≥ ${val("surfaceMin")} m²`;
   $("count").textContent = `${state.filtered.length} di ${state.data.length}`;
+  $("tbCount").textContent = state.filtered.length;
+  $("showMapCount").textContent = state.filtered.length;
 
   cluster.clearLayers();
   state.markers.clear();
@@ -149,6 +157,15 @@ function refresh(fit = false) {
   cluster.addLayers(layers);
   renderList();
   if (fit && state.filtered.length) map.fitBounds(L.latLngBounds(state.filtered.map(r => [r.lat, r.lng])).pad(0.08), { maxZoom: 14 });
+}
+
+function setSidebar(open) {
+  $("app").classList.toggle("collapsed", !open);
+  setTimeout(() => map.invalidateSize(), 260); // dopo l'animazione del cassetto
+}
+
+function fitFiltered() {
+  if (state.filtered.length) map.fitBounds(L.latLngBounds(state.filtered.map(r => [r.lat, r.lng])).pad(0.08), { maxZoom: 14 });
 }
 
 function renderList() {
@@ -175,8 +192,15 @@ function select(uid, fly = false) {
     if (m) m.setIcon(pinIcon(state.data.find(x => x.uid === id), id === uid));
   }
   const m = state.markers.get(uid);
-  if (fly || (m && !map.getBounds().contains(m.getLatLng()))) map.flyTo([r.lat, r.lng], Math.max(map.getZoom(), 15), { duration: .6 });
-  if (m) cluster.zoomToShowLayer(m, () => {});
+  if (isMobile()) {
+    // la card a foglio copre la parte bassa dello schermo: l'annuncio va portato nella metà alta
+    const zoom = Math.max(map.getZoom(), 15), h = map.getSize().y;
+    const center = map.unproject(map.project([r.lat, r.lng], zoom).add([0, h * 0.3]), zoom);
+    map.flyTo(center, zoom, { duration: .6 }); // a zoom >= 15 il raggruppamento è disattivato: il marker è già visibile
+  } else {
+    if (fly || (m && !map.getBounds().contains(m.getLatLng()))) map.flyTo([r.lat, r.lng], Math.max(map.getZoom(), 15), { duration: .6 });
+    if (m) cluster.zoomToShowLayer(m, () => {});
+  }
   renderCard(r);
   history.replaceState(null, "", "#" + encodeURIComponent(uid));
   document.querySelectorAll("#list li").forEach(li => li.classList.toggle("sel", li.dataset.uid === uid));
@@ -294,8 +318,26 @@ function setupControls() {
     document.querySelectorAll("#kinds .chip").forEach(c => c.classList.add("on"));
     refresh(true);
   });
-  $("list").addEventListener("click", e => { const li = e.target.closest("li[data-uid]"); if (li) select(li.dataset.uid, true); });
-  $("toggleSidebar").addEventListener("click", () => { $("app").classList.toggle("collapsed"); setTimeout(() => map.invalidateSize(), 50); });
+  $("list").addEventListener("click", e => {
+    const li = e.target.closest("li[data-uid]");
+    if (!li) return;
+    if (isMobile()) setSidebar(false); // su telefono il cassetto copre la mappa: si chiude per mostrare annuncio e card
+    select(li.dataset.uid, true);
+  });
+  $("toggleSidebar").addEventListener("click", () => setSidebar($("app").classList.contains("collapsed")));
+  $("closeSidebar").addEventListener("click", () => setSidebar(false));
+  $("backdrop").addEventListener("click", () => setSidebar(false));
+  $("showMap").addEventListener("click", () => { setSidebar(false); fitFiltered(); });
+  // la card a foglio si chiude trascinando verso il basso la parte alta (foto)
+  let swipeY = null;
+  $("card").addEventListener("touchstart", e => { swipeY = e.target.closest(".c-photo") ? e.touches[0].clientY : null; }, { passive: true });
+  $("card").addEventListener("touchend", e => {
+    if (swipeY !== null && e.changedTouches[0].clientY - swipeY > 70) closeCard();
+    swipeY = null;
+  }, { passive: true });
+  // ruotando il telefono o ridimensionando: cassetto chiuso su schermi stretti, pannello aperto su schermi larghi
+  mobileQuery.addEventListener("change", () => { setSidebar(!isMobile()); });
+  if (isMobile()) setSidebar(false); // all'avvio su telefono si vede subito la mappa
   document.addEventListener("keydown", e => { if (e.key === "Escape") closeCard(); });
   map.on("click", closeCard);
 }

@@ -2,7 +2,8 @@
 <html lang="it">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1c2330">
   <title>Mappa affitti Roma · Sapienza</title>
   <meta name="robots" content="noindex, nofollow, noarchive">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='52'%3E%F0%9F%8F%A0%3C/text%3E%3C/svg%3E">
@@ -14,6 +15,7 @@
   <div id="app">
     <aside id="sidebar">
       <header>
+        <button id="closeSidebar" class="close-sb only-mobile" aria-label="Chiudi il pannello">✕</button>
         <h1>Monolocali a Roma</h1>
         <p class="sub"><span id="count">…</span> annunci · aggiornati <span id="updated">–</span></p>
       </header>
@@ -70,7 +72,9 @@
         26/10/2026 e non aggiornati in tempo reale: prezzi e disponibilità vanno verificati con l'inserzionista.
         Tempi di viaggio e punteggio di qualità sono stime. Mappa © OpenStreetMap.
       </footer>
+      <div class="showmap only-mobile"><button id="showMap">Mostra <span id="showMapCount">…</span> annunci sulla mappa</button></div>
     </aside>
+    <div id="backdrop" class="backdrop"></div>
 
     <main id="map"></main>
 
@@ -86,7 +90,7 @@
         <div id="lockMsg" class="lockmsg" role="alert"></div>
       </form>
     </div>
-    <button id="toggleSidebar" title="Mostra/nascondi pannello">☰</button>
+    <button id="toggleSidebar" title="Mostra/nascondi pannello"><span class="ico">☰</span><span class="lbl only-mobile">Filtri · <b id="tbCount">…</b></span></button>
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
