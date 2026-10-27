@@ -9,7 +9,7 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='52'%3E%F0%9F%8F%A0%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
-  <link rel="stylesheet" href="assets/css/affitti.css?v=c0b9f2360d">
+  <link rel="stylesheet" href="assets/css/affitti.css?v=8a71b629e4">
 </head>
 <body>
   <div id="app">
@@ -32,6 +32,11 @@
 
       <section class="panel">
         <h2>Filtri</h2>
+        <label class="row sel-row">Prezzo calcolato su
+          <select id="priceBasis">
+            <option value="total" selected>canone + spese</option>
+            <option value="monthly">costo reale al mese</option>
+          </select></label>
         <label class="row">Prezzo massimo <b id="priceMaxVal"></b>
           <input type="range" id="priceMax" min="300" max="800" step="10" value="800"></label>
         <label class="row">Qualità minima <b id="qualityMinVal"></b>
@@ -45,6 +50,9 @@
           <label><input type="checkbox" id="onlyMetro"> Solo con metro entro 900 m</label>
           <label><input type="checkbox" id="onlyPrecise"> Solo posizione precisa</label>
           <label><input type="checkbox" id="onlyFav"> Solo preferiti ★</label>
+          <label><input type="checkbox" id="onlyNew"> Solo nuovi dall'ultima raccolta <span class="cnt" id="newCount"></span></label>
+          <label><input type="checkbox" id="noTransient"> Escludi contratti transitori e per studenti</label>
+          <label><input type="checkbox" id="hideDiscarded" checked> Nascondi quelli che ho scartato</label>
           <label><input type="checkbox" id="showProblems"> Mostra anche stanze, uso ufficio, stagionali</label>
           <label><input type="checkbox" id="showPaid"> Mostra anche i servizi a pagamento («banca dati») <span class="cnt" id="paidCount"></span></label>
         </div>
@@ -58,6 +66,7 @@
           <span class="chip on" data-kind="monolocale">Monolocali</span><span class="chip on" data-kind="bilocale">Bilocali (zona est/sud-est)</span></div>
         <div class="chips" id="sources"></div>
         <div class="chips" id="metroLines"><span class="chip-title">Linea metro vicina:</span></div>
+        <div class="chips" id="statusChips"><span class="chip-title">Il mio stato:</span></div>
         <input type="search" id="search" placeholder="Cerca zona, via, parola…">
         <button id="reset" class="ghost">Azzera filtri</button>
       </section>
@@ -65,19 +74,34 @@
       <section class="panel grow">
         <div class="listhead">
           <h2>Risultati</h2>
+          <button id="compareBtn" class="ghost sm" title="Confronta i preferiti affiancati">Confronta ★</button>
           <select id="sort">
+            <option value="balance">Equilibrio ↓</option>
             <option value="quality">Qualità ↓</option>
             <option value="price">Prezzo ↑</option>
+            <option value="monthly">Costo reale ↑</option>
+            <option value="entry">Costo d'ingresso ↑</option>
             <option value="commute">Tempo ↑</option>
+            <option value="newest">Più recenti</option>
             <option value="ppm">€/m² ↑</option>
           </select>
         </div>
         <ol id="list"></ol>
       </section>
+      <section class="panel">
+        <h2>Fonti e copertura</h2>
+        <div id="coverage" class="coverage"></div>
+      </section>
+      <section class="panel">
+        <h2>Telefono e PC</h2>
+        <p class="note">Preferiti, stati e note restano su questo dispositivo. Per portarli sull'altro apri lì il link di sincronizzazione.</p>
+        <button id="syncBtn" class="ghost">Copia link di sincronizzazione</button>
+        <div id="syncMsg" class="note"></div>
+      </section>
       <footer class="foot">
-        Strumento personale di ricerca. Dati tratti da annunci pubblici di Immobiliare.it, Idealista, Casa.it e Subito, raccolti il
-        26/10/2026 e non aggiornati in tempo reale: prezzi e disponibilità vanno verificati con l'inserzionista.
-        Tempi di viaggio e punteggio di qualità sono stime. Mappa © OpenStreetMap.
+        Strumento personale di ricerca. Dati tratti da annunci pubblici di Immobiliare.it, Idealista, Casa.it e Subito, non aggiornati
+        in tempo reale: prezzi e disponibilità vanno verificati con l'inserzionista. Tempi di viaggio dagli orari ufficiali di Roma
+        Mobilità (GTFS) o stimati; costi con utenze stimati; qualità e rischio sono indizi, non giudizi. Mappa © OpenStreetMap.
       </footer>
       <div class="showmap only-mobile"><button id="showMap">Mostra <span id="showMapCount">…</span> annunci sulla mappa</button></div>
     </aside>
@@ -86,6 +110,8 @@
     <main id="map"></main>
 
     <aside id="card" class="hidden" aria-live="polite"></aside>
+    <div id="compare" class="compare hidden" role="dialog" aria-label="Confronto dei preferiti"></div>
+    <div id="toast" class="toast hidden" role="status"></div>
 
     <div id="lock" class="lock hidden">
       <form id="lockForm" autocomplete="off">
@@ -102,7 +128,7 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-  <script>window.DATA_BASE = "assets/data/"; window.ENCRYPTED_DATA = "assets/data/data.enc.json?v=276272c082";</script>
-  <script src="assets/js/affitti.js?v=aca0b9863f"></script>
+  <script>window.DATA_BASE = "assets/data/"; window.ENCRYPTED_DATA = "assets/data/data.enc.json?v=97d5664e67";</script>
+  <script src="assets/js/affitti.js?v=423825145d"></script>
 </body>
 </html>

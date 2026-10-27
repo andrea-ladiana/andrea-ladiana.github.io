@@ -116,6 +116,53 @@ input[type=search] { width: 100%; padding: 8px 10px; border: 1px solid var(--lin
 .btn.alt { background: #fff; color: var(--ink); border: 1px solid var(--line); }
 .note { color: var(--muted); font-size: 11.5px; margin-top: 6px; }
 
+/* nuovi annunci, stato, costi, contesto, confronto */
+.listhead { gap: 8px; }
+.listhead h2 { margin-right: auto; }
+.ghost.sm { margin: 0; padding: 3px 9px; font-size: 12.5px; white-space: nowrap; }
+.tag { display: inline-block; font-size: 10.5px; font-weight: 700; color: #fff; background: var(--muted); border-radius: 5px; padding: 0 5px; margin-right: 5px; vertical-align: 1px; text-transform: uppercase; letter-spacing: .03em; }
+.tag.new { background: var(--good); }
+.tag.drop { background: var(--accent); }
+.c-price .tag { align-self: center; }
+.pin.new { box-shadow: 0 0 0 3px #fff, 0 0 0 6px rgba(26, 152, 80, .85), 0 2px 7px rgba(0, 0, 0, .35); }
+.est { font-style: normal; font-size: 10.5px; color: var(--warn); border: 1px solid #f3d9a4; border-radius: 4px; padding: 0 3px; }
+.cost { background: #f3f8ff; border-color: #cfe0f7; }
+.cost-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.cost-row span { display: block; color: var(--muted); font-size: 11.5px; }
+.cost-row b { font-size: 22px; letter-spacing: -.02em; }
+.poi { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 13px; }
+.poi .zero { color: var(--muted); }
+.warn-txt { color: #9a5b00; }
+.st-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.st-btns button { border: 1.5px solid var(--c); color: var(--c); background: #fff; border-radius: 999px; padding: 4px 10px; font: inherit; font-size: 12.5px; cursor: pointer; }
+.st-btns button.on { background: var(--c); color: #fff; }
+.mine textarea { width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 7px 9px; font: inherit; resize: vertical; }
+.qs { margin: 0 0 10px; padding-left: 20px; font-size: 13px; }
+.qs li { margin: 3px 0; }
+.box .btn { border: 0; cursor: pointer; font: inherit; font-weight: 600; font-size: 13px; }
+details.visit { margin-top: 10px; font-size: 13px; }
+details.visit summary { cursor: pointer; color: var(--accent); font-weight: 600; }
+details.visit ul { margin: 6px 0 0; padding-left: 18px; }
+.g-prev, .g-next { position: absolute; top: 50%; transform: translateY(-50%); border: 0; background: rgba(255, 255, 255, .88); width: 32px; height: 32px; border-radius: 50%; font-size: 20px; line-height: 1; cursor: pointer; box-shadow: 0 1px 5px rgba(0, 0, 0, .25); }
+.g-prev { left: 10px; } .g-next { right: 10px; }
+.g-count { position: absolute; bottom: 8px; right: 10px; background: rgba(28, 35, 48, .7); color: #fff; font-size: 11.5px; padding: 1px 7px; border-radius: 999px; }
+.coverage ul { margin: 0; padding-left: 18px; font-size: 12.5px; }
+.compare { position: absolute; inset: 0; background: rgba(20, 28, 40, .45); z-index: 30; display: grid; place-items: center; padding: 20px; }
+.compare.hidden { display: none; }
+@media (max-width: 860px) { .compare { padding: 8px; } .compare th, .compare td { min-width: 120px; padding: 6px 8px; } }
+.cmp-inner { background: var(--panel); border-radius: 16px; box-shadow: var(--shadow); max-width: min(1100px, 100%); max-height: 100%; display: flex; flex-direction: column; overflow: hidden; }
+.cmp-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--line); position: relative; }
+.cmp-head h2 { margin: 0; }
+.cmp-head .c-close { position: static; }
+.cmp-scroll { overflow: auto; }
+.compare table { border-collapse: collapse; font-size: 13px; }
+.compare th, .compare td { border-bottom: 1px solid var(--line); padding: 7px 10px; text-align: left; vertical-align: top; min-width: 140px; }
+.compare tbody th { color: var(--muted); font-weight: 600; position: sticky; left: 0; background: var(--panel); min-width: 130px; }
+.compare thead th { position: sticky; top: 0; background: var(--panel); }
+.compare thead a { color: var(--accent); }
+.toast { position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--ink); color: #fff; padding: 9px 14px; border-radius: 10px; z-index: 40; box-shadow: var(--shadow); font-size: 13px; max-width: calc(100% - 32px); }
+.toast.hidden { display: none; }
+
 /* schermata password (versione pubblicata con dati cifrati) */
 .lock { position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center; background: rgba(246, 247, 249, .97); backdrop-filter: blur(6px); }
 .lock.hidden { display: none; }
