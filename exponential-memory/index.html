@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A memory bigger than its brain</title>
+<meta name="description" content="An interactive companion to “Exponential Capacity in Multilayer Hetero-Associative Neural Networks”: a memory whose capacity grows exponentially with its size, tested live on T-cell receptors and on natural language.">
+<meta name="color-scheme" content="light dark">
+<link rel="canonical" href="https://andrea-ladiana.github.io/exponential-memory/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="A memory bigger than its brain">
+<meta property="og:description" content="Twenty neurons, ten thousand memories: an exponential associative memory, played live on receptors and sentences.">
+<meta property="og:url" content="https://andrea-ladiana.github.io/exponential-memory/">
+<meta property="og:image" content="https://andrea-ladiana.github.io/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/img/icon.svg" type="image/svg+xml">
+<link rel="preload" href="../assets/series/fonts/lenia-sans-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/series/series.css?v=20261029b">
+<link rel="stylesheet" href="assets/css/exponential.css?v=20261029a">
+<script>
+  // theme before first paint (a per-viewer convenience, it may be absent)
+  try { const t = localStorage.getItem("series-theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="home" href="../" title="Back to Andrea Ladiana's website">← Andrea Ladiana</a>
+    <nav aria-label="Chapters">
+      <a href="#pairs"><span class="n">1</span>Pairs</a>
+      <a href="#capacity"><span class="n">2</span>Capacity</a>
+      <a href="#basins"><span class="n">3</span>Basins</a>
+      <a href="#function"><span class="n">4</span>One answer</a>
+      <a href="#receptors"><span class="n">5</span>Receptors</a>
+      <a href="#language"><span class="n">6</span>Language</a>
+    </nav>
+    <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch between light and dark theme" title="Theme">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z" fill="currentColor"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+<section class="hero wrap">
+  <p class="series">Interactive paper</p>
+  <h1>A memory bigger than its brain</h1>
+  <p class="thesis">A network that stores pairs, and whose capacity grows exponentially with its size. It remembers almost anything it is told. What it cannot do is invent an answer it was never told, unless the data make guessing easy.</p>
+  <div class="numbers" aria-label="The capacity in three numbers">
+    <div><b>20</b><span>neurons, in two layers of 10</span></div>
+    <div><b>11,522</b><span>pairs stored, each returned with 99% of its neurons right</span></div>
+    <div><b>≈ 3</b><span>memories for a classic Hopfield network of the same size</span></div>
+  </div>
+  <p class="paper">Based on E. Agliari, A. Barra, A. Ladiana, A. Lepre, <cite>Exponential Capacity in Multilayer Hetero-Associative Neural Networks</cite>, submitted to Neural Networks (2026).</p>
+  <div class="actions">
+    <a class="btn primary" href="#pairs">Start <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg></a>
+    <a class="btn" href="https://arxiv.org/abs/2607.29554" target="_blank" rel="noopener">Read on arXiv <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+    <a class="btn" href="https://github.com/andrea-ladiana/exponential-lam-engine/" target="_blank" rel="noopener">Code</a>
+    <a class="btn" href="#cite">Cite</a>
+  </div>
+  <p class="legend-badges"><span class="badge theory">Theory</span> derived in the paper (signal-to-noise and large deviations), not a rigorous proof <span class="badge numerics">Numerics</span> Monte Carlo, here or in the paper <span class="badge beyond">Beyond the paper</span> outside its assumptions</p>
+</section>
+
+<!-- 1 · Pairs ------------------------------------------------------------- -->
+<section class="chapter wrap" id="pairs">
+  <div class="chapter-head">
+    <span class="n">01</span>
+    <h2>Ask with one, answer with the other</h2>
+    <p class="lede">This memory stores pairs. Show it one half and it returns the other. Here it holds 26 pairs, each capital letter with its small letter, in two layers of 400 neurons. Click a letter to ask, and blur the question.</p>
+  </div>
+  <div class="stage">
+    <div class="stage-grid">
+      <div class="canvas-box square"><canvas id="pairs-run" aria-label="The question, the first guess and the answer"></canvas></div>
+      <div class="canvas-box square"><canvas id="pairs-pick" aria-label="The 26 stored pairs and their share of the vote: click one to ask it"></canvas>
+        <span class="overlay-label">stored pairs · bar: share of the vote · click to ask</span>
+      </div>
+    </div>
+    <div class="controls">
+      <div class="seg" id="pairs-rule"><button data-v="exp" aria-pressed="true">Exponential vote</button><button data-v="lin">Linear vote (classic)</button></div>
+      <div class="control grow-1"><label for="pairs-r">question kept <em class="v">r</em></label><input type="range" id="pairs-r" min="0" max="100" step="5" value="70"><output id="pairs-r-out">0.70</output></div>
+      <button class="btn small" id="pairs-again" type="button">Blur again</button>
+    </div>
+    <div class="stats">
+      <span>vote for the right pair <b id="pairs-share">–</b></span>
+      <span>answer <b id="pairs-answer">–</b></span>
+      <span class="hl">letters answered right, 2 blurred questions each <b id="pairs-rate">–</b></span>
+    </div>
+  </div>
+  <p class="note">Every stored pair votes on the answer. Its weight is <strong>e<sup><em class="v">N</em>(<em class="v">m</em><sub>1</sub><em class="v">m</em><sub>2</sub> − 1)</sup></strong>, where <em class="v">m</em><sub>1</sub> and <em class="v">m</em><sub>2</sub> say how well each layer matches it. Because <em class="v">N</em> = 400 sits in the exponent, a slightly better match outweighs all the others combined. The first guess is a blur: with only the question known, nobody can be weighed yet. From the next sweep on, the exponential picks one pair. It usually picks the right one; F, L and M are the exceptions, because that blur already leans toward another small letter. The classic linear vote gives every pair a say proportional to its match. Letters look alike, so the answer melts into a smudge.</p>
+  <p class="refs"><span class="badge beyond">Beyond the paper</span> <span class="badge numerics">Numerics</span> letters are far from the random patterns of the theory; simulated in your browser with the paper’s update rule · Paper · §2, §3, Algorithm 1</p>
+</section>
+
+<!-- 2 · Capacity ---------------------------------------------------------- -->
+<section class="chapter wrap" id="capacity">
+  <div class="chapter-head">
+    <span class="n">02</span>
+    <h2>Exponentially many</h2>
+    <p class="lede">Store <em class="v">P</em> random pairs in two layers of <em class="v">N</em> neurons, start from one of them and let the network update. If it stays put, the pair is a memory. Add pairs until it slips.</p>
+  </div>
+  <div class="stage">
+    <div class="canvas-box ratio-wide"><canvas id="cap-canvas" aria-label="Overlap after the updates versus the number of stored pairs"></canvas>
+    </div>
+    <div class="controls">
+      <div class="seg" id="cap-N"><button data-v="8">N = 8</button><button data-v="9">9</button><button data-v="10" aria-pressed="true">10</button><button data-v="11">11</button><button data-v="12">12</button></div>
+      <div class="control grow-1"><label for="cap-P">pairs <em class="v">P</em></label><input type="range" id="cap-P" min="0" max="100" value="62"><output id="cap-P-out">–</output></div>
+      <button class="btn small primary" id="cap-run" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5l12 7-12 7z"/></svg>Run here</button>
+    </div>
+    <div class="stats">
+      <span>reduced load <em class="v">γ</em> <b id="cap-gamma">–</b></span>
+      <span>theory, one sweep <b id="cap-theory">–</b></span>
+      <span>paper, five sweeps <b id="cap-paper">–</b></span>
+      <span class="hl">your run <b id="cap-you">–</b></span>
+    </div>
+  </div>
+  <p class="note">Each extra pair adds noise of order <strong>e<sup>−<em class="v">N</em><em class="v">ρ</em></sup></strong>, with <em class="v">ρ</em><sub>2</sub> ≈ 1.35, so the capacity grows as e<sup><em class="v">N</em><em class="v">ρ</em></sup>. One more neuron per layer multiplies it by about 3.8. At <em class="v">N</em> = 10 there are only 1,024 different patterns per layer, yet more than ten thousand pairs stay put: a memory here is the pair, one point among 2<sup>20</sup>. A classic Hopfield network holds about 0.14 memories per neuron.</p>
+  <p class="refs"><span class="badge theory">Theory</span> curves: one-step overlap erf(1/√2<em class="v">γ</em>), §5</p>
+  <p class="refs"><span class="badge numerics">Numerics</span> dots: the paper’s Monte Carlo, 5 sweeps, 6 data sets × 200 starts · your run: the same protocol in your browser · Paper · Fig. 1a</p>
+
+  <div class="sub" id="width">
+    <h3>More layers, more room</h3>
+    <p>Bind <em class="v">L</em> layers instead of two and the rate <em class="v">ρ</em><sub><em class="v">L</em></sub> grows. It comes from a single equation, tanh <em class="v">x</em> = <em class="v">x</em>/[2(<em class="v">L</em> − 1)], solved here as you move the slider.</p>
+    <div class="stage">
+      <div class="stage-grid">
+        <div class="canvas-box square"><canvas id="width-saddle" aria-label="Graphical solution of the saddle-point equation"></canvas></div>
+        <div class="canvas-box square"><canvas id="width-rate" aria-label="The rate rho against the number of layers"></canvas></div>
+      </div>
+      <div class="controls">
+        <div class="control grow-1"><label for="width-L">layers <em class="v">L</em></label><input type="range" id="width-L" min="2" max="10" value="3"><output id="width-L-out">3</output></div>
+      </div>
+      <div class="stats">
+        <span>saddle <em class="v">x</em>* <b id="width-x">–</b></span>
+        <span>rate <em class="v">ρ</em><sub><em class="v">L</em></sub> <b id="width-rho">–</b></span>
+        <span class="hl">capacity at <em class="v">N</em> = 10, e<sup>10<em class="v">ρ</em></sup> <b id="width-pc">–</b></span>
+      </div>
+    </div>
+    <p class="note">The rate approaches <strong><em class="v">L</em> log 2</strong>, the logarithm of the number of joint states per neuron: the network can file an exponential share of all its configurations. The bill grows at the same rate. Each sweep reads every stored pair, so running near capacity at <em class="v">N</em> = 64 would mean reading about 10<sup>37</sup> pairs per step. The capacity describes which states are fixed points, not a regime any machine can reach.</p>
+    <p class="refs"><span class="badge theory">Theory</span> saddle point and rate, §4 · cost, §3 · Paper · Fig. 1b</p>
+  </div>
+</section>
+
+<!-- 3 · Basins ------------------------------------------------------------ -->
+<section class="chapter wrap" id="basins">
+  <div class="chapter-head">
+    <span class="n">03</span>
+    <h2>How wrong can the question be?</h2>
+    <p class="lede">Three layers of 30 neurons hold 35,224 random triples. Start from a damaged copy of one, each neuron kept with probability (1 + <em class="v">r</em>)/2, and apply one sweep. Does it come home?</p>
+  </div>
+  <div class="stage">
+    <div class="stage-grid">
+      <div class="canvas-box square"><canvas id="basins-run" aria-label="Final overlap versus the starting overlap"></canvas>
+      </div>
+      <div class="canvas-box square"><canvas id="basins-eps" aria-label="Storage exponent versus the starting overlap, for 2, 3 and 4 layers"></canvas></div>
+    </div>
+    <div class="controls">
+      <div class="control grow-1"><label for="basins-r">starting overlap <em class="v">r</em></label><input type="range" id="basins-r" min="0" max="100" value="50"><output id="basins-r-out">0.50</output></div>
+      <button class="btn small primary" id="basins-run-btn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5l12 7-12 7z"/></svg>Run here</button>
+    </div>
+    <div class="stats">
+      <span>neurons flipped <b id="basins-d">–</b></span>
+      <span>exponent <em class="v">ε</em><sub>3</sub>, annealed · typical <b id="basins-eps-v">–</b></span>
+      <span class="hl">your run <b id="basins-you">–</b></span>
+    </div>
+  </div>
+  <p class="note">Two estimates bracket the answer. The <strong>typical</strong> one follows the most likely damage and is pessimistic. The <strong>annealed</strong> one averages over all damage patterns, and the rare lucky ones dominate that average. The simulations sit on the annealed curve. On the right, the price: <em class="v">P</em><sub>c</sub>(<em class="v">r</em>) ~ e<sup><em class="v">N</em><em class="v">ε</em><sub><em class="v">L</em></sub>(<em class="v">r</em>)</sup> stays exponential down to the threshold where <em class="v">ε</em> hits zero. Wider networks start higher but cross zero sooner: they store more and forgive less.</p>
+  <p class="refs"><span class="badge theory">Theory</span> curves, §6, Remark 2 · <span class="badge numerics">Numerics</span> dots: the paper’s data, 30 starts per point · your run: in your browser, 24 starts · Paper · Fig. 2</p>
+</section>
+
+<!-- 4 · One answer -------------------------------------------------------- -->
+<section class="chapter wrap" id="function">
+  <div class="chapter-head">
+    <span class="n">04</span>
+    <h2>One question, one answer</h2>
+    <p class="lede">Many questions may share an answer. One question with several answers is a different matter. File the question “?” under <em class="v">q</em> different digits and ask it.</p>
+  </div>
+  <div class="stage">
+    <div class="stage-grid">
+      <div class="canvas-box square"><canvas id="function-run" aria-label="The stored answers, the first sweep and the settled answer"></canvas></div>
+      <div class="canvas-box square"><canvas id="function-plot" aria-label="Overlap of the first-sweep answer with each stored answer, versus q"></canvas></div>
+    </div>
+    <div class="controls">
+      <div class="control grow-1"><label for="function-q">answers <em class="v">q</em></label><input type="range" id="function-q" min="1" max="9" value="3"><output id="function-q-out">3</output></div>
+    </div>
+    <div class="stats">
+      <span>first sweep, overlap with each answer <b id="function-blend">–</b></span>
+      <span>independent answers, theory <b id="function-theory">–</b></span>
+      <span class="hl">settles on <b id="function-final">–</b></span>
+    </div>
+  </div>
+  <p class="note">All <em class="v">q</em> pairs match the question equally well, so they tie in the vote. The first sweep returns their <strong>pixel-by-pixel majority</strong>. For independent answers its overlap with each one is about √(2/<em class="v">πq</em>): the curve, checked by the dots. The digits sit higher because they share most of their pixels. Let it settle and it locks onto one of them, chosen by details of the blend, not by anything stored. Either way the question was never stored. That is why the real data below keep each cue with a single target. Many cues per target is fine: it is what real data look like.</p>
+  <p class="refs"><span class="badge theory">Theory</span> Remark 1, §3 · <span class="badge numerics">Numerics</span> dots: random answers, 128 neurons, two cue layers, in your browser · <span class="badge beyond">Beyond the paper</span> the digits, and the settling after the first sweep</p>
+</section>
+
+<!-- 5 · Receptors --------------------------------------------------------- -->
+<section class="chapter wrap" id="receptors">
+  <div class="chapter-head">
+    <span class="n">05</span>
+    <h2>Two chains name the antigen</h2>
+    <p class="lede">A T cell recognises its target, a short peptide called the epitope, through two receptor chains, α and β. VDJdb lists receptor–epitope pairs confirmed in the lab. The paper keeps 1,052 of them, one epitope per receptor. Here 789 are stored, as three layers of 128 neurons.</p>
+  </div>
+  <div class="stage">
+    <div class="stage-grid">
+      <div class="canvas-box square"><canvas id="rec-run" aria-label="A receptor's two chains and the recalled epitope"></canvas></div>
+      <div class="canvas-box square"><canvas id="rec-bars" aria-label="Recall rates: the paper's and yours"></canvas></div>
+    </div>
+    <div class="controls">
+      <div class="seg" id="rec-cue"><button data-v="ab" aria-pressed="true">α + β</button><button data-v="a">α only</button><button data-v="b">β only</button></div>
+      <div class="seg" id="rec-src"><button data-v="stored" aria-pressed="true">Stored receptor</button><button data-v="unseen">Never seen</button></div>
+      <button class="btn small primary" id="rec-go" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5l12 7-12 7z"/></svg>Another receptor</button>
+    </div>
+    <div class="stats">
+      <span>epitope recalled <b id="rec-answer">–</b></span>
+      <span>true epitope <b id="rec-truth">–</b></span>
+      <span class="hl">your tally <b id="rec-tally">–</b></span>
+    </div>
+  </div>
+  <p class="note">From both chains a stored receptor is recalled essentially without error. From one chain alone, only about four times in five: each chain carries information the other lacks. For a receptor it has never seen, the network names the right epitope about <strong>one time in ten</strong>. That is twice a shuffled-label control and twenty times chance, but far below its memory.</p>
+  <p class="refs"><span class="badge numerics">Numerics</span> live in your browser, with the paper’s cleaning, split and encoder (Atchley factors and SimHash) · bars: the paper’s results · Paper · §8, Figs. 6–7 · data: <a href="https://vdjdb.cdr3.net/" target="_blank" rel="noopener">VDJdb</a>, CC BY-ND 4.0</p>
+</section>
+
+<!-- 6 · Language ---------------------------------------------------------- -->
+<section class="chapter wrap" id="language">
+  <div class="chapter-head">
+    <span class="n">06</span>
+    <h2>Same network, different words</h2>
+    <p class="lede">Now the pairs are sentences and their intents, from CLINC150: 16,868 requests stored over 150 intents, in two layers of 128 neurons. Type a request in English.</p>
+  </div>
+  <div class="stage">
+    <div class="ask">
+      <input type="text" id="lang-input" maxlength="160" autocomplete="off" spellcheck="false" placeholder="e.g. wake me up at seven tomorrow" aria-label="A request in English">
+      <div class="chips" id="lang-chips">
+        <button type="button" data-k="stored">A stored request</button>
+        <button type="button" data-k="unseen">One it never saw</button>
+      </div>
+    </div>
+    <div class="stage-grid">
+      <div class="canvas-box square lang-box">
+        <div class="lang-out" id="lang-out" aria-live="polite">
+          <p class="lang-status" id="lang-status">Loading 16,868 sentences…</p>
+        </div>
+      </div>
+      <div class="canvas-box square"><canvas id="lang-bars" aria-label="Memory and generalisation in the two domains"></canvas></div>
+    </div>
+    <div class="controls">
+      <div class="control grow-1"><label for="lang-words">words given</label><input type="range" id="lang-words" min="1" max="1" value="1"><output id="lang-words-out">all</output></div>
+    </div>
+  </div>
+  <p class="note">Storage rule, dynamics and closed forms are the same as for receptors. Yet a new sentence finds its intent <strong>0.58</strong> of the time, against 0.11 for a new receptor. The encoder makes the difference: paraphrases share words, so their codes land close together. Swap it for a text-blind random code and memory survives while new sentences fall to chance (0.008). The memory belongs to the network. Generalisation belongs to the encoder.</p>
+  <p class="refs"><span class="badge numerics">Numerics</span> live in your browser, with the paper’s split and encoder (TF-IDF and SimHash), reproduced bit for bit · bars: the paper’s results · Paper · §9, Fig. 8 · data: <a href="https://github.com/clinc/oos-eval" target="_blank" rel="noopener">CLINC150</a>, CC BY 3.0</p>
+</section>
+
+</main>
+
+<footer class="site-footer" id="cite">
+  <div class="wrap">
+    <p>Cite the paper:</p>
+<pre>@article{agliari2026exponential,
+  title   = {Exponential Capacity in Multilayer Hetero-Associative Neural Networks},
+  author  = {Agliari, Elena and Barra, Adriano and Ladiana, Andrea and Lepre, Andrea},
+  journal = {submitted to Neural Networks},
+  year    = {2026},
+  url     = {https://arxiv.org/abs/2607.29554}
+}</pre>
+    <p>Live simulations run the paper’s update rule (Algorithm 1, with the cue-driven start of the <a href="https://github.com/andrea-ladiana/exponential-lam-engine/">reference code</a>) in your browser. Dots and bars marked as the paper’s are its Monte Carlo results. Receptor data from VDJdb (Shugay et al. 2018; Bagaev et al. 2020), intent data from CLINC150 (Larson et al. 2019). Built by <a href="../">Andrea Ladiana</a>. Part of a series of interactive papers; see also <a href="../dreaming/">Networks that dream</a> and <a href="../diamond-spectrum/">The diamond lattice, played</a>.</p>
+  </div>
+</footer>
+
+<script type="module" src="assets/js/main.js?v=20261029a"></script>
+</body>
+</html>
