@@ -14,8 +14,10 @@ Personal website. Plain HTML/CSS/JS, no build step.
 | `conferences.json` | **Conferences**: edit this file, the page renders it |
 | `lenia/`, `affitti/` | Sub-pages |
 | `diamond-spectrum/` | Interactive paper on the diamond-lattice spectrum (ES modules, data in `assets/data/spectrum.json`) |
+| `dreaming/` | Interactive paper on dreaming Hopfield networks (ES modules, live Monte Carlo, data in `assets/data/dreaming.json`) |
 | `assets/series/` | Shared look of the interactive-paper series (`series.css`, fonts) |
 | `tools/diamond/precompute.py` | Regenerates `diamond-spectrum/assets/data/spectrum.json` from the paper's exact formulas (needs sympy, mpmath, numpy; ~3 min) |
+| `tools/dreaming/precompute.py` | Regenerates `dreaming/assets/data/dreaming.json`: letter bitmaps plus the paper's Monte Carlo data, read from the local DLAM working folder (needs numpy, pillow, matplotlib) |
 | `404.html`, `robots.txt`, `sitemap.xml`, `og-image.png` | SEO / sharing |
 
 ## Previewing locally
@@ -53,10 +55,11 @@ validates `biblio.bib` and `conferences.json`. The same check, plus a link check
 
 GitHub Pages caches assets for a few minutes. When you change `style.css`, `script.js` or the files in `assets/js/`, bump the `?v=` suffix in `index.html` (and `404.html`) so visitors never get new HTML with old CSS/JS.
 
-In `diamond-spectrum/` the same suffix is also on every `import` between modules, so bump it everywhere at once:
+In `diamond-spectrum/` and `dreaming/` the same suffix is also on every `import` between modules, so bump it everywhere at once:
 
 ```bash
 grep -rl "v=20261029a" diamond-spectrum | xargs sed -i "s/v=20261029a/v=NEW/g"
+grep -rl "v=20261029a" dreaming | xargs sed -i "s/v=20261029a/v=NEW/g"
 ```
 
 ## Background animation

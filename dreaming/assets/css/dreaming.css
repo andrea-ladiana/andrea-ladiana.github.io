@@ -1,0 +1,40 @@
+/* Page-specific layout for /dreaming/ (the shared look lives in ../assets/series/series.css). */
+
+.icon-btn {
+  display: inline-grid; place-items: center; width: 34px; height: 34px; flex: none;
+  border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink-2); cursor: pointer;
+}
+.icon-btn:hover { color: var(--c1-ink); border-color: var(--c1); }
+.icon-btn svg { width: 16px; height: 16px; }
+
+.legend-badges { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin: 28px 0 0; font-size: 13.5px; color: var(--muted); }
+.legend-badges .badge { margin-left: 4px; }
+
+/* Canvas boxes: fixed aspect ratios so nothing jumps while drawing */
+.canvas-box.ratio-wide { aspect-ratio: 2 / 1; }
+.canvas-box.square { aspect-ratio: 1 / 1; }
+@media (max-width: 760px) {
+  .canvas-box.ratio-wide { aspect-ratio: 4 / 3; }
+  .canvas-box.square { aspect-ratio: 1 / 1; }
+  .canvas-box.learn-box { aspect-ratio: 1 / 1; }
+}
+
+.controls + .controls { border-top: 1px dashed var(--line); }
+.control.grow-1 { flex: 1 1 260px; }
+.control.grow-1 input[type="range"] { flex: 1; width: auto; min-width: 120px; }
+
+.key { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin: 0 4px 0 2px; vertical-align: -1px; }
+.key.err { background: var(--c3); }
+
+#letters-pick, #senses-simplex { cursor: pointer; }
+.seg em.v { font-style: italic; }
+
+/* A sub-section inside a chapter */
+.sub { margin-top: 44px; }
+.sub h3 { margin: 0 0 4px; font-size: 21px; font-weight: 600; }
+.sub > p:not(.note):not(.refs) { margin: 0 0 16px; color: var(--ink-2); font-size: 16.5px; max-width: 62ch; }
+
+@media (max-width: 600px) {
+  .topbar .home { font-size: 14px; }
+  .controls .seg { flex-wrap: wrap; border-radius: 18px; }
+}

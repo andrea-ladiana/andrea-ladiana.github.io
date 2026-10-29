@@ -6,7 +6,8 @@
  *   --c1  primary object of the paper   (violet)
  *   --c2  what is measured / heard      (blue)
  *   --c3  dynamics, renormalization     (orange)
- * Claim badges: .badge.theorem (proved), .badge.conjecture (open), .badge.numerics (computed).
+ * Claim badges: .badge.theorem (proved), .badge.theory (derived, not rigorous: replica / signal-to-noise),
+ * .badge.conjecture (open), .badge.numerics (computed), .badge.beyond (outside the paper's scope).
  */
 @font-face { font-family: "Series Sans"; src: url("fonts/lenia-sans-regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
 @font-face { font-family: "Series Sans"; src: url("fonts/lenia-sans-italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
@@ -164,6 +165,10 @@ input[type="range"] { accent-color: var(--c1); width: 150px; }
 .badge.conjecture { color: var(--c3-ink); border-color: var(--c3); border-style: dashed; background: var(--c3-soft); }
 .badge.conjecture::before { background: none; border: 1.5px solid currentColor; width: 5px; height: 5px; }
 .badge.numerics { color: var(--c2-ink); border-color: color-mix(in srgb, var(--c2) 45%, transparent); background: var(--c2-soft); }
+.badge.theory { color: var(--c1-ink); border-color: color-mix(in srgb, var(--c1) 45%, transparent); background: none; }
+.badge.theory::before { background: linear-gradient(90deg, currentColor 50%, transparent 50%); border: 1.5px solid currentColor; width: 5px; height: 5px; }
+.badge.beyond { color: var(--ink-2); border-color: var(--axis); border-style: dashed; background: none; }
+.badge.beyond::before { background: none; border: 1.5px solid currentColor; width: 5px; height: 5px; }
 
 .tip {
   position: absolute; pointer-events: none; z-index: 5; padding: 6px 9px; border-radius: 8px;

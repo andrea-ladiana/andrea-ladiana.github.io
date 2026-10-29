@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Networks that dream</title>
+<meta name="description" content="An interactive companion to “Do Hopfield Networks Dream of Stored Patterns?”: a memory that learns from noisy examples, sleeps on them, and recalls more from less data, across several senses.">
+<meta name="color-scheme" content="light dark">
+<link rel="canonical" href="https://andrea-ladiana.github.io/dreaming/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Networks that dream">
+<meta property="og:description" content="Watch a Hopfield network learn from noisy examples, sleep on them, and recall more from less data.">
+<meta property="og:url" content="https://andrea-ladiana.github.io/dreaming/">
+<meta property="og:image" content="https://andrea-ladiana.github.io/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/img/icon.svg" type="image/svg+xml">
+<link rel="preload" href="../assets/series/fonts/lenia-sans-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/series/series.css?v=20261029b">
+<link rel="stylesheet" href="assets/css/dreaming.css?v=20261029a">
+<script>
+  // theme before first paint (a per-viewer convenience, it may be absent)
+  try { const t = localStorage.getItem("series-theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="home" href="../" title="Back to Andrea Ladiana's website">← Andrea Ladiana</a>
+    <nav aria-label="Chapters">
+      <a href="#learn"><span class="n">1</span>Learn</a>
+      <a href="#crowd"><span class="n">2</span>Crowd</a>
+      <a href="#sleep"><span class="n">3</span>Sleep</a>
+      <a href="#letters"><span class="n">4</span>Real data</a>
+      <a href="#senses"><span class="n">5</span>Senses</a>
+      <a href="#data"><span class="n">6</span>Less data</a>
+    </nav>
+    <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch between light and dark theme" title="Theme">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z" fill="currentColor"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+<section class="hero wrap">
+  <p class="series">Interactive paper</p>
+  <h1>A memory that gets better while it sleeps</h1>
+  <p class="thesis">A Hopfield network never sees the originals, only noisy examples. Let it sleep on them and it recalls more, from fewer examples, across several senses at once.</p>
+  <p class="paper">Based on A. Barra, F. Durante, A. Ladiana, M. Marra Solazzo, <cite>Do Hopfield Networks Dream of Stored Patterns? A Statistical-Mechanical Theory of Dreaming in Multidirectional Associative Memories</cite>, Neural Networks 206, 109729 (2026).</p>
+  <div class="actions">
+    <a class="btn primary" href="#learn">Start <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg></a>
+    <a class="btn" href="https://doi.org/10.1016/j.neunet.2026.109729" target="_blank" rel="noopener">Read the paper <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+    <a class="btn" href="https://arxiv.org/abs/2605.13721" target="_blank" rel="noopener">arXiv</a>
+    <a class="btn" href="https://github.com/andrea-ladiana/dlam-mc-core" target="_blank" rel="noopener">Code</a>
+    <a class="btn" href="#cite">Cite</a>
+  </div>
+  <p class="legend-badges"><span class="badge theory">Theory</span> derived in the paper (replica or signal-to-noise), not a rigorous proof <span class="badge numerics">Numerics</span> Monte Carlo, here or in the paper <span class="badge beyond">Beyond the paper</span> outside its assumptions</p>
+</section>
+
+<!-- 1 · Learn ------------------------------------------------------------- -->
+<section class="chapter wrap" id="learn">
+  <div class="chapter-head">
+    <span class="n">01</span>
+    <h2>Learn from examples</h2>
+    <p class="lede">The network is never shown the original. It gets <em class="v">M</em> noisy copies, each pixel kept with probability (1 + <em class="v">r</em>)/2, and stores their average.</p>
+  </div>
+  <div class="stage">
+    <div class="canvas-box ratio-wide learn-box"><canvas id="learn-canvas" aria-label="A hidden letter, its noisy examples and their average"></canvas></div>
+    <div class="controls">
+      <div class="control"><label for="learn-M">examples <em class="v">M</em></label><input type="range" id="learn-M" min="1" max="60" value="8"><output id="learn-M-out">8</output></div>
+      <div class="control"><label for="learn-r">quality <em class="v">r</em></label><input type="range" id="learn-r" min="5" max="100" step="5" value="40"><output id="learn-r-out">0.4</output></div>
+      <button class="btn small" id="learn-new" type="button">Another letter</button>
+    </div>
+    <div class="stats">
+      <span>pixels each example gets right <b id="learn-ex">–</b></span>
+      <span>pixels the average gets right <b id="learn-avg">–</b></span>
+      <span class="hl">dataset entropy <em class="v">ρ</em> <b id="learn-rho">–</b></span>
+    </div>
+  </div>
+  <p class="note">One number sums up the data: <strong><em class="v">ρ</em> = (1 − <em class="v">r</em><sup>2</sup>)/(<em class="v">M r</em><sup>2</sup>)</strong>. Small <em class="v">ρ</em>: many good examples. Large <em class="v">ρ</em>: few bad ones. Everything below is about what a network can do with a given <em class="v">ρ</em>.</p>
+  <p class="refs">Paper · §2.1, eqs. (1)–(2)</p>
+</section>
+
+<!-- 2 · Crowd ------------------------------------------------------------- -->
+<section class="chapter wrap" id="crowd">
+  <div class="chapter-head">
+    <span class="n">02</span>
+    <h2>Too many memories</h2>
+    <p class="lede">Store <em class="v">K</em> random patterns in 400 neurons. Start from a damaged copy of one and let every neuron follow the others. With few memories it snaps back. Add more and they start talking over each other.</p>
+  </div>
+  <div class="stage">
+    <div class="stage-grid">
+      <div class="canvas-box square"><canvas id="crowd-grid" aria-label="The 400 neurons during recall"></canvas>
+        <span class="overlay-label">400 neurons · <span class="key err"></span>wrong</span>
+      </div>
+      <div class="canvas-box square"><canvas id="crowd-plot" aria-label="Overlap with the cued memory and with all the others"></canvas></div>
+    </div>
+    <div class="controls">
+      <div class="control grow-1"><label for="crowd-K">memories <em class="v">K</em></label><input type="range" id="crowd-K" min="8" max="240" step="4" value="40"><output id="crowd-K-out">40</output></div>
+      <button class="btn small primary" id="crowd-go" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5l12 7-12 7z"/></svg>Recall another</button>
+    </div>
+    <div class="stats">
+      <span>load <em class="v">α</em> = <em class="v">K</em>/<em class="v">N</em> <b id="crowd-alpha">–</b></span>
+      <span>overlap with the cued memory <b id="crowd-m">–</b></span>
+      <span class="hl">recalled, out of 24 cues <b id="crowd-rate">–</b></span>
+    </div>
+  </div>
+  <p class="note">Each memory adds a little crosstalk to every other. Past a load of about <strong>0.14</strong> it drowns the signal: the classic limit of Hebbian storage. Here every memory is also learned from 40 noisy examples (<em class="v">ρ</em> ≈ 0.04), which costs a bit more.</p>
+  <p class="refs"><span class="badge numerics">Numerics</span> simulated in your browser, Algorithm 1 at <em class="v">t</em> = 0 · Paper · §2.2, Algorithm 1</p>
+</section>
+
+<!-- 3 · Sleep ------------------------------------------------------------- -->
+<section class="chapter wrap" id="sleep">
+  <div class="chapter-head">
+    <span class="n">03</span>
+    <h2>Sleep on it</h2>
+    <p class="lede">Before recall, let the network dream: an off-line change of its synapses that turns down the directions many memories share. One knob, the sleep time <em class="v">t</em>.</p>
+  </div>
+  <div class="stage">
+    <div class="stage-grid">
+      <div class="canvas-box square"><canvas id="sleep-grid" aria-label="The 400 neurons during recall"></canvas>
+        <span class="overlay-label">400 neurons · <span class="key err"></span>wrong</span>
+      </div>
+      <div class="canvas-box square"><canvas id="sleep-spec" aria-label="How strongly each direction is stored, awake and after sleep"></canvas></div>
+    </div>
+    <div class="controls">
+      <div class="control grow-1"><label for="sleep-t">sleep <em class="v">t</em></label><input type="range" id="sleep-t" min="0" max="100" value="0"><output id="sleep-t-out">0</output></div>
+      <div class="control"><label for="sleep-K">memories <em class="v">K</em></label><input type="range" id="sleep-K" min="20" max="240" step="4" value="120"><output id="sleep-K-out">120</output></div>
+      <button class="btn small primary" id="sleep-go" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5l12 7-12 7z"/></svg>Recall another</button>
+    </div>
+    <div class="stats">
+      <span>load <em class="v">α</em> <b id="sleep-alpha">–</b></span>
+      <span>recalled awake <b id="sleep-awake">–</b></span>
+      <span class="hl">recalled after sleep <b id="sleep-rate">–</b></span>
+    </div>
+  </div>
+  <p class="note">A direction stored with strength <em class="v">λ</em> is rescaled by <strong>(1 + <em class="v">t</em>)/(1 + <em class="v">tλ</em>)</strong>. The loud, shared directions, where memories interfere, are turned down most. As <em class="v">t</em> grows, every memory ends up with the same weight. Nothing is replayed: dreaming is computed once, before recall.</p>
+  <p class="refs"><span class="badge numerics">Numerics</span> simulated in your browser · Paper · §2.2, eqs. (3)–(5)</p>
+</section>
+
+<!-- 4 · Real data --------------------------------------------------------- -->
+<section class="chapter wrap" id="letters">
+  <div class="chapter-head">
+    <span class="n">04</span>
+    <h2>Real data looks alike</h2>
+    <p class="lede">The standard complaint about Hopfield networks: real patterns are correlated. Letters share most of their pixels. Hebbian storage melts them into one smudge. Pick a letter and try.</p>
+  </div>
+  <div class="stage">
+    <div class="stage-grid">
+      <div class="canvas-box square"><canvas id="letters-grid" aria-label="The network recalling a letter"></canvas>
+        <span class="overlay-label" id="letters-label"></span>
+      </div>
+      <div class="canvas-box square"><canvas id="letters-pick" aria-label="The 26 stored letters: click one to cue it"></canvas>
+        <span class="overlay-label">what is stored · click a letter to cue it</span>
+      </div>
+    </div>
+    <div class="controls">
+      <div class="control grow-1"><label for="letters-t">sleep <em class="v">t</em></label><input type="range" id="letters-t" min="0" max="100" value="0"><output id="letters-t-out">0</output></div>
+    </div>
+    <div class="controls">
+      <div class="control"><label for="letters-M">examples <em class="v">M</em></label><input type="range" id="letters-M" min="2" max="40" value="20"><output id="letters-M-out">20</output></div>
+      <div class="control"><label for="letters-r">quality <em class="v">r</em></label><input type="range" id="letters-r" min="20" max="100" step="5" value="60"><output id="letters-r-out">0.6</output></div>
+    </div>
+    <div class="stats">
+      <span>average overlap between letters <b id="letters-corr">–</b></span>
+      <span>landed on <b id="letters-land">–</b></span>
+      <span class="hl">letters recalled, 3 cues each <b id="letters-rate">–</b></span>
+    </div>
+  </div>
+  <p class="note">This is the problem sleep was invented for: it undoes the correlations that Hebbian storage piles up. Read it with care, though. The paper’s theory assumes random patterns, and letters are far from random, so this is a demonstration, not a result. And sleep cannot replace all data: with 5 examples of quality 0.4, most letters stay lost.</p>
+  <p class="refs"><span class="badge beyond">Beyond the paper</span> <span class="badge numerics">Numerics</span> simulated in your browser · structured check in the paper: MNIST digits, Fig. 3b · limitations: §6</p>
+</section>
+
+<!-- 5 · Senses ------------------------------------------------------------ -->
+<section class="chapter wrap" id="senses">
+  <div class="chapter-head">
+    <span class="n">05</span>
+    <h2>Many senses</h2>
+    <p class="lede">Give every memory three views, one per layer, and link the layers. Then blend the three views into a single cue and ask each layer to pull out its own. Click the triangle to choose the blend.</p>
+  </div>
+  <div class="stage">
+    <div class="stage-grid">
+      <div class="canvas-box square"><canvas id="senses-simplex" aria-label="Joint success over all cue blends"></canvas>
+        <span class="overlay-label" id="senses-map-label"></span>
+        <div class="tip" id="senses-tip"></div>
+      </div>
+      <div class="canvas-box square"><canvas id="senses-run" aria-label="One recall with three layers"></canvas></div>
+    </div>
+    <div class="controls">
+      <div class="seg" id="senses-mode"><button data-v="t0">Awake</button><button data-v="t64" aria-pressed="true">After sleep, <em class="v">t</em> = 64</button><button data-v="off">Layers unlinked</button></div>
+      <button class="btn small" id="senses-go" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5l12 7-12 7z"/></svg>Run again</button>
+    </div>
+    <div class="stats">
+      <span>blend <b id="senses-w">–</b></span>
+      <span>success in the paper, 40 runs <b id="senses-p">–</b></span>
+      <span class="hl">this run <b id="senses-ok">–</b></span>
+    </div>
+  </div>
+  <p class="note">At the centre every layer gets part of the clue. Near a corner only one does, and the other two must be told by their neighbours. Awake, their own crosstalk drowns the message. After sleep, success reaches the corners. Unlinked, the blind layers never move: sleep cleans a memory but cannot create a clue that is not there.</p>
+  <p class="refs"><span class="badge numerics">Numerics</span> map: the paper’s data, <em class="v">N</em> = 400, <em class="v">K</em> = 72 · run: in your browser · Paper · Fig. 2, eq. (13), §4.1</p>
+  <p class="refs"><span class="badge theory">Theory</span> why it works: the effective field splits into a relayed signal and two noises, eqs. (28)–(29)</p>
+</section>
+
+<!-- 6 · Less data --------------------------------------------------------- -->
+<section class="chapter wrap" id="data">
+  <div class="chapter-head">
+    <span class="n">06</span>
+    <h2>Sleep instead of data</h2>
+    <p class="lede">How many examples per memory does a network need to recall reliably? Measure it again after each amount of sleep.</p>
+  </div>
+  <div class="stage">
+    <div class="canvas-box ratio-wide"><canvas id="data-canvas" aria-label="Examples needed versus sleep time"></canvas>
+      <div class="tip" id="data-tip"></div>
+    </div>
+    <div class="stats">
+      <span>sleep <em class="v">t</em> <b id="data-t">–</b></span>
+      <span>examples needed, poor data <b id="data-lo">–</b></span>
+      <span>good data <b id="data-hi">–</b></span>
+      <span class="hl">saving, poor · good <b id="data-s">–</b></span>
+    </div>
+  </div>
+  <p class="note">Moderate sleep cuts the examples needed by <strong>40–60%</strong>: off-line computation stands in for data. The worse the data, the larger the saving.</p>
+  <p class="refs"><span class="badge numerics">Numerics</span> the paper’s data, <em class="v">N</em> = 300, <em class="v">K</em> = 30, 15 runs · Paper · Fig. 3a, §3.4</p>
+
+  <div class="sub" id="howlong">
+    <h3>How long to sleep?</h3>
+    <p>Sleep removes crosstalk, but pushed to the limit it also amplifies the noise of the examples themselves. The theory predicts a best sleep time.</p>
+    <div class="stage">
+      <div class="canvas-box ratio-wide"><canvas id="snr-canvas" aria-label="Signal-to-noise ratio versus sleep time"></canvas></div>
+      <div class="controls">
+        <div class="control"><label for="snr-a">load <em class="v">α</em></label><input type="range" id="snr-a" min="2" max="95" value="80"><output id="snr-a-out">0.80</output></div>
+        <div class="control"><label for="snr-rho">entropy <em class="v">ρ</em></label><input type="range" id="snr-rho" min="0" max="100" value="50"><output id="snr-rho-out">0.05</output></div>
+      </div>
+      <div class="stats">
+        <span>awake <b id="snr-hebb">–</b></span>
+        <span>endless sleep <b id="snr-inf">–</b></span>
+        <span class="hl">best <b id="snr-best">–</b></span>
+      </div>
+    </div>
+    <p class="note">At low load and clean data the best time lies far to the right and the peak is tiny: in simulations, more sleep simply looks better. At high load with noisy examples, over-sleeping visibly hurts.</p>
+    <p class="refs"><span class="badge theory">Theory</span> one-step signal-to-noise, eqs. (35)–(38) · Paper · §5, Figs. 10–11</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer" id="cite">
+  <div class="wrap">
+    <p>Cite the paper:</p>
+<pre>@article{barra2026dreaming,
+  title   = {Do Hopfield Networks Dream of Stored Patterns? A Statistical-Mechanical Theory of Dreaming in Multidirectional Associative Memories},
+  author  = {Barra, Adriano and Durante, Fabrizio and Ladiana, Andrea and Marra Solazzo, Michela},
+  journal = {Neural Networks},
+  volume  = {206},
+  pages   = {109729},
+  year    = {2026},
+  doi     = {10.1016/j.neunet.2026.109729}
+}</pre>
+    <p>Live simulations run the paper’s Algorithm 1 in your browser, with the normalisation of the <a href="https://github.com/andrea-ladiana/dlam-mc-core">reference code</a>. Maps and curves marked as the paper’s data are its Monte Carlo results. Built by <a href="../">Andrea Ladiana</a>. Part of a series of interactive papers; see also <a href="../diamond-spectrum/">The diamond lattice, played</a> and <a href="../lenia/">Lenia in a heat bath</a>.</p>
+  </div>
+</footer>
+
+<script type="module" src="assets/js/main.js?v=20261029a"></script>
+</body>
+</html>

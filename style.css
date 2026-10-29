@@ -960,6 +960,39 @@ h2 {
     opacity: 0.8;
 }
 
+/* Dreaming-network project card visual: a noisy example, sleep, the recalled letter */
+.dream-visual {
+    height: 78px;
+    width: auto;
+    overflow: visible;
+}
+
+.dream-visual .dmv-frame {
+    fill: none;
+    stroke: var(--accent-color);
+    stroke-width: 0.8;
+    opacity: 0.35;
+}
+
+.dream-visual .dmv-noisy {
+    fill: var(--accent-color);
+    opacity: 0.5;
+    transition: opacity 0.4s ease;
+}
+
+.dream-visual .dmv-clean {
+    fill: var(--accent-color);
+}
+
+.dream-visual .dmv-moon {
+    fill: var(--accent-color);
+    filter: drop-shadow(0 0 6px var(--accent-color));
+}
+
+.project-card:hover .dream-visual .dmv-noisy {
+    opacity: 0.25;
+}
+
 .visual-tag {
     position: absolute;
     bottom: 8px;
