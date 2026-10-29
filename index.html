@@ -4,39 +4,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>document.documentElement.classList.add('js');</script>
     <title>Andrea Ladiana | Mathematician</title>
     <meta name="description"
         content="Personal website of Andrea Ladiana, PhD Student in Mathematics. Researching Heteroassociative Neural Networks, Hopfield Models, and Statistical Mechanics.">
+    <meta name="theme-color" content="#1a1a1a">
     <meta name="google-site-verification" content="h4_lvbonIy-Myi1BwjT4lL30Hb9_FXrG5Ct0ZSgzLMA" />
+    <link rel="canonical" href="https://andrea-ladiana.github.io/">
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
     <!-- Open Graph -->
+    <meta property="og:site_name" content="Andrea Ladiana">
     <meta property="og:title" content="Andrea Ladiana | Mathematician">
     <meta property="og:description"
         content="PhD Student in Mathematics researching Associative Neural Networks, Hopfield Models, and Statistical Mechanics.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://andrea-ladiana.github.io">
+    <meta property="og:url" content="https://andrea-ladiana.github.io/">
+    <meta property="og:image" content="https://andrea-ladiana.github.io/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Andrea Ladiana, PhD Student in Mathematics, over a network of nodes exchanging signals">
 
     <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Andrea Ladiana | Mathematician">
     <meta name="twitter:description"
         content="PhD Student in Mathematics researching Associative Neural Networks and Statistical Mechanics.">
+    <meta name="twitter:image" content="https://andrea-ladiana.github.io/og-image.png">
 
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Self-hosted font (no third-party requests) -->
+    <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="style.css?v=20261029d">
 
-    <!-- Schema.org JSON-LD for Academic / Scholarly Profile -->
+    <!-- Schema.org JSON-LD. The list of ScholarlyArticle items is added by script.js from biblio.bib -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Person",
+      "@id": "https://andrea-ladiana.github.io/#me",
       "name": "Andrea Ladiana",
       "jobTitle": "PhD Student in Mathematics",
       "worksFor": {
@@ -49,11 +56,12 @@
         "name": "Agliari-Barra Lab 'CoScienza'",
         "url": "https://www.researchgate.net/lab/Agliari-Barra-Lab-CoScienza-Adriano-Barra"
       },
-      "url": "https://andrea-ladiana.github.io",
+      "url": "https://andrea-ladiana.github.io/",
       "sameAs": [
         "https://orcid.org/0009-0005-5078-9817",
         "https://github.com/andrea-ladiana",
         "https://www.researchgate.net/profile/Andrea-Ladiana",
+        "https://scholar.google.com/citations?user=8NSj9foAAAAJ",
         "https://phd.uniroma1.it/web/ANDREA-LADIANA_nP2239069_IT.aspx"
       ],
       "knowsAbout": [
@@ -72,14 +80,40 @@
 </head>
 
 <body>
-    <div class="gradient-bg">
+    <!-- Icon sprite: <svg class="icon"><use href="#i-name"/></svg> -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+        <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></symbol>
+        <symbol id="i-github" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></symbol>
+        <symbol id="i-researchgate" viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="19" height="19" rx="4.5"/><text x="12" y="16.2" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700" fill="currentColor" stroke="none">Rg</text></symbol>
+        <symbol id="i-scholar" viewBox="0 0 24 24"><path d="M22 9 12 4 2 9l10 5z"/><path d="M6 11.5V16c2.5 3 9.5 3 12 0v-4.5"/><path d="M22 9v6"/></symbol>
+        <symbol id="i-arxiv" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></symbol>
+        <symbol id="i-university" viewBox="0 0 24 24"><path d="M3 21h18M5 18v-7M9.5 18v-7M14.5 18v-7M19 18v-7M12 3 3 8h18z"/></symbol>
+        <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+        <symbol id="i-external" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></symbol>
+        <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+        <symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5m-7 7 7-7 7 7"/></symbol>
+        <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+        <symbol id="i-filter" viewBox="0 0 24 24"><path d="M22 3H2l8 9.5V19l4 2v-8.5z"/></symbol>
+        <symbol id="i-hash" viewBox="0 0 24 24"><path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18"/></symbol>
+        <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol>
+        <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+        <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+        <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+        <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+        <symbol id="i-map-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+        <symbol id="i-play" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m10 8 6 4-6 4z"/></symbol>
+        <symbol id="i-atom" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.5"/><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/></symbol>
+        <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+        <symbol id="i-motion" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z"/></symbol>
+        <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></symbol>
+    </svg>
+
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="gradient-bg" aria-hidden="true">
         <div class="noise"></div>
-        <div class="gradients">
-            <div class="g1"></div>
-            <div class="g2"></div>
-            <div class="g3"></div>
-        </div>
     </div>
+    <canvas id="graph-bg" class="graph-bg" aria-hidden="true"></canvas>
 
     <!-- Sticky Navigation -->
     <nav class="top-nav" aria-label="Main Navigation">
@@ -89,13 +123,13 @@
         <div class="nav-dropdown" id="projects-dropdown">
             <button type="button" class="nav-dropdown-btn" id="projects-dropdown-btn" aria-expanded="false" aria-haspopup="true">
                 <span>Projects</span>
-                <i class="fas fa-chevron-down nav-chevron" aria-hidden="true"></i>
+                <svg class="icon nav-chevron" aria-hidden="true"><use href="#i-chevron-down"/></svg>
             </button>
             <div class="nav-dropdown-menu" id="projects-dropdown-menu" role="menu" aria-labelledby="projects-dropdown-btn">
                 <a href="lenia/" class="dropdown-item" role="menuitem">
                     <div class="dropdown-item-header">
                         <span class="dropdown-item-title">Lenia in a Bath</span>
-                        <i class="fas fa-arrow-up-right-from-square dropdown-external-icon"></i>
+                        <svg class="icon dropdown-external-icon" aria-hidden="true"><use href="#i-external"/></svg>
                     </div>
                     <span class="dropdown-item-desc">Continuous Cellular Automaton Simulator</span>
                 </a>
@@ -105,29 +139,28 @@
         <a href="#szilard-commandments">Ten Commandments</a>
     </nav>
 
-    <main class="container">
+    <main class="container" id="main">
         <header class="hero">
             <div class="hero-content">
                 <p class="hero-eyebrow">Hello world!</p>
                 <h1 class="name">Andrea Ladiana</h1>
                 <p class="hero-subtitle">
-                    PhD Student in Mathematics · Associative Neural Networks & Statistical Mechanics
+                    PhD Student in Mathematics · Associative Neural Networks &amp; Statistical Mechanics
                 </p>
                 <p class="intro-text">
                     I'm a PhD Student in Mathematics at
-                    <a href="https://phd.uniroma1.it/web/ANDREA-LADIANA_nP2239069_IT.aspx" target="_blank"
+                    <a href="https://phd.uniroma1.it/web/ANDREA-LADIANA_nP2239069_IT.aspx" target="_blank" rel="noopener"
                         class="link">Sapienza University of Rome</a> and member of the
-                    <a href="https://www.researchgate.net/lab/Agliari-Barra-Lab-CoScienza-Adriano-Barra" target="_blank"
+                    <a href="https://www.researchgate.net/lab/Agliari-Barra-Lab-CoScienza-Adriano-Barra" target="_blank" rel="noopener"
                         class="link">Agliari-Barra Lab "CoScienza"</a>.
                 </p>
                 <div class="social-links">
-                    <a href="mailto:andrea.ladiana@uniroma1.it" title="Email"><i class="fas fa-envelope"></i></a>
-                    <a href="https://github.com/andrea-ladiana" target="_blank" title="GitHub"><i
-                            class="fab fa-github"></i></a>
-                    <a href="https://www.researchgate.net/profile/Andrea-Ladiana?ev=hdr_xprf" target="_blank"
-                        title="ResearchGate"><i class="fab fa-researchgate"></i></a>
-                    <a href="https://orcid.org/0009-0005-5078-9817" target="_blank" title="ORCID" class="orcid-link">
-                        <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid">
+                    <a href="mailto:andrea.ladiana@uniroma1.it" title="Email" aria-label="Email"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></a>
+                    <a href="https://github.com/andrea-ladiana" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub"><svg class="icon" aria-hidden="true"><use href="#i-github"/></svg></a>
+                    <a href="https://www.researchgate.net/profile/Andrea-Ladiana?ev=hdr_xprf" target="_blank" rel="noopener"
+                        title="ResearchGate" aria-label="ResearchGate"><svg class="icon" aria-hidden="true"><use href="#i-researchgate"/></svg></a>
+                    <a href="https://orcid.org/0009-0005-5078-9817" target="_blank" rel="noopener" title="ORCID" aria-label="ORCID" class="orcid-link">
+                        <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid" aria-hidden="true">
                             <path d="M256 128c0 70.7-57.3 128-128 128S0 198.7 0 128 57.3 0 128 0s128 57.3 128 128z"
                                 fill="#a6ce39" />
                             <path
@@ -135,8 +168,12 @@
                                 fill="#fff" />
                         </svg>
                     </a>
-                    <a href="https://phd.uniroma1.it/web/ANDREA-LADIANA_nP2239069_IT.aspx" target="_blank"
-                        title="Institutional Page"><i class="fas fa-university"></i></a>
+                    <a href="https://scholar.google.com/citations?user=8NSj9foAAAAJ" target="_blank" rel="noopener"
+                        title="Google Scholar" aria-label="Google Scholar"><svg class="icon" aria-hidden="true"><use href="#i-scholar"/></svg></a>
+                    <a href="https://arxiv.org/search/?searchtype=author&amp;query=Ladiana%2C+A" target="_blank" rel="noopener"
+                        title="arXiv" aria-label="arXiv"><svg class="icon" aria-hidden="true"><use href="#i-arxiv"/></svg></a>
+                    <a href="https://phd.uniroma1.it/web/ANDREA-LADIANA_nP2239069_IT.aspx" target="_blank" rel="noopener"
+                        title="Institutional Page" aria-label="Institutional Page"><svg class="icon" aria-hidden="true"><use href="#i-university"/></svg></a>
                 </div>
             </div>
         </header>
@@ -169,90 +206,82 @@
             </div>
         </section>
 
-        <section id="publications" class="glass-card">
+        <section id="publications" class="glass-card" aria-labelledby="publications-title">
             <div class="pub-section-header">
                 <div>
                     <p class="section-kicker">Publications</p>
-                    <h2>Publications</h2>
+                    <h2 id="publications-title">Publications</h2>
                 </div>
                 <div class="pub-header-actions">
-                    <a href="biblio.bib" download="andrea_ladiana_publications.bib" class="pub-download-btn" title="Download complete .bib file">
-                        <i class="fas fa-file-arrow-down"></i> Download .bib
+                    <a href="https://scholar.google.com/citations?user=8NSj9foAAAAJ" target="_blank" rel="noopener" class="pub-download-btn">
+                        <svg class="icon" aria-hidden="true"><use href="#i-scholar"/></svg> Scholar
+                    </a>
+                    <a href="https://arxiv.org/search/?searchtype=author&amp;query=Ladiana%2C+A" target="_blank" rel="noopener" class="pub-download-btn">
+                        <svg class="icon" aria-hidden="true"><use href="#i-arxiv"/></svg> arXiv
+                    </a>
+                    <a href="biblio.bib" download="andrea_ladiana_publications.bib" id="bib-download" class="pub-download-btn" title="Download complete .bib file">
+                        <svg class="icon" aria-hidden="true"><use href="#i-download"/></svg> .bib
                     </a>
                 </div>
             </div>
             <p class="pub-note"><span class="ca-star">*</span> indicates Corresponding Author</p>
 
-            <!-- Publication Filters -->
-            <div class="pub-filters-wrap" aria-label="Filter Publications">
+            <!-- Publication search and filters -->
+            <div class="pub-filters-wrap" role="group" aria-label="Search and filter publications">
+                <div class="pub-search">
+                    <svg class="icon pub-search-icon" aria-hidden="true"><use href="#i-search"/></svg>
+                    <input type="search" id="pub-search" placeholder="Search publications…" aria-label="Search publications" autocomplete="off" spellcheck="false">
+                    <button type="button" class="pub-search-clear" id="pub-search-clear" aria-label="Clear search" hidden><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
+                </div>
                 <div class="pub-filter-row">
-                    <span class="pub-filter-label"><i class="fas fa-filter"></i> Type:</span>
+                    <span class="pub-filter-label"><svg class="icon" aria-hidden="true"><use href="#i-filter"/></svg> Type:</span>
                     <div class="pub-filter-group" id="filter-type-group">
-                        <button type="button" class="pub-filter-btn active" data-filter-type="all">All (<span id="pub-count-all">0</span>)</button>
-                        <button type="button" class="pub-filter-btn" data-filter-type="journal">Journals</button>
-                        <button type="button" class="pub-filter-btn" data-filter-type="submitted">Preprints / Submitted</button>
-                        <button type="button" class="pub-filter-btn" data-filter-type="conference">Conferences</button>
-                        <button type="button" class="pub-filter-btn" data-filter-type="ca"><i class="fas fa-envelope"></i> Corresponding</button>
+                        <button type="button" class="pub-filter-btn active" data-filter-type="all" aria-pressed="true">All <span class="pub-count"></span></button>
+                        <button type="button" class="pub-filter-btn" data-filter-type="journal" aria-pressed="false">Journals <span class="pub-count"></span></button>
+                        <button type="button" class="pub-filter-btn" data-filter-type="submitted" aria-pressed="false">Preprints / Submitted <span class="pub-count"></span></button>
+                        <button type="button" class="pub-filter-btn" data-filter-type="conference" aria-pressed="false">Conferences <span class="pub-count"></span></button>
+                        <button type="button" class="pub-filter-btn" data-filter-type="ca" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg> Corresponding <span class="pub-count"></span></button>
                     </div>
                 </div>
                 <div class="pub-filter-row">
-                    <span class="pub-filter-label"><i class="fas fa-tags"></i> Topic:</span>
+                    <span class="pub-filter-label"><svg class="icon" aria-hidden="true"><use href="#i-hash"/></svg> Topic:</span>
                     <div class="pub-filter-group" id="filter-topic-group">
-                        <button type="button" class="pub-filter-btn active" data-filter-topic="all">All Topics</button>
-                        <button type="button" class="pub-filter-btn" data-filter-topic="associative">Associative Networks</button>
-                        <button type="button" class="pub-filter-btn" data-filter-topic="statmech">Statistical Mechanics</button>
-                        <button type="button" class="pub-filter-btn" data-filter-topic="federated">Federated Learning</button>
-                        <button type="button" class="pub-filter-btn" data-filter-topic="graphs">Graph Theory</button>
+                        <button type="button" class="pub-filter-btn active" data-filter-topic="all" aria-pressed="true">All Topics</button>
+                        <button type="button" class="pub-filter-btn" data-filter-topic="associative" aria-pressed="false">Associative Networks <span class="pub-count"></span></button>
+                        <button type="button" class="pub-filter-btn" data-filter-topic="statmech" aria-pressed="false">Statistical Mechanics <span class="pub-count"></span></button>
+                        <button type="button" class="pub-filter-btn" data-filter-topic="federated" aria-pressed="false">Federated Learning <span class="pub-count"></span></button>
+                        <button type="button" class="pub-filter-btn" data-filter-topic="graphs" aria-pressed="false">Graph Theory <span class="pub-count"></span></button>
                     </div>
+                </div>
+                <div class="pub-filter-footer">
+                    <span class="pub-summary" id="pub-summary" role="status"></span>
+                    <button type="button" class="pub-reset" id="pub-reset" hidden>Reset filters</button>
                 </div>
             </div>
 
             <div id="bibtex-container">
-                <!-- Publications will be injected here by script.js -->
-                <p class="loading">Loading publications...</p>
+                <!-- Publications are injected here by script.js -->
+                <p class="loading">Loading publications…</p>
             </div>
-
-            <details id="older-publications" style="display: none; margin-top: 2rem;">
-                <summary style="cursor: pointer; color: var(--accent-color); font-weight: 600;">
-                    Older Publications
-                </summary>
-                <div id="older-publications-list"
-                    style="margin-top: 1rem; padding-left: 1rem; border-left: 2px solid rgba(255,255,255,0.1);">
-                    <!-- Older publications will be moved here -->
-                </div>
-            </details>
+            <noscript><p class="pub-empty-msg">Publications are loaded with JavaScript. The full list is in <a href="biblio.bib">biblio.bib</a>.</p></noscript>
         </section>
 
         <section id="conferences" class="glass-card">
             <p class="section-kicker">Conferences</p>
             <h2>Conferences Organized</h2>
-            <div id="conferences-list">
-                <!-- Upcoming conferences will be injected here -->
-            </div>
+            <div id="conferences-list"></div>
 
-            <details id="past-conferences" style="display: none; margin-top: 2rem;">
-                <summary style="cursor: pointer; color: var(--accent-color); font-weight: 600;">
-                    Past Conferences
-                </summary>
-                <div id="past-conferences-list"
-                    style="margin-top: 1rem; padding-left: 1rem; border-left: 2px solid rgba(255,255,255,0.1);">
-                    <!-- Past conferences will be moved here -->
-                </div>
+            <details id="past-conferences" class="past-details" hidden>
+                <summary>Past Conferences</summary>
+                <div id="past-conferences-list" class="past-list"></div>
             </details>
 
-            <h2 style="margin-top: 3rem;">Speaker</h2>
-            <div id="speaker-conferences-list">
-                <!-- Upcoming invited-speaker conferences will be injected here -->
-            </div>
+            <h2 class="subsection-title">Speaker</h2>
+            <div id="speaker-conferences-list"></div>
 
-            <details id="past-speaker-conferences" style="display: none; margin-top: 2rem;">
-                <summary style="cursor: pointer; color: var(--accent-color); font-weight: 600;">
-                    Past Speaker
-                </summary>
-                <div id="past-speaker-conferences-list"
-                    style="margin-top: 1rem; padding-left: 1rem; border-left: 2px solid rgba(255,255,255,0.1);">
-                    <!-- Past invited-speaker conferences will be moved here -->
-                </div>
+            <details id="past-speaker-conferences" class="past-details" hidden>
+                <summary>Past Speaker</summary>
+                <div id="past-speaker-conferences-list" class="past-list"></div>
             </details>
         </section>
 
@@ -268,11 +297,11 @@
                             <span class="ring r3"></span>
                             <span class="soliton-core"></span>
                         </div>
-                        <div class="visual-tag"><i class="fas fa-circle-play"></i> Live Simulator</div>
+                        <div class="visual-tag"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg> Live Simulator</div>
                     </div>
                     <div class="project-card-header">
-                        <span class="project-badge"><i class="fas fa-atom"></i> Simulation</span>
-                        <span class="project-arrow"><i class="fas fa-arrow-up-right-from-square"></i></span>
+                        <span class="project-badge"><svg class="icon" aria-hidden="true"><use href="#i-atom"/></svg> Simulation</span>
+                        <span class="project-arrow"><svg class="icon" aria-hidden="true"><use href="#i-external"/></svg></span>
                     </div>
                     <h3 class="project-title">Lenia in a Bath</h3>
                     <p class="project-desc">
@@ -284,7 +313,7 @@
                         <span class="keyword-tag">Interactive Simulation</span>
                     </div>
                     <div class="project-cta">
-                        Launch Simulator <i class="fas fa-arrow-right"></i>
+                        Launch Simulator <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
                     </div>
                 </a>
             </div>
@@ -339,10 +368,10 @@
 
         <section id="szilard-commandments" class="glass-card szilard-commandments">
             <p class="section-kicker">Ten Commandments</p>
-            <h3>The Ten Commandments of Leó Szilárd</h3>
+            <h2>The Ten Commandments of Leó Szilárd</h2>
             <div class="text-content">
                 <p>
-                    Below this section I like to include <strong>"The Ten
+                    I like to close the page with <strong>"The Ten
                         Commandments of Leó Szilárd"</strong>, a short
                     list of personal principles written by the Hungarian-American
                     physicist best known for his work on
@@ -350,7 +379,7 @@
                     responsibility.
                 </p>
                 <blockquote>
-                    <ol style="padding-left: 1.5rem; margin-top: 1rem;">
+                    <ol class="commandments">
                         <li>Recognize the connections of things and laws of conduct
                             of men, so that you may know what
                             you are doing.</li>
@@ -376,7 +405,7 @@
                         <li>Lead your life with a gentle hand and be ready to leave
                             whenever you are called.</li>
                     </ol>
-                    <cite style="display: block; margin-top: 1rem; opacity: 0.8;">Leó
+                    <cite class="quote-source">Leó
                         Szilárd, <em>The Voice of the Dolphins &amp; Other
                             Stories</em></cite>
                 </blockquote>
@@ -384,12 +413,19 @@
         </section>
     </main>
 
-    <!-- Floating Back to Top Button -->
-    <button id="back-to-top" class="back-to-top" aria-label="Back to top" title="Back to top">
-        <i class="fas fa-arrow-up"></i>
+    <!-- Background animation toggle (state handled by assets/js/graph-bg.js) -->
+    <button type="button" id="bg-toggle" class="bg-toggle" aria-label="Pause background animation" title="Pause background animation">
+        <svg class="icon" aria-hidden="true"><use href="#i-pause"/></svg>
     </button>
 
-    <script src="script.js"></script>
+    <!-- Floating Back to Top Button -->
+    <button id="back-to-top" class="back-to-top" aria-label="Back to top" title="Back to top">
+        <svg class="icon" aria-hidden="true"><use href="#i-arrow-up"/></svg>
+    </button>
+
+    <script src="assets/js/bibtex.js?v=20261029d" defer></script>
+    <script src="assets/js/graph-bg.js?v=20261029d" defer></script>
+    <script src="script.js?v=20261029d" defer></script>
 </body>
 
 </html>

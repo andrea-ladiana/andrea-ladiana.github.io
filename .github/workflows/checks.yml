@@ -1,0 +1,37 @@
+name: Site checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: '0 6 * * 1'   # every Monday: catches links that went stale
+  workflow_dispatch:
+
+jobs:
+  data:
+    name: Validate biblio.bib and conferences.json
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node tools/check-data.js
+
+  links:
+    name: Check links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # Local files are resolved from the repo root; sites that block bots answer 403/429.
+          args: >-
+            --no-progress --max-concurrency 4 --max-retries 2 --timeout 20
+            --accept 200,206,301,302,403,429
+            --root-dir ${{ github.workspace }}
+            --exclude '^https://andrea-ladiana.github.io'
+            index.html lenia/index.html conferences.json biblio.bib
+          fail: true

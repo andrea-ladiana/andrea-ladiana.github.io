@@ -1,606 +1,484 @@
-// Embedded Data to avoid CORS issues on local file system
-const CONFERENCES_DATA = [
-    {
-        "title": "The Role of Data Science: From Statistical to Quantum and Relative Mechanics",
-        "url": "https://sites.google.com/uniroma1.it/ecc-ds4-workshop2025/home-page",
-        "date": "19-20 January 2026",
-        "location": "Sapienza Università di Roma, Department of Mathematics \"G. Castelnuovo\", Aula Picone",
-        "description": "A conference in memory of Francesco Guerra."
-    },
-    {
-        "title": "4th Workshop of UMI Group: Mathematics for Artificial Intelligence and Machine Learning",
-        "url": "https://sites.google.com/uniroma1.it/umiworkshop2025/math4aiml-umi-workshop",
-        "date": "21-23 January 2026",
-        "location": "Sapienza Università di Roma, Department of Mathematics \"G. Castelnuovo\"",
-        "description": "Focusing on the interplay between mathematics, artificial intelligence, and machine learning."
-    },
-    {
-        "title": "Intelligenza Artificiale: il futuro è già qui",
-        "date": "20 September 2025",
-        "location": "Centro Congressi di Ecotekne, Università del Salento, Lecce, Italy",
-        "description": "Dialogue on how artificial intelligence is transforming the future, featuring Prof. Pierluigi Contucci, Prof. Marc Mézard, and Prof. Giorgio Parisi."
-    }
-];
-
-// Conferences where you are invited as a speaker (same schema as CONFERENCES_DATA)
-const SPEAKER_CONFERENCES_DATA = [
-    {
-        "title": "ICLR 2026",
-        "url": "https://iclr.cc/",
-        "date": "23-27 April 2026",
-        "location": "Riocentro Convention and Event Center, Rio de Janeiro, Brazil",
-        "description": "The International Conference on Learning Representations (ICLR) is the premier gathering of professionals dedicated to the advancement of the branch of artificial intelligence called representation learning, but generally referred to as deep learning."
-    },
-    {
-        "title": "Deep Patterns",
-        "url": "https://www.eurandom.tue.nl/event/deep-patterns/",
-        "date": "18-22 May 2026",
-        "location": "Eurandom, Metaforum, 4th floor, Eindhoven, Netherlands",
-        "description": "Workshop bringing together researchers on pattern formation and pattern recognition at the intersection of Applied Mathematics and Theoretical Physics."
-    }
-];
+'use strict';
 
 /*
-Temporarily hidden (finding new venue after PNAS rejection):
-@article{ladiana2026origami,
-  title = {Geometric spin glasses: origami flat-foldability as a deterministic frustrated spin model},
-  author = {Andrea Ladiana*},
-  journal = {submitted to Proceedings of the National Academy of Sciences (PNAS)},
-  year = {2026},
-  note = {[Submitted]}
-}
-*/
+ * Data lives in biblio.bib and conferences.json (nothing is duplicated here).
+ * Browsers block fetch() on file://, so preview locally with a tiny server:  python -m http.server
+ */
 
-const BIBTEX_DATA = `
-@article{rollo2026feddqkl,
-  title = {FedDQKL: A Federated Learning aggregation method with Data-Quality-driven client weighting and Kullback-Leibler-based calibration},
-  author = {Davide Rollo and Mattia Cotardo and Andrea Ladiana and Andrea Lepre and Teodoro Montanaro and Fabrizio Durante and Elisabetta Mangino and Luigi Patrono*},
-  journal = {submitted to Array},
-  year = {2026},
-  keywords = {Federated Learning, Machine Learning},
-  note = {[Submitted]}
-}
+const SITE_URL = 'https://andrea-ladiana.github.io/';
+const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-@article{ladiana2026berker,
-  title = {The Exact Laplacian Spectrum of the Berker--Ostlund Diamond Lattice},
-  author = {Andrea Ladiana*},
-  journal = {Journal of Physics A: Mathematical and Theoretical},
-  year = {2026},
-  doi = {https://doi.org/10.1088/1751-8121/aea3c9},
-  url = {https://iopscience.iop.org/article/10.1088/1751-8121/aea3c9},
-  keywords = {Graph Theory, Mathematical Physics},
-  note = {[Published]}
+/* ---------- Helpers ---------- */
+
+const icon = name => `<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;
+
+const esc = value => String(value ?? '').replace(/[&<>"']/g, ch => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]
+));
+
+/** Only allow http(s) links in generated markup. */
+function safeUrl(url) {
+    return /^https?:\/\//i.test(url || '') ? url : '';
 }
 
-@article{albanese2026semisupervised,
-  title = {Semi-supervised Hopfield model: Theoretical and Numerical results},
-  author = {Linda Albanese and Andrea Ladiana and Andrea Lepre*},
-  journal = {Physica A: Statistical Mechanics and its Applications},
-  pages = {132009},
-  year = {2026},
-  issn = {0378-4371},
-  doi = {https://doi.org/10.1016/j.physa.2026.132009},
-  url = {https://www.sciencedirect.com/science/article/pii/S0378437126007454},
-  eprint = {https://arxiv.org/abs/2607.28173},
-  keywords = {Associative Networks, Statistical Mechanics},
-  note = {[Published]}
+async function fetchText(path) {
+    if (window.location.protocol === 'file:') throw new Error('file-protocol');
+    const response = await fetch(path, { cache: 'no-cache' });
+    if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
+    return response.text();
 }
 
-@article{alessandrelli2026federated,
-  title = {A Federated Many-to-One Hopfield model for associative Neural Networks},
-  author = {Andrea Alessandrelli* and Fabrizio Durante and Andrea Ladiana and Andrea Lepre},
-  journal = {submitted to Neural Networks},
-  year = {2026},
-  url = {https://arxiv.org/abs/2603.19902},
-  keywords = {Associative Networks, Federated Learning},
-  note = {[Submitted]}
-}
+const LOCAL_PREVIEW_HINT = 'Open the site through a local web server (e.g. <code>python -m http.server</code>) to load this section.';
 
-@article{barra2027dreaming,
-  title = {Do Hopfield Networks Dream of Stored Patterns? A Statistical-Mechanical Theory of Dreaming in Multidirectional Associative Memories},
-  author = {Adriano Barra and Fabrizio Durante and Andrea Ladiana* and Michela Marra Solazzo},
-  journal = {Neural Networks},
-  volume = {206},
-  pages = {109729},
-  year = {2027},
-  issn = {0893-6080},
-  doi = {https://doi.org/10.1016/j.neunet.2026.109729},
-  url = {https://www.sciencedirect.com/science/article/pii/S0893608026011846},
-  eprint = {https://arxiv.org/abs/2605.13721},
-  keywords = {Associative Networks, Statistical Mechanics},
-  note = {[Published]}
-}
+/* ---------- Reveal on scroll (classes, so hover transforms keep working) ---------- */
 
-@article{agliari2026exponential,
-  title = {Exponential Capacity in Multilayer Hetero-Associative Neural Networks},
-  author = {Elena Agliari and Adriano Barra and Andrea Ladiana* and Andrea Lepre},
-  journal = {submitted to Neural Networks},
-  year = {2026},
-  url = {https://arxiv.org/abs/2607.29554},
-  keywords = {Associative Networks},
-  note = {[Submitted]}
-}
+(function initReveal() {
+    const cards = document.querySelectorAll('.glass-card');
+    if (!('IntersectionObserver' in window)) {
+        cards.forEach(card => card.classList.add('is-visible'));
+        return;
+    }
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+        });
+    }, { threshold: 0, rootMargin: '0px 0px -8% 0px' });
+    cards.forEach(card => observer.observe(card));
+})();
 
-@article{ladiana2026retrieval,
-  title = {Finite-size scaling of hetero-associative retrieval in continuous-signal-driven Ising spin systems},
-  author = {Andrea Ladiana*},
-  journal = {arXiv preprint},
-  year = {2026},
-  url = {https://arxiv.org/abs/2605.14059},
-  keywords = {Statistical Mechanics, Associative Networks},
-  note = {[arXiv preprint]}
-}
+/* ---------- Navigation: height variable, dropdown, scrollspy, back-to-top ---------- */
 
-@inproceedings{ladiana2026thermodynamic,
-  title = {Thermodynamic Binding: Freezing Chimeric States in Multi-Modal Associative Memories},
-  author = {Elena Agliari and Adriano Barra and Andrea Ladiana* and Andrea Lepre},
-  booktitle = {proceedings of the New Frontiers in Associative Memories Workshop (ICLR, 2026)},
-  year = {2026},
-  url = {https://openreview.net/forum?id=ZTnAvMRFyU},
-  keywords = {Associative Networks, Statistical Mechanics},
-  note = {[Workshop Proceedings]}
-}
+const navEl = document.querySelector('.top-nav');
 
-@inproceedings{alessandrellibeyond,
-  title = {Beyond Disorder: Unveiling Cooperativeness in Multidirectional Associative Memories},
-  author = {Andrea Alessandrelli* and Adriano Barra and Andrea Ladiana and Andrea Lepre and Federico Ricci-Tersenghi},
-  booktitle = {proceedings of the New Frontiers in Associative Memories Workshop (ICLR, Singapore, 2025)},
-  year = {2025},
-  url = {https://openreview.net/pdf?id=o1AGK0hzJp},
-  keywords = {Associative Networks, Statistical Mechanics},
-  note = {[In press]}
-}
+(function initNavMetrics() {
+    if (!navEl) return;
+    const update = () => document.documentElement.style.setProperty('--nav-h', `${navEl.offsetHeight}px`);
+    update();
+    window.addEventListener('resize', update, { passive: true });
+    if ('ResizeObserver' in window) new ResizeObserver(update).observe(navEl);
+})();
 
-@article{ALESSANDRELLI2025130871,
-  title = {Supervised and Unsupervised Learning Protocols in Hetero-associative Neural Networks},
-  author = {Andrea Alessandrelli and Adriano Barra and Andrea Ladiana* and Andrea Lepre and Federico Ricci-Tersenghi},
-  journal = {Physica A: Statistical Mechanics and its Applications},
-  volume = {676},
-  pages = {130871},
-  year = {2025},
-  issn = {0378-4371},
-  doi = {https://doi.org/10.1016/j.physa.2025.130871},
-  url = {https://www.sciencedirect.com/science/article/pii/S0378437125005230},
-  keywords = {Associative Networks, Statistical Mechanics},
-  note = {[Published]}
-}
-`;
+(function initProjectsDropdown() {
+    const dropdown = document.getElementById('projects-dropdown');
+    const btn = document.getElementById('projects-dropdown-btn');
+    if (!dropdown || !btn) return;
 
-// Reveal animation
-const cards = document.querySelectorAll('.glass-card');
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = 1;
-            entry.target.style.transform = 'translateY(0)';
+    const close = () => {
+        dropdown.classList.remove('active');
+        btn.setAttribute('aria-expanded', 'false');
+    };
+
+    btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const isOpen = dropdown.classList.toggle('active');
+        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    document.addEventListener('click', e => {
+        if (!dropdown.contains(e.target)) close();
+    });
+
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && dropdown.classList.contains('active')) {
+            close();
+            btn.focus();
         }
     });
-}, { threshold: 0.1 });
+})();
 
-cards.forEach(card => {
-    card.style.opacity = 0;
-    card.style.transform = 'translateY(20px)';
-    card.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-    observer.observe(card);
-});
+(function initScrollspy() {
+    const navLinks = document.querySelectorAll('.top-nav a[href^="#"]');
+    if (!navLinks.length) return;
 
-// Load and Parse BibTeX
-loadBibTeX();
+    const sections = Array.from(navLinks)
+        .map(link => document.querySelector(link.getAttribute('href')))
+        .filter(Boolean);
 
-// Load & Render Conferences (organized + invited speaker)
-loadAndRenderConferences();
+    function onScroll() {
+        const navHeight = navEl ? navEl.offsetHeight : 0;
+        const scrollPos = window.scrollY + navHeight + 80;
+        let currentId = null;
 
-async function loadAndRenderConferences() {
-    const data = await loadConferencesData();
-
-    renderConferenceTimeline({
-        data: data.organized,
-        upcomingListId: 'conferences-list',
-        pastDetailsId: 'past-conferences',
-        pastListId: 'past-conferences-list'
-    });
-
-    renderConferenceTimeline({
-        data: data.speaker,
-        upcomingListId: 'speaker-conferences-list',
-        pastDetailsId: 'past-speaker-conferences',
-        pastListId: 'past-speaker-conferences-list'
-    });
-}
-
-async function loadConferencesData() {
-    // Default fallback (works on file://)
-    let organized = Array.isArray(CONFERENCES_DATA) ? CONFERENCES_DATA : [];
-    let speaker = Array.isArray(SPEAKER_CONFERENCES_DATA) ? SPEAKER_CONFERENCES_DATA : [];
-
-    // Best-effort: load from conferences.json when served via http(s)
-    try {
-        if (typeof window !== 'undefined' && window.location && window.location.protocol !== 'file:') {
-            const response = await fetch('conferences.json', { cache: 'no-store' });
-            if (response.ok) {
-                const json = await response.json();
-
-                if (Array.isArray(json)) {
-                    // Backward compatibility: old format was a plain array of organized conferences
-                    organized = json;
-                } else if (json && typeof json === 'object') {
-                    if (Array.isArray(json.organized)) organized = json.organized;
-                    if (Array.isArray(json.speaker)) speaker = json.speaker;
-                }
+        for (let i = sections.length - 1; i >= 0; i--) {
+            if (sections[i].offsetTop <= scrollPos) {
+                currentId = sections[i].id;
+                break;
             }
         }
-    } catch (error) {
-        // Silent fallback to embedded data
-        console.warn('Could not load conferences.json; using embedded data.', error);
+
+        navLinks.forEach(link => {
+            link.classList.toggle('active', !!currentId && link.getAttribute('href') === `#${currentId}`);
+        });
     }
 
-    return { organized, speaker };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+})();
+
+(function initBackToTop() {
+    const btn = document.getElementById('back-to-top');
+    if (!btn) return;
+
+    window.addEventListener('scroll', () => {
+        btn.classList.toggle('visible', window.scrollY > 350);
+    }, { passive: true });
+
+    btn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+    });
+})();
+
+/* ---------- Conferences ---------- */
+
+const MONTH_FORMAT = new Intl.DateTimeFormat('en-GB', { month: 'long', timeZone: 'UTC' });
+
+function parseIsoDate(iso) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
+    return m ? new Date(Date.UTC(+m[1], +m[2] - 1, +m[3])) : null;
+}
+
+/** "19–20 January 2026", "28 April – 2 May 2026", "20 September 2025". */
+function formatDateRange(startIso, endIso) {
+    const start = parseIsoDate(startIso);
+    const end = parseIsoDate(endIso || startIso);
+    if (!start || !end) return '';
+
+    const d = date => date.getUTCDate();
+    const m = date => MONTH_FORMAT.format(date);
+    const y = date => date.getUTCFullYear();
+
+    if (+start === +end) return `${d(start)} ${m(start)} ${y(start)}`;
+    if (y(start) !== y(end)) return `${d(start)} ${m(start)} ${y(start)} – ${d(end)} ${m(end)} ${y(end)}`;
+    if (m(start) !== m(end)) return `${d(start)} ${m(start)} – ${d(end)} ${m(end)} ${y(end)}`;
+    return `${d(start)}–${d(end)} ${m(start)} ${y(start)}`;
+}
+
+const todayIso = () => new Date().toLocaleDateString('en-CA'); // local date as YYYY-MM-DD
+
+function renderConference(conf) {
+    const title = esc(conf.title);
+    const url = safeUrl(conf.url);
+    const titleHtml = url ? `<a href="${esc(url)}" target="_blank" rel="noopener">${title}</a>` : title;
+    return `
+        <div class="conference-item">
+            <h3>${titleHtml}</h3>
+            <p class="conf-meta">
+                ${icon('calendar')} ${esc(formatDateRange(conf.start, conf.end))}<br>
+                ${icon('map-pin')} ${esc(conf.location)}
+            </p>
+            <p class="conf-desc">${esc(conf.description)}</p>
+        </div>`;
 }
 
 function renderConferenceTimeline({ data, upcomingListId, pastDetailsId, pastListId }) {
     const upcomingList = document.getElementById(upcomingListId);
     const pastDetails = document.getElementById(pastDetailsId);
     const pastList = document.getElementById(pastListId);
-
     if (!upcomingList || !pastDetails || !pastList) return;
 
+    const today = todayIso();
+    const conferences = (Array.isArray(data) ? data : []).filter(c => c && parseIsoDate(c.start));
+    const endOf = c => c.end || c.start;
+
+    const upcoming = conferences.filter(c => endOf(c) >= today).sort((a, b) => a.start.localeCompare(b.start));
+    const past = conferences.filter(c => endOf(c) < today).sort((a, b) => b.start.localeCompare(a.start));
+
+    upcomingList.innerHTML = upcoming.length
+        ? upcoming.map(renderConference).join('')
+        : '<p class="empty-note">No upcoming events at the moment.</p>';
+    pastList.innerHTML = past.map(renderConference).join('');
+
+    pastDetails.hidden = past.length === 0;
+    // With nothing upcoming, show the most recent events straight away instead of an empty block.
+    pastDetails.open = upcoming.length === 0 && past.length > 0;
+}
+
+(async function loadConferences() {
+    const upcomingContainer = document.getElementById('conferences-list');
+    if (!upcomingContainer) return;
+
     try {
-        const conferences = Array.isArray(data) ? data : [];
-        const currentDate = new Date();
-
-        upcomingList.innerHTML = '';
-        pastList.innerHTML = '';
-        pastDetails.style.display = 'none';
-
-        conferences.forEach(conf => {
-            const div = document.createElement('div');
-            div.className = 'conference-item';
-
-            const titleHtml = conf.url
-                ? `<a href="${conf.url}" target="_blank">${conf.title}</a>`
-                : `${conf.title}`;
-
-            div.innerHTML = `
-                <h3>${titleHtml}</h3>
-                <p class="conf-meta">
-                    <i class="far fa-calendar-alt"></i> ${conf.date} <br>
-                    <i class="fas fa-map-marker-alt"></i> ${conf.location}
-                </p>
-                <p class="conf-desc">
-                    ${conf.description}
-                </p>
-            `;
-
-            const isPast = isConferenceInPast(conf.date, currentDate);
-            if (isPast) {
-                pastList.appendChild(div);
-            } else {
-                upcomingList.appendChild(div);
-            }
+        const json = JSON.parse(await fetchText('conferences.json'));
+        renderConferenceTimeline({
+            data: json.organized,
+            upcomingListId: 'conferences-list',
+            pastDetailsId: 'past-conferences',
+            pastListId: 'past-conferences-list'
         });
-
-        if (pastList.children.length > 0) {
-            pastDetails.style.display = 'block';
-        }
+        renderConferenceTimeline({
+            data: json.speaker,
+            upcomingListId: 'speaker-conferences-list',
+            pastDetailsId: 'past-speaker-conferences',
+            pastListId: 'past-speaker-conferences-list'
+        });
     } catch (error) {
-        console.error('Error rendering conferences:', error);
-        upcomingList.innerHTML = '<p>Error loading conferences.</p>';
+        const local = error.message === 'file-protocol';
+        if (!local) console.error('Could not load conferences.json', error);
+        upcomingContainer.innerHTML = `<p class="empty-note">${local ? LOCAL_PREVIEW_HINT : 'Could not load the conferences list.'}</p>`;
     }
+})();
+
+/* ---------- Publications ---------- */
+
+const TYPE_RULES = {
+    all: () => true,
+    journal: e => e.type === 'article' && /published/i.test(e.note || ''),
+    submitted: e => /submitted|arxiv/i.test(e.note || ''),
+    conference: e => e.type === 'inproceedings' || /workshop/i.test(e.note || ''),
+    ca: e => e.isSelfCA
+};
+
+const TOPIC_RULES = {
+    all: () => true,
+    associative: e => /associative/i.test(e.keywords || '') || /associative|hopfield|dlam/i.test(e.title || ''),
+    statmech: e => /statistical mechanics/i.test(e.keywords || '') || /statistical-mechanical|ising|spin|thermodynamic/i.test(e.title || ''),
+    federated: e => /federated/i.test(e.keywords || '') || /federated|feddqkl/i.test(e.title || ''),
+    graphs: e => /graph|fractal/i.test(e.keywords || '') || /laplacian|lattice/i.test(e.title || '')
+};
+
+const pubState = { entries: [], type: 'all', topic: 'all', q: '' };
+
+function matchesFilters(entry, { type, topic, q }) {
+    if (!TYPE_RULES[type](entry) || !TOPIC_RULES[topic](entry)) return false;
+    const tokens = q.toLowerCase().split(/\s+/).filter(Boolean);
+    return tokens.every(token => entry._search.includes(token));
 }
 
-function isConferenceInPast(dateStr, now) {
-    if (!dateStr) return false;
-
-    // Try range format first: "19-20 January 2026"
-    const rangeMatch = dateStr.match(/(\d+)-(\d+)\s+([A-Za-z]+)\s+(\d{4})/);
-    // Try single date format: "20 September 2025"
-    const singleMatch = dateStr.match(/^(\d+)\s+([A-Za-z]+)\s+(\d{4})$/);
-
-    let endDay, monthStr, year;
-    if (rangeMatch) {
-        endDay = parseInt(rangeMatch[2]);
-        monthStr = rangeMatch[3];
-        year = parseInt(rangeMatch[4]);
-    } else if (singleMatch) {
-        endDay = parseInt(singleMatch[1]);
-        monthStr = singleMatch[2];
-        year = parseInt(singleMatch[3]);
-    } else {
-        return false;
-    }
-
-    const endDate = new Date(`${monthStr} ${endDay}, ${year}`);
-    endDate.setHours(23, 59, 59, 999);
-    return endDate < now;
+function buildSearchIndex(entry) {
+    entry._search = [
+        BibTeX.displayText(entry.title),
+        entry.authors.map(a => a.name).join(' '),
+        BibTeX.displayText(entry.journal || entry.booktitle),
+        entry.year, entry.keywords, entry.note, entry.tldr, BibTeX.displayText(entry.abstract)
+    ].join(' ').toLowerCase();
 }
 
-// Global state for publications
-let allPublicationEntries = [];
-let currentTypeFilter = 'all';
-let currentTopicFilter = 'all';
-
-async function loadBibTeX() {
-    const container = document.getElementById('bibtex-container');
-    if (!container) return;
-
-    let text = BIBTEX_DATA;
-    // Dynamic fetch from biblio.bib when served over http(s)
-    try {
-        if (typeof window !== 'undefined' && window.location && window.location.protocol !== 'file:') {
-            const res = await fetch('biblio.bib', { cache: 'no-store' });
-            if (res.ok) {
-                const fetchedText = await res.text();
-                if (fetchedText && fetchedText.trim().length > 0) {
-                    text = fetchedText;
-                }
-            }
-        }
-    } catch (e) {
-        console.warn('Could not load biblio.bib dynamically; using embedded data.', e);
-    }
-
-    try {
-        allPublicationEntries = parseBibTeX(text);
-        initPublicationFilters();
-        renderFilteredPublications();
-    } catch (error) {
-        console.error('Error loading publications:', error);
-        container.innerHTML = '<p class="error">Error loading publications.</p>';
-    }
+function doiUrl(entry) {
+    if (!entry.doi) return '';
+    return /^https?:\/\//i.test(entry.doi) ? entry.doi : `https://doi.org/${entry.doi}`;
 }
 
-function parseBibTeX(input) {
-    const entries = [];
-    // Strip comment lines (% ...)
-    const cleanedInput = input
-        .split('\n')
-        .filter(line => !line.trim().startsWith('%'))
-        .join('\n');
+function linkLabel(url) {
+    if (/arxiv\.org/i.test(url)) return 'arXiv';
+    if (/openreview\.net/i.test(url)) return 'OpenReview';
+    if (/sciencedirect\.com/i.test(url)) return 'ScienceDirect';
+    if (/iopscience\.iop\.org/i.test(url)) return 'IOPscience';
+    if (/doi\.org/i.test(url)) return 'DOI';
+    return 'Link';
+}
 
-    const entryBlocks = cleanedInput.split(/(?=@\w+\s*\{)/);
+function renderAuthors(entry) {
+    if (!entry.authors.length) return 'Unknown Author';
+    return entry.authors.map(author => {
+        const star = author.corresponding ? '<span class="ca-star" title="Corresponding Author">*</span>' : '';
+        return author.self
+            ? `<strong class="author-self">Andrea Ladiana${star}</strong>`
+            : `${esc(author.name)}${star}`;
+    }).join(', ');
+}
 
-    for (const block of entryBlocks) {
-        const trimmed = block.trim();
-        if (!trimmed.startsWith('@')) continue;
+function renderPublication(entry) {
+    const title = esc(BibTeX.displayText(entry.title) || 'Untitled');
+    const venue = esc(BibTeX.displayText(entry.journal || entry.booktitle));
+    const year = esc(entry.year);
+    const mainLink = safeUrl(entry.url) || safeUrl(doiUrl(entry));
 
-        const headerMatch = trimmed.match(/^@(\w+)\s*\{\s*([^,]+),/);
-        if (!headerMatch) continue;
+    const typeLabel = entry.type === 'article' ? 'Journal'
+        : entry.type === 'inproceedings' ? 'Conference'
+            : entry.type.charAt(0).toUpperCase() + entry.type.slice(1);
 
-        const type = headerMatch[1].toLowerCase();
-        const key = headerMatch[2].trim();
-
-        // Safety exclusion: ensure unpublished/hidden origami manuscript never renders
-        if (key === 'ladiana2026origami' || key.toLowerCase().includes('origami')) continue;
-
-        const entry = { type, key, rawBibtex: trimmed };
-
-        const body = trimmed.slice(headerMatch[0].length);
-        const fieldRegex = /([a-zA-Z_]+)\s*=\s*\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}|([a-zA-Z_]+)\s*=\s*"([^"]*)"/g;
-        let match;
-        while ((match = fieldRegex.exec(body)) !== null) {
-            const fieldName = (match[1] || match[3]).toLowerCase();
-            const fieldValue = (match[2] !== undefined ? match[2] : match[4]).trim();
-            entry[fieldName] = fieldValue;
-        }
-
-        // Determine if Andrea Ladiana is Corresponding Author
-        let isLadianaCA = false;
-        if (entry.author) {
-            const authorsList = entry.author.split(/\s+and\s+/i);
-            for (const auth of authorsList) {
-                const isCA = auth.includes('*') || auth.includes('^');
-                const cleanName = auth.replace(/[\*\$\^]/g, '').trim();
-                const isLadiana = /Andrea\s+Ladiana|A\.\s*Ladiana/i.test(cleanName);
-                if (isLadiana && isCA) {
-                    isLadianaCA = true;
-                    break;
-                }
-            }
-        }
-        entry.isLadianaCA = isLadianaCA;
-
-        entries.push(entry);
+    const badges = [`<span class="pub-badge">${esc(typeLabel)}</span>`];
+    if (year) badges.push(`<span class="pub-badge">${year}</span>`);
+    if (entry.isSelfCA) {
+        badges.push(`<span class="pub-badge ca-badge" title="Andrea Ladiana is Corresponding Author">${icon('mail')} Corresponding Author</span>`);
     }
-
-    // Sort by publication year descending
-    return entries.sort((a, b) => {
-        const yearA = parseInt(a.year) || 0;
-        const yearB = parseInt(b.year) || 0;
-        return yearB - yearA;
+    if (entry.note) {
+        badges.push(`<span class="pub-badge pub-badge-status">${esc(entry.note.replace(/^\[|\]$/g, '').trim())}</span>`);
+    }
+    (entry.keywords || '').split(',').map(k => k.trim()).filter(Boolean).forEach(keyword => {
+        badges.push(`<span class="pub-badge pub-badge-topic">${esc(keyword)}</span>`);
     });
+
+    // Links: publisher/preprint URL, arXiv, DOI (each URL once)
+    const seen = new Set();
+    const links = [];
+    const addLink = (url, label) => {
+        const safe = safeUrl(url);
+        if (!safe || seen.has(safe)) return;
+        seen.add(safe);
+        links.push(`<a href="${esc(safe)}" target="_blank" rel="noopener">[${label || linkLabel(safe)}]</a>`);
+    };
+    addLink(entry.url);
+    if (entry.eprint) addLink(/^https?:/.test(entry.eprint) ? entry.eprint : `https://arxiv.org/abs/${entry.eprint}`, 'arXiv');
+    addLink(doiUrl(entry), 'DOI');
+
+    const tldr = entry.tldr ? `<p class="pub-tldr">${esc(entry.tldr)}</p>` : '';
+    const abstract = entry.abstract
+        ? `<details class="pub-abstract"><summary>Abstract</summary><p>${esc(BibTeX.displayText(entry.abstract))}</p></details>`
+        : '';
+
+    return `
+        <article class="publication-item">
+            ${mainLink
+            ? `<a href="${esc(mainLink)}" target="_blank" rel="noopener" class="pub-title">${title}</a>`
+            : `<span class="pub-title">${title}</span>`}
+            <p class="pub-authors">${renderAuthors(entry)}</p>
+            ${venue ? `<p class="pub-journal">${venue}${year ? ', ' + year : ''}</p>` : ''}
+            ${tldr}
+            <div class="pub-meta-badges">${badges.join('')}</div>
+            ${abstract}
+            <div class="pub-actions">
+                ${links.length ? `<div class="pub-links">${links.join(' ')}</div>` : ''}
+                <button type="button" class="pub-btn-bibtex" data-key="${esc(entry.key)}" title="Copy BibTeX citation">${icon('copy')} BibTeX</button>
+            </div>
+        </article>`;
 }
 
-function initPublicationFilters() {
-    const typeGroup = document.getElementById('filter-type-group');
-    const topicGroup = document.getElementById('filter-topic-group');
-
-    if (typeGroup) {
-        typeGroup.querySelectorAll('.pub-filter-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                typeGroup.querySelectorAll('.pub-filter-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentTypeFilter = btn.dataset.filterType || 'all';
-                renderFilteredPublications();
-            });
-        });
-    }
-
-    if (topicGroup) {
-        topicGroup.querySelectorAll('.pub-filter-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                topicGroup.querySelectorAll('.pub-filter-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentTopicFilter = btn.dataset.filterTopic || 'all';
-                renderFilteredPublications();
-            });
-        });
-    }
-}
-
-function matchesFilters(entry) {
-    // Type Filter
-    if (currentTypeFilter !== 'all') {
-        const note = (entry.note || '').toLowerCase();
-        const type = (entry.type || '').toLowerCase();
-
-        if (currentTypeFilter === 'journal') {
-            if (type !== 'article' || !note.includes('published')) return false;
-        } else if (currentTypeFilter === 'submitted') {
-            if (!note.includes('submitted') && !note.includes('arxiv')) return false;
-        } else if (currentTypeFilter === 'conference') {
-            if (type !== 'inproceedings' && !note.includes('workshop') && !note.includes('press')) return false;
-        } else if (currentTypeFilter === 'ca') {
-            if (!entry.isLadianaCA) return false;
-        }
-    }
-
-    // Topic Filter
-    if (currentTopicFilter !== 'all') {
-        const kws = (entry.keywords || '').toLowerCase();
-        const title = (entry.title || '').toLowerCase();
-
-        if (currentTopicFilter === 'associative') {
-            if (!kws.includes('associative') && !title.includes('associative') && !title.includes('hopfield') && !title.includes('dlam')) return false;
-        } else if (currentTopicFilter === 'statmech') {
-            if (!kws.includes('statistical mechanics') && !title.includes('statistical-mechanical') && !title.includes('ising') && !title.includes('spin') && !title.includes('thermodynamic')) return false;
-        } else if (currentTopicFilter === 'federated') {
-            if (!kws.includes('federated') && !title.includes('federated') && !title.includes('feddqkl')) return false;
-        } else if (currentTopicFilter === 'graphs') {
-            if (!kws.includes('graph') && !kws.includes('fractal') && !title.includes('laplacian') && !title.includes('lattice')) return false;
-        }
-    }
-
-    return true;
-}
-
-function renderFilteredPublications() {
+function renderPublicationList() {
     const container = document.getElementById('bibtex-container');
-    const olderContainer = document.getElementById('older-publications');
-    if (!container) return;
+    const filtered = pubState.entries.filter(e => matchesFilters(e, pubState));
 
-    // Update total count indicator
-    const countAllEl = document.getElementById('pub-count-all');
-    if (countAllEl) countAllEl.textContent = allPublicationEntries.length;
+    updatePublicationUi(filtered.length);
 
-    const filtered = allPublicationEntries.filter(matchesFilters);
-
-    if (olderContainer) olderContainer.style.display = 'none';
-
-    if (filtered.length === 0) {
-        container.innerHTML = '<div class="pub-empty-msg"><i class="fas fa-search"></i> No publications match the selected filters.</div>';
+    if (!filtered.length) {
+        container.innerHTML = `<div class="pub-empty-msg">${icon('search')} No publications match your search.</div>`;
         return;
     }
 
-    container.innerHTML = '';
+    const groups = new Map();
     filtered.forEach(entry => {
-        const div = createPublicationElement(entry);
-        container.appendChild(div);
+        const key = entry.year || 'Undated';
+        if (!groups.has(key)) groups.set(key, []);
+        groups.get(key).push(entry);
+    });
+
+    container.innerHTML = Array.from(groups, ([year, items]) => `
+        <div class="pub-year-group">
+            <h3 class="pub-year">${esc(year)} <span class="pub-year-count">${items.length}</span></h3>
+            ${items.map(renderPublication).join('')}
+        </div>`).join('');
+}
+
+function updatePublicationUi(shownCount) {
+    const total = pubState.entries.length;
+    const filtersActive = pubState.type !== 'all' || pubState.topic !== 'all' || pubState.q.trim() !== '';
+
+    document.querySelectorAll('[data-filter-type]').forEach(btn => {
+        const value = btn.dataset.filterType;
+        const active = value === pubState.type;
+        btn.classList.toggle('active', active);
+        btn.setAttribute('aria-pressed', String(active));
+        const count = pubState.entries.filter(e => matchesFilters(e, { ...pubState, type: value })).length;
+        const countEl = btn.querySelector('.pub-count');
+        if (countEl) countEl.textContent = count;
+        btn.classList.toggle('is-empty', count === 0);
+    });
+
+    document.querySelectorAll('[data-filter-topic]').forEach(btn => {
+        const value = btn.dataset.filterTopic;
+        const active = value === pubState.topic;
+        btn.classList.toggle('active', active);
+        btn.setAttribute('aria-pressed', String(active));
+        const count = pubState.entries.filter(e => matchesFilters(e, { ...pubState, topic: value })).length;
+        const countEl = btn.querySelector('.pub-count');
+        if (countEl) countEl.textContent = count;
+        btn.classList.toggle('is-empty', count === 0);
+    });
+
+    const summary = document.getElementById('pub-summary');
+    if (summary) {
+        summary.textContent = filtersActive
+            ? `Showing ${shownCount} of ${total} publications`
+            : `${total} publications`;
+    }
+    const reset = document.getElementById('pub-reset');
+    if (reset) reset.hidden = !filtersActive;
+    const clear = document.getElementById('pub-search-clear');
+    if (clear) clear.hidden = pubState.q === '';
+
+    syncFiltersToUrl();
+}
+
+/** Keep filters in the address bar (?type=ca&topic=statmech&q=hopfield) so a filtered view can be shared. */
+function syncFiltersToUrl() {
+    const params = new URLSearchParams();
+    if (pubState.type !== 'all') params.set('type', pubState.type);
+    if (pubState.topic !== 'all') params.set('topic', pubState.topic);
+    if (pubState.q.trim()) params.set('q', pubState.q.trim());
+    const query = params.toString();
+    try {
+        history.replaceState(null, '', `${location.pathname}${query ? '?' + query : ''}${location.hash}`);
+    } catch (e) { /* replaceState can throw on file:// */ }
+}
+
+function readFiltersFromUrl() {
+    const params = new URLSearchParams(location.search);
+    const type = params.get('type');
+    const topic = params.get('topic');
+    if (type && TYPE_RULES[type]) pubState.type = type;
+    if (topic && TOPIC_RULES[topic]) pubState.topic = topic;
+    pubState.q = params.get('q') || '';
+    const input = document.getElementById('pub-search');
+    if (input) input.value = pubState.q;
+}
+
+function initPublicationControls() {
+    const wrap = document.querySelector('.pub-filters-wrap');
+    const input = document.getElementById('pub-search');
+    if (!wrap || !input) return;
+
+    wrap.addEventListener('click', e => {
+        const typeBtn = e.target.closest('[data-filter-type]');
+        const topicBtn = e.target.closest('[data-filter-topic]');
+        if (typeBtn) pubState.type = typeBtn.dataset.filterType;
+        else if (topicBtn) pubState.topic = topicBtn.dataset.filterTopic;
+        else return;
+        renderPublicationList();
+    });
+
+    let timer = 0;
+    input.addEventListener('input', () => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            pubState.q = input.value;
+            renderPublicationList();
+        }, 120);
+    });
+
+    input.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && input.value) {
+            input.value = '';
+            pubState.q = '';
+            renderPublicationList();
+        }
+    });
+
+    document.getElementById('pub-search-clear').addEventListener('click', () => {
+        input.value = '';
+        pubState.q = '';
+        renderPublicationList();
+        input.focus();
+    });
+
+    document.getElementById('pub-reset').addEventListener('click', () => {
+        Object.assign(pubState, { type: 'all', topic: 'all', q: '' });
+        input.value = '';
+        renderPublicationList();
     });
 }
 
-function createPublicationElement(entry) {
-    const div = document.createElement('div');
-    div.className = 'publication-item';
+/* ---------- BibTeX copy / download ---------- */
 
-    const title = entry.title ? entry.title.replace(/--/g, '–') : 'Untitled';
-    const venue = entry.journal || entry.booktitle || '';
-    const year = entry.year || '';
-    const publicationLink = entry.url || entry.doi || '';
-    const type = entry.type || '';
-
-    // Authors formatting
-    let authorsHtml = 'Unknown Author';
-    if (entry.author) {
-        const authorsList = entry.author.split(/\s+and\s+/i);
-        const formattedAuthors = authorsList.map(auth => {
-            const isCA = auth.includes('*') || auth.includes('^');
-            const cleanName = auth.replace(/[\*\$\^]/g, '').trim();
-            const isLadiana = /Andrea\s+Ladiana|A\.\s*Ladiana/i.test(cleanName);
-
-            const starHtml = isCA ? '<span class="ca-star" title="Corresponding Author">*</span>' : '';
-            if (isLadiana) {
-                return `<strong class="author-self">Andrea Ladiana${starHtml}</strong>`;
-            }
-            return `${cleanName}${starHtml}`;
-        });
-        authorsHtml = formattedAuthors.join(', ');
-    }
-
-    let html = `
-        ${publicationLink
-            ? `<a href="${publicationLink}" target="_blank" rel="noopener" class="pub-title">${title}</a>`
-            : `<span class="pub-title">${title}</span>`}
-        <p class="pub-authors">${authorsHtml}</p>
-        ${venue ? `<p class="pub-journal">${venue}${year ? ', ' + year : ''}</p>` : ''}
-    `;
-
-    // Metadata badges
-    html += '<div class="pub-meta-badges">';
-    if (type) {
-        const typeLabel = type === 'article' ? 'Journal' :
-            type === 'inproceedings' ? 'Conference' :
-                type.charAt(0).toUpperCase() + type.slice(1);
-        html += `<span class="pub-badge">${typeLabel}</span>`;
-    }
-    if (year) {
-        html += `<span class="pub-badge">${year}</span>`;
-    }
-    if (entry.isLadianaCA) {
-        html += `<span class="pub-badge ca-badge" title="Andrea Ladiana is Corresponding Author"><i class="fas fa-envelope"></i> Corresponding Author</span>`;
-    }
-    if (entry.note) {
-        const cleanNote = entry.note.replace(/^\[|\]$/g, '').trim();
-        html += `<span class="pub-badge pub-badge-status">${cleanNote}</span>`;
-    }
-    if (entry.keywords) {
-        const kws = entry.keywords.split(',').map(k => k.trim()).filter(Boolean);
-        kws.forEach(kw => {
-            html += `<span class="pub-badge pub-badge-topic">${kw}</span>`;
-        });
-    }
-    html += '</div>';
-
-    // Actions: Links & Copy BibTeX
-    html += '<div class="pub-actions">';
-    let links = [];
-    if (entry.url) {
-        let label = 'Link';
-        if (entry.url.includes('arxiv.org')) label = 'arXiv';
-        else if (entry.url.includes('openreview.net')) label = 'OpenReview';
-        else if (entry.url.includes('sciencedirect.com')) label = 'ScienceDirect';
-        else if (entry.url.includes('iopscience.iop.org')) label = 'IOPscience';
-        else if (entry.url.includes('doi.org')) label = 'DOI';
-        links.push(`<a href="${entry.url}" target="_blank" rel="noopener">[${label}]</a>`);
-    }
-    if (entry.eprint) {
-        const arxivUrl = entry.eprint.startsWith('http') ? entry.eprint : `https://arxiv.org/abs/${entry.eprint}`;
-        links.push(`<a href="${arxivUrl}" target="_blank" rel="noopener">[arXiv]</a>`);
-    }
-    if (entry.doi && !entry.url) {
-        links.push(`<a href="${entry.doi}" target="_blank" rel="noopener">[DOI]</a>`);
-    }
-
-    if (links.length > 0) {
-        html += `<div class="pub-links">${links.join(' ')}</div>`;
-    }
-
-    // Copy BibTeX Button
-    html += `<button type="button" class="pub-btn-bibtex" data-key="${entry.key}" title="Copy BibTeX citation"><i class="fas fa-quote-right"></i> BibTeX</button>`;
-    html += '</div>';
-
-    div.innerHTML = html;
-    return div;
-}
-
-// Copy BibTeX to clipboard with visual feedback
 function copyBibTeX(key, button) {
-    const entry = allPublicationEntries.find(e => e.key === key);
+    const entry = pubState.entries.find(e => e.key === key);
     if (!entry) return;
 
-    const textToCopy = entry.rawBibtex || '';
-    const doFeedback = () => {
-        const originalHtml = button.innerHTML;
-        button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+    const text = BibTeX.cleanEntry(entry);
+    const originalHtml = button.innerHTML;
+    const feedback = () => {
+        button.innerHTML = `${icon('check')} Copied!`;
         button.classList.add('copied');
         setTimeout(() => {
             button.innerHTML = originalHtml;
@@ -609,11 +487,9 @@ function copyBibTeX(key, button) {
     };
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(textToCopy).then(doFeedback).catch(() => {
-            fallbackCopyText(textToCopy, doFeedback);
-        });
+        navigator.clipboard.writeText(text).then(feedback).catch(() => fallbackCopyText(text, feedback));
     } else {
-        fallbackCopyText(textToCopy, doFeedback);
+        fallbackCopyText(text, feedback);
     }
 }
 
@@ -626,104 +502,79 @@ function fallbackCopyText(text, callback) {
     textarea.select();
     try {
         document.execCommand('copy');
-        if (callback) callback();
+        callback();
     } catch (e) {
         console.error('Copy failed:', e);
     }
     document.body.removeChild(textarea);
 }
 
-// Global click delegation for Copy BibTeX
-document.addEventListener('click', (e) => {
+document.addEventListener('click', e => {
     const btn = e.target.closest('.pub-btn-bibtex');
-    if (btn) {
-        const key = btn.dataset.key;
-        copyBibTeX(key, btn);
-    }
+    if (btn) copyBibTeX(btn.dataset.key, btn);
 });
 
-// Dropdown menu interactivity for Projects
-(function initProjectsDropdown() {
-    const dropdown = document.getElementById('projects-dropdown');
-    const btn = document.getElementById('projects-dropdown-btn');
+/** Point the "download .bib" button at a cleaned file (no *, status notes, URL-style DOIs). */
+function setupBibDownload(entries) {
+    const link = document.getElementById('bib-download');
+    if (!link || !window.Blob || !window.URL || !URL.createObjectURL) return;
+    link.href = URL.createObjectURL(new Blob([BibTeX.cleanFile(entries)], { type: 'text/plain;charset=utf-8' }));
+}
 
-    if (!dropdown || !btn) return;
+/* ---------- Structured data (JSON-LD) built from the same bib file ---------- */
 
-    btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const isOpen = dropdown.classList.toggle('active');
-        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+function injectPublicationsJsonLd(entries) {
+    const author = a => (a.self
+        ? { '@type': 'Person', '@id': `${SITE_URL}#me`, name: 'Andrea Ladiana' }
+        : { '@type': 'Person', name: a.name });
+
+    const articles = entries.map(entry => {
+        const item = {
+            '@type': 'ScholarlyArticle',
+            headline: BibTeX.displayText(entry.title),
+            author: entry.authors.map(author),
+            datePublished: entry.year
+        };
+        const url = safeUrl(entry.url) || safeUrl(doiUrl(entry));
+        if (url) item.url = url;
+        if (entry.doi) item.sameAs = doiUrl(entry);
+
+        const status = (entry.note || '').replace(/^\[|\]$/g, '').trim();
+        if (/^published$/i.test(status)) {
+            const venue = BibTeX.displayText(entry.journal);
+            if (venue) item.isPartOf = { '@type': 'Periodical', name: venue };
+        } else if (status) {
+            item.creativeWorkStatus = status;
+        }
+        return item;
     });
 
-    document.addEventListener('click', (e) => {
-        if (!dropdown.contains(e.target)) {
-            dropdown.classList.remove('active');
-            btn.setAttribute('aria-expanded', 'false');
-        }
-    });
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.id = 'ld-publications';
+    script.textContent = JSON.stringify({ '@context': 'https://schema.org', '@graph': articles }).replace(/</g, '\\u003c');
+    document.head.appendChild(script);
+}
 
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && dropdown.classList.contains('active')) {
-            dropdown.classList.remove('active');
-            btn.setAttribute('aria-expanded', 'false');
-            btn.focus();
-        }
-    });
-})();
+/* ---------- Load publications ---------- */
 
-// Scrollspy for top navigation
-(function initScrollspy() {
-    const navLinks = document.querySelectorAll('.top-nav a[href^="#"]');
-    if (!navLinks.length) return;
+(async function loadPublications() {
+    const container = document.getElementById('bibtex-container');
+    if (!container) return;
 
-    const sections = Array.from(navLinks)
-        .map(link => document.querySelector(link.getAttribute('href')))
-        .filter(Boolean);
+    initPublicationControls();
 
-    function onScroll() {
-        const scrollPos = window.scrollY + 120;
-        let currentSectionId = null;
-
-        for (let i = sections.length - 1; i >= 0; i--) {
-            const section = sections[i];
-            if (section.offsetTop <= scrollPos) {
-                currentSectionId = section.getAttribute('id');
-                break;
-            }
-        }
-
-        navLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            if (currentSectionId && href === `#${currentSectionId}`) {
-                link.classList.add('active');
-            } else {
-                link.classList.remove('active');
-            }
-        });
+    try {
+        const text = await fetchText('biblio.bib');
+        pubState.entries = BibTeX.parse(text);
+        pubState.entries.forEach(buildSearchIndex);
+        readFiltersFromUrl();
+        renderPublicationList();
+        setupBibDownload(pubState.entries);
+        injectPublicationsJsonLd(pubState.entries);
+    } catch (error) {
+        const local = error.message === 'file-protocol';
+        if (!local) console.error('Error loading publications:', error);
+        container.innerHTML = `<div class="pub-empty-msg">${icon('alert')} <span>${local ? LOCAL_PREVIEW_HINT : 'Could not load publications.'}</span></div>`;
     }
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
 })();
-
-// Floating Back to Top Button
-(function initBackToTop() {
-    const btn = document.getElementById('back-to-top');
-    if (!btn) return;
-
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 350) {
-            btn.classList.add('visible');
-        } else {
-            btn.classList.remove('visible');
-        }
-    }, { passive: true });
-
-    btn.addEventListener('click', () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    });
-})();
-

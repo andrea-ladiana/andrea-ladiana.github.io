@@ -1,11 +1,40 @@
+/* Inter (variable, self-hosted). unicode-range lets the browser skip latin-ext unless needed. */
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('assets/fonts/inter-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('assets/fonts/inter-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
     --bg-color: #1a1a1a;
     --text-color: #e0e0e0;
     --accent-color: #64ffda;
-    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-bg: rgba(30, 32, 39, 0.62);
     --glass-border: rgba(255, 255, 255, 0.08);
-    --font-main: 'Inter', sans-serif;
+    --font-main: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
     --link-hover: #fff;
+}
+
+html {
+    scroll-padding-top: calc(var(--nav-h, 3.5rem) + 1rem);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
 }
 
 * {
@@ -23,82 +52,62 @@ body {
     min-height: 100vh;
 }
 
-/* Gradient Mesh Background */
+/* Background: static colour washes + a canvas graph animated by assets/js/graph-bg.js */
 .gradient-bg {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: -1;
+    inset: 0;
+    z-index: -2;
     overflow: hidden;
-    background: var(--bg-color);
+    background:
+        radial-gradient(60vw 60vw at 5% 0%, rgba(18, 113, 255, 0.17), transparent 62%),
+        radial-gradient(50vw 50vw at 100% 100%, rgba(221, 74, 255, 0.13), transparent 62%),
+        radial-gradient(42vw 42vw at 55% 55%, rgba(100, 255, 218, 0.07), transparent 62%),
+        var(--bg-color);
 }
 
 .noise {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     background: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.04"/%3E%3C/svg%3E');
     pointer-events: none;
-    z-index: 1;
 }
 
-.gradients {
+.graph-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    display: block;
+    pointer-events: none;
+}
+
+.skip-link {
     position: absolute;
-    width: 100%;
-    height: 100%;
-    filter: blur(80px);
+    left: -999px;
+    top: 0.5rem;
+    z-index: 1000;
+    padding: 0.5rem 0.9rem;
+    border-radius: 8px;
+    background: #000;
+    color: var(--accent-color);
+    font-weight: 600;
 }
 
-.g1,
-.g2,
-.g3 {
-    position: absolute;
-    border-radius: 50%;
-    opacity: 0.3;
-    animation: move 20s infinite alternate;
+.skip-link:focus {
+    left: 0.5rem;
 }
 
-.g1 {
-    background: radial-gradient(circle, rgba(18, 113, 255, 0.8) 0%, rgba(0, 0, 0, 0) 50%);
-    width: 80vw;
-    height: 80vw;
-    top: -20%;
-    left: -20%;
-    animation-duration: 25s;
-}
-
-.g2 {
-    background: radial-gradient(circle, rgba(221, 74, 255, 0.8) 0%, rgba(0, 0, 0, 0) 50%);
-    width: 60vw;
-    height: 60vw;
-    bottom: -10%;
-    right: -10%;
-    animation-duration: 30s;
-    animation-delay: -5s;
-}
-
-.g3 {
-    background: radial-gradient(circle, rgba(100, 255, 218, 0.8) 0%, rgba(0, 0, 0, 0) 50%);
-    width: 50vw;
-    height: 50vw;
-    top: 40%;
-    left: 40%;
-    animation-duration: 35s;
-    animation-delay: -10s;
-}
-
-@keyframes move {
-    0% {
-        transform: translate(0, 0);
-    }
-
-    100% {
-        transform: translate(10%, 10%);
-    }
+/* Inline SVG icons (sprite in index.html); size follows the surrounding font-size */
+.icon {
+    width: 1em;
+    height: 1em;
+    flex: none;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vertical-align: -0.125em;
 }
 
 /* Layout */
@@ -488,17 +497,23 @@ h2 {
     vertical-align: middle;
 }
 
-/* Glass Cards */
+/* Glass Cards
+   Reveal uses the individual `translate` property so it never fights with the hover `transform`.
+   No backdrop-filter here: blurring everything behind seven big cards on every canvas frame is costly. */
 .glass-card {
     background: var(--glass-bg);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
     border: 1px solid var(--glass-border);
     border-radius: 12px;
     padding: 2rem;
     margin-bottom: 3rem;
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    scroll-margin-top: calc(var(--nav-h, 3.5rem) + 1rem);
+    transition: opacity 0.6s ease-out, translate 0.6s ease-out, transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.js .glass-card:not(.is-visible) {
+    opacity: 0;
+    translate: 0 20px;
 }
 
 .glass-card:hover {
@@ -991,17 +1006,76 @@ h2 {
     color: #fff;
 }
 
-/* Details/Summary */
-details summary {
-    transition: color 0.2s ease;
+/* Background animation toggle (bottom-left, mirrors the back-to-top button) */
+.bg-toggle {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(18, 18, 24, 0.88);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+    z-index: 99;
+    transition: color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-details[open] summary {
+.bg-toggle:hover,
+.bg-toggle:focus-visible {
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+    box-shadow: 0 10px 28px rgba(100, 255, 218, 0.2);
+}
+
+.bg-toggle:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+/* Past conferences / speaker */
+.past-details {
+    margin-top: 2rem;
+}
+
+.past-details[hidden] {
+    display: none;
+}
+
+.past-details > summary {
+    cursor: pointer;
+    color: var(--accent-color);
+    font-weight: 600;
+    transition: opacity 0.2s ease;
+}
+
+.past-details > summary:hover {
+    opacity: 0.8;
+}
+
+.past-details[open] > summary {
     margin-bottom: 1rem;
 }
 
-details summary:hover {
-    opacity: 0.8;
+.past-list {
+    margin-top: 1rem;
+    padding-left: 1rem;
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.subsection-title {
+    margin-top: 3rem;
+}
+
+.empty-note {
+    margin-bottom: 1rem;
+    font-style: italic;
+    opacity: 0.7;
 }
 
 /* Conferences Timeline */
@@ -1044,6 +1118,10 @@ details summary:hover {
     margin-bottom: 0.6rem;
 }
 
+.conf-meta .icon {
+    margin-right: 0.35rem;
+}
+
 .conf-meta {
     font-size: 0.95rem;
     color: var(--accent-color);
@@ -1057,21 +1135,16 @@ details summary:hover {
     line-height: 1.65;
 }
 
-/* Quotes */
-.quote {
-    font-size: 1.1rem;
-    font-style: italic;
-    margin-bottom: 2rem;
-    padding-left: 1rem;
-    border-left: 3px solid var(--accent-color);
-    opacity: 0.9;
+/* Ten Commandments */
+.commandments {
+    padding-left: 1.5rem;
+    margin-top: 1rem;
 }
 
-.quote footer {
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-    font-style: normal;
-    opacity: 0.7;
+.quote-source {
+    display: block;
+    margin-top: 1rem;
+    opacity: 0.8;
 }
 
 /* Responsive */
@@ -1137,10 +1210,304 @@ details summary:hover {
         margin-bottom: 0.2rem;
     }
 
-    .back-to-top {
+    .back-to-top,
+    .bg-toggle {
         bottom: 1.2rem;
-        right: 1.2rem;
         width: 40px;
         height: 40px;
+    }
+
+    .back-to-top {
+        right: 1.2rem;
+    }
+
+    .bg-toggle {
+        left: 1.2rem;
+    }
+}
+
+/* Publications: header actions, search, counts, year groups, abstracts */
+.pub-header-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.pub-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.pub-search-icon {
+    position: absolute;
+    left: 0.85rem;
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+.pub-search input {
+    width: 100%;
+    padding: 0.55rem 2.3rem 0.55rem 2.4rem;
+    font: inherit;
+    font-size: 0.92rem;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.pub-search input::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.pub-search input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.07);
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.14);
+}
+
+.pub-search input::-webkit-search-cancel-button {
+    display: none;
+}
+
+.pub-search-clear {
+    position: absolute;
+    right: 0.45rem;
+    display: grid;
+    place-items: center;
+    width: 1.7rem;
+    height: 1.7rem;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.65);
+    cursor: pointer;
+}
+
+.pub-search-clear[hidden] {
+    display: none;
+}
+
+.pub-search-clear:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.pub-filter-btn:focus-visible,
+.pub-reset:focus-visible,
+.pub-btn-bibtex:focus-visible,
+.pub-search-clear:focus-visible,
+.past-details > summary:focus-visible,
+.pub-abstract > summary:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+.pub-count {
+    font-size: 0.9em;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.55;
+}
+
+.pub-count:not(:empty)::before {
+    content: '(';
+}
+
+.pub-count:not(:empty)::after {
+    content: ')';
+}
+
+.pub-filter-btn.active .pub-count {
+    opacity: 0.85;
+}
+
+.pub-filter-btn.is-empty:not(.active) {
+    opacity: 0.45;
+}
+
+.pub-filter-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    min-height: 1.4rem;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.pub-reset {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: var(--accent-color);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    cursor: pointer;
+}
+
+.pub-reset[hidden] {
+    display: none;
+}
+
+.pub-year {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin: 2.2rem 0 1.2rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: var(--accent-color);
+}
+
+.pub-year::after {
+    content: '';
+    flex: 1;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pub-year-group:first-child .pub-year {
+    margin-top: 0.4rem;
+}
+
+.pub-year-count {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    opacity: 0.6;
+}
+
+.pub-tldr {
+    margin: 0.55rem 0 0;
+    padding-left: 0.75rem;
+    border-left: 2px solid rgba(100, 255, 218, 0.35);
+    font-size: 0.95rem;
+    opacity: 0.92;
+}
+
+.pub-abstract {
+    margin-top: 0.7rem;
+}
+
+.pub-abstract > summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    list-style: none;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent-color);
+}
+
+.pub-abstract > summary::-webkit-details-marker {
+    display: none;
+}
+
+.pub-abstract > summary::before {
+    content: '+';
+    display: inline-block;
+    width: 1em;
+    text-align: center;
+    font-size: 1.1em;
+    line-height: 1;
+}
+
+.pub-abstract[open] > summary::before {
+    content: '\2212';
+}
+
+.pub-abstract > p {
+    margin-top: 0.6rem;
+    font-size: 0.92rem;
+    line-height: 1.65;
+    opacity: 0.88;
+}
+
+@media (max-width: 600px) {
+    .pub-header-actions {
+        width: 100%;
+    }
+
+    .pub-year {
+        margin-top: 1.8rem;
+    }
+}
+
+/* Motion: honour the user's preference */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .js .glass-card:not(.is-visible) {
+        translate: none;
+    }
+}
+
+/* Print: plain readable page (handy as a quick CV) */
+@media print {
+
+    .gradient-bg,
+    .graph-bg,
+    .top-nav,
+    .back-to-top,
+    .bg-toggle,
+    .skip-link,
+    .pub-filters-wrap,
+    .pub-btn-bibtex,
+    .pub-header-actions,
+    .social-links,
+    .projects-grid,
+    #other-interests,
+    #szilard-commandments {
+        display: none !important;
+    }
+
+    body {
+        background: #fff;
+        color: #000;
+    }
+
+    .glass-card,
+    .js .glass-card:not(.is-visible) {
+        opacity: 1;
+        translate: none;
+        background: none;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        break-inside: avoid-page;
+    }
+
+    h1,
+    h2,
+    h3,
+    .name,
+    .pub-title,
+    .project-title {
+        color: #000;
+        -webkit-text-fill-color: #000;
+        background: none;
+    }
+
+    a,
+    .pub-journal,
+    .conf-meta,
+    .pub-year {
+        color: #000;
     }
 }
