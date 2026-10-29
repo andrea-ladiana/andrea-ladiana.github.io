@@ -31,8 +31,9 @@ export function init(root, data) {
         ctx.strokeStyle = C.axis; line(ctx, F.X(hop), F.y0, F.X(hop), F.y1);
         ctx.strokeStyle = alpha(C.c1, 0.6); line(ctx, F.X(cnt), F.y0, F.X(cnt), F.y1);
         ctx.setLineDash([]);
-        text(ctx, "classic Hopfield", F.X(hop) + 4, F.y0 + 4, { base: "top", px: 11 });
-        text(ctx, `2^${N} patterns per layer`, F.X(cnt) + 4, F.y0 + 4, { base: "top", px: 11, color: C.c1Ink });
+        // labelled near the bottom, where the curves have not dropped yet
+        text(ctx, "classic Hopfield", F.X(hop) + 4, F.Y(0.12), { base: "bottom", px: 11 });
+        text(ctx, `2^${N} patterns per layer`, F.X(cnt) + 4, F.Y(0.12), { base: "bottom", px: 11, color: C.c1Ink });
 
         // theory curves and the paper's dots, the selected N on top
         const order = Ns.filter(n => n !== N).concat([N]);

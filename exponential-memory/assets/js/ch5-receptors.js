@@ -78,9 +78,11 @@ export async function init(root) {
         const rowH = gh + 44;
         let y = Math.max(pad, (h - 3 * rowH - 26) / 2) + 22;
         const s = frames[shown];
+        // labels span the canvas, not the grid, so they never collide on a phone
+        const lx = Math.min(x, pad), rx = Math.max(x + gw, w - pad);
         const layer = (lab, seq, a, known) => {
-            text(ctx, lab, x, y - 8, { px: 12 });
-            text(ctx, seq, x + gw, y - 8, { px: 13, align: "right", mono: true, color: known ? C.ink : C.muted });
+            text(ctx, lab, lx, y - 8, { px: 12 });
+            text(ctx, seq, rx, y - 8, { px: 13, align: "right", mono: true, color: known ? C.ink : C.muted });
             if (known || a === 2) drawPattern(ctx, s, ROWS, COLS, x, y, gw, gh, { o: a * N, target: a === 2 ? epi : null, to: cur.truth * N });
             else {
                 ctx.fillStyle = C.surface2; ctx.fillRect(x, y, gw, gh);
@@ -97,8 +99,8 @@ export async function init(root) {
         line(ctx, ax, ay - 2, ax, ay + 12); line(ctx, ax - 4, ay + 7, ax, ay + 12); line(ctx, ax + 4, ay + 7, ax, ay + 12);
         const done = shown === frames.length - 1;
         layer("epitope, recalled", done ? d.epitopes[cur.got].seq : "…", 2, true);
-        text(ctx, "orange: bits that differ from the true epitope", x, y - 44 + 18, { px: 11.5 });
-        if (done) text(ctx, cur.ok ? "right" : "wrong", x + gw, y - 44 + 18, { px: 12, align: "right", color: cur.ok ? C.c2Ink : C.c3Ink, weight: 600 });
+        text(ctx, "orange: bits that differ from the true epitope", lx, y - 44 + 18, { px: 11.5 });
+        if (done) text(ctx, cur.ok ? "right" : "wrong", rx, y - 44 + 18, { px: 12, align: "right", color: cur.ok ? C.c2Ink : C.c3Ink, weight: 600 });
     });
 
     const bars = stageCanvas(root.querySelector("#rec-bars"), (ctx, w, h) => {

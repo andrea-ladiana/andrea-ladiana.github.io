@@ -126,8 +126,8 @@ export async function init(root) {
             ctx.fillStyle = p.label === "stored" ? C.c2 : p.label === "new" ? C.c1 : C.axis;
             ctx.fillRect(x, y, wd, bottom - y);
             text(ctx, p.v < 0.1 ? p.v.toFixed(3) : p.v.toFixed(2), x + wd / 2, y - 4, { align: "center", base: "bottom", px: 10.5, mono: true, color: C.ink2 });
-            const lab = p.label.split(" ");
-            lab.forEach((s, j) => text(ctx, s, x + wd / 2, bottom + 6 + 13 * j, { align: "center", base: "top", px: 10.5 }));
+            const lab = p.label.split(" "), px = w < 420 ? 9.5 : 10.5;
+            lab.forEach((s, j) => text(ctx, s, x + wd / 2, bottom + 6 + 13 * j, { align: "center", base: "top", px }));
             gx[p.group][0] = Math.min(gx[p.group][0], x); gx[p.group][1] = Math.max(gx[p.group][1], x + wd);
             const t = tally[p.key];
             if (t && t.n) {

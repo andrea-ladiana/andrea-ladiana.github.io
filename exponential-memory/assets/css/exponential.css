@@ -75,4 +75,5 @@
   .topbar .home { font-size: 14px; }
   .controls .seg { flex-wrap: wrap; border-radius: 18px; }
   .canvas-box.lang-box { aspect-ratio: auto; min-height: 320px; }
+  .canvas-box.rec-box { aspect-ratio: 3 / 4; }
 }
