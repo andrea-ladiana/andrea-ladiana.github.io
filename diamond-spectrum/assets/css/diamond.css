@@ -1,0 +1,78 @@
+/* Page-specific layout for /diamond-spectrum/ (the shared look lives in ../assets/series/series.css). */
+
+.icon-btn {
+  display: inline-grid; place-items: center; width: 34px; height: 34px; flex: none;
+  border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink-2); cursor: pointer;
+}
+.icon-btn:hover { color: var(--c1-ink); border-color: var(--c1); }
+.icon-btn svg { width: 16px; height: 16px; }
+
+.legend-badges { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin: 28px 0 0; font-size: 13.5px; color: var(--muted); }
+.legend-badges .badge + .badge, .legend-badges .badge { margin-left: 4px; }
+
+/* Canvas boxes: fixed aspect ratios so nothing jumps while drawing */
+.canvas-box.ratio-wide { aspect-ratio: 2 / 1; }
+.canvas-box.square { aspect-ratio: 1 / 1; }
+.canvas-box.strip { height: 150px; border-top: 1px solid var(--line); }
+.canvas-box.ladder-box { height: 340px; }
+.canvas-box.idos-box { height: 240px; border-top: 1px solid var(--line); }
+.canvas-box.fly-box { aspect-ratio: 2 / 1; min-height: 360px; }
+@media (max-width: 760px) {
+  .canvas-box.ratio-wide { aspect-ratio: 4 / 3; }
+  .canvas-box.square { aspect-ratio: 5 / 4; }
+  .canvas-box.ladder-box { height: 300px; }
+  .canvas-box.fly-box { aspect-ratio: auto; height: 440px; }
+}
+.overlay-label.bottom { top: auto; bottom: 10px; }
+.legend-plane { display: inline-flex; align-items: center; gap: 6px; }
+.ln { display: inline-block; width: 22px; height: 0; border-top: 2px solid var(--c3); }
+.ln.dash { border-top-style: dashed; }
+
+.controls + .controls { border-top: 1px dashed var(--line); }
+.controls.top { border-top: 0; border-bottom: 1px solid var(--line); }
+.control.grow-1 { flex: 1 1 260px; }
+.control.grow-1 input[type="range"] { flex: 1; width: auto; min-width: 120px; }
+.check { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink-2); cursor: pointer; }
+.check input { accent-color: var(--c1); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  font: 500 12.5px/1 var(--font-mono); padding: 6px 9px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--line); background: var(--surface-2); color: var(--ink-2);
+}
+.chip:hover { border-color: var(--c3); color: var(--c3-ink); }
+.chip[aria-pressed="true"] { border-color: var(--c3); background: var(--c3-soft); color: var(--c3-ink); }
+.chip .k { color: var(--muted); margin-left: 4px; font-size: 11px; }
+
+.zoom-msg { padding: 12px 16px; border-top: 1px solid var(--line); font-size: 15px; color: var(--ink-2); min-height: 48px; }
+.zoom-msg strong { color: var(--ink); font-weight: 500; }
+.zoom-msg .hit { color: var(--c3-ink); font-weight: 600; }
+.zoom-msg .esc { color: var(--muted); }
+
+/* Twins */
+.twins { margin-top: 36px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); }
+.twins h3 { margin: 0 0 4px; font-size: 19px; font-weight: 600; }
+.twins > p { margin: 0 0 14px; color: var(--ink-2); font-size: 15.5px; }
+.twins .seg { flex-wrap: wrap; border-radius: 18px; max-width: 100%; }
+.twins .refs .badge { margin-right: 2px; }
+.digits { margin-top: 14px; font-size: 14px; line-height: 1.75; overflow-x: auto; white-space: nowrap; padding-bottom: 4px; }
+.digits .row { display: flex; gap: 12px; align-items: baseline; }
+.digits .lab { color: var(--muted); font-size: 12px; min-width: 3.6em; }
+.digits .same { color: var(--ink); }
+.digits .diff { color: var(--c3-ink); font-weight: 600; }
+.digits .rest { color: var(--muted); }
+.digits .gap { margin-top: 6px; font-family: var(--font-ui); color: var(--ink-2); font-size: 14px; white-space: normal; }
+.digits .gap b { font-family: var(--font-mono); font-weight: 500; color: var(--c3-ink); }
+
+.shadow-caption { padding: 14px 16px; border-top: 1px solid var(--line); font-size: 15px; color: var(--ink-2); }
+.shadow-caption p { margin: 0; max-width: 72ch; }
+.shadow-caption p + p { margin-top: 6px; }
+.shadow-caption strong { color: var(--ink); font-weight: 500; }
+
+.beyond-title { margin: 44px 0 0; font-size: 20px; font-weight: 600; }
+
+@media (max-width: 600px) {
+  .topbar .home { font-size: 14px; }
+  .twins { padding: 16px; }
+  .digits { font-size: 12.5px; }
+}

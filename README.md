@@ -13,6 +13,9 @@ Personal website. Plain HTML/CSS/JS, no build step.
 | `biblio.bib` | **Publications**: edit this file, the page renders it |
 | `conferences.json` | **Conferences**: edit this file, the page renders it |
 | `lenia/`, `affitti/` | Sub-pages |
+| `diamond-spectrum/` | Interactive paper on the diamond-lattice spectrum (ES modules, data in `assets/data/spectrum.json`) |
+| `assets/series/` | Shared look of the interactive-paper series (`series.css`, fonts) |
+| `tools/diamond/precompute.py` | Regenerates `diamond-spectrum/assets/data/spectrum.json` from the paper's exact formulas (needs sympy, mpmath, numpy; ~3 min) |
 | `404.html`, `robots.txt`, `sitemap.xml`, `og-image.png` | SEO / sharing |
 
 ## Previewing locally
@@ -49,6 +52,12 @@ validates `biblio.bib` and `conferences.json`. The same check, plus a link check
 ## Cache busting
 
 GitHub Pages caches assets for a few minutes. When you change `style.css`, `script.js` or the files in `assets/js/`, bump the `?v=` suffix in `index.html` (and `404.html`) so visitors never get new HTML with old CSS/JS.
+
+In `diamond-spectrum/` the same suffix is also on every `import` between modules, so bump it everywhere at once:
+
+```bash
+grep -rl "v=20261029a" diamond-spectrum | xargs sed -i "s/v=20261029a/v=NEW/g"
+```
 
 ## Background animation
 

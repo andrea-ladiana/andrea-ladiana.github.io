@@ -930,6 +930,36 @@ h2 {
     transform: scale(1.15);
 }
 
+/* Diamond-lattice project card visual */
+.diamond-visual {
+    height: 92px;
+    width: auto;
+    overflow: visible;
+}
+
+.diamond-visual .dv-edges {
+    fill: none;
+    stroke: var(--accent-color);
+    stroke-width: 1.1;
+    stroke-linecap: round;
+    opacity: 0.45;
+    transition: opacity 0.4s ease;
+}
+
+.diamond-visual .dv-mid {
+    fill: var(--accent-color);
+    opacity: 0.8;
+}
+
+.diamond-visual .dv-root {
+    fill: var(--accent-color);
+    filter: drop-shadow(0 0 6px var(--accent-color));
+}
+
+.project-card:hover .diamond-visual .dv-edges {
+    opacity: 0.8;
+}
+
 .visual-tag {
     position: absolute;
     bottom: 8px;

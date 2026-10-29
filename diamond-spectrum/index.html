@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The diamond lattice, played</title>
+<meta name="description" content="An interactive companion to “The Exact Laplacian Spectrum of the Berker–Ostlund Diamond Lattice”: grow the fractal, listen to its vibrations, and see why almost all of them sit on one note.">
+<meta name="color-scheme" content="light dark">
+<link rel="canonical" href="https://andrea-ladiana.github.io/diamond-spectrum/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The diamond lattice, played">
+<meta property="og:description" content="Grow a hierarchical lattice, hear its spectrum, and follow the renormalization map that writes it down exactly.">
+<meta property="og:url" content="https://andrea-ladiana.github.io/diamond-spectrum/">
+<meta property="og:image" content="https://andrea-ladiana.github.io/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/img/icon.svg" type="image/svg+xml">
+<link rel="preload" href="../assets/series/fonts/lenia-sans-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/series/series.css?v=20261029a">
+<link rel="stylesheet" href="assets/css/diamond.css?v=20261029a">
+<script>
+  // theme before first paint (a per-viewer convenience, it may be absent)
+  try { const t = localStorage.getItem("series-theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="home" href="../" title="Back to Andrea Ladiana's website">← Andrea Ladiana</a>
+    <nav aria-label="Chapters">
+      <a href="#grow"><span class="n">1</span>Grow</a>
+      <a href="#listen"><span class="n">2</span>Listen</a>
+      <a href="#trapped"><span class="n">3</span>Trapped</a>
+      <a href="#zoom"><span class="n">4</span>Zoom out</a>
+      <a href="#ladder"><span class="n">5</span>The ladder</a>
+      <a href="#shadows"><span class="n">6</span>Shadows</a>
+      <a href="#butterfly"><span class="n">∞</span>Butterfly</a>
+    </nav>
+    <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch between light and dark theme" title="Theme">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z" fill="currentColor"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+<section class="hero wrap">
+  <p class="series">Interactive paper</p>
+  <h1>A fractal that mostly plays one note</h1>
+  <p class="thesis">Strike a hierarchical lattice and it rings. Most of its sound sits on a single frequency; the rest climbs a ladder that can be written down exactly.</p>
+  <p class="paper">Based on A. Ladiana, <cite>The Exact Laplacian Spectrum of the Berker–Ostlund Diamond Lattice</cite>, J. Phys. A: Math. Theor. (2026).</p>
+  <div class="actions">
+    <a class="btn primary" href="#grow">Start <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg></a>
+    <a class="btn" href="https://iopscience.iop.org/article/10.1088/1751-8121/aea3c9" target="_blank" rel="noopener">Read the paper <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+    <a class="btn" href="#cite">Cite</a>
+  </div>
+  <p class="legend-badges"><span class="badge theorem">Theorem</span> proved in the paper <span class="badge numerics">Numerics</span> computed, here or in the paper <span class="badge conjecture">Conjecture</span> still open</p>
+</section>
+
+<!-- 1 · Grow -------------------------------------------------------------- -->
+<section class="chapter wrap" id="grow">
+  <div class="chapter-head">
+    <span class="n">01</span>
+    <h2>Grow</h2>
+    <p class="lede">Start from one edge. Replace it with <em class="v">b</em> parallel two-step paths. Do the same to every new edge, again and again.</p>
+  </div>
+  <div class="stage">
+    <div class="canvas-box ratio-wide"><canvas id="grow-canvas" aria-label="The diamond lattice"></canvas>
+      <span class="overlay-label">colour = generation · size = degree</span>
+      <div class="tip" id="grow-tip"></div>
+    </div>
+    <div class="controls">
+      <div class="control"><label>branches <em class="v">b</em></label>
+        <div class="seg" id="grow-b"><button data-v="2" aria-pressed="true">2</button><button data-v="3">3</button><button data-v="4">4</button><button data-v="5">5</button></div>
+      </div>
+      <div class="control"><label for="grow-L">level <em class="v">L</em></label><input type="range" id="grow-L" min="0" max="6" value="4"><output id="grow-L-out">4</output></div>
+      <button class="btn small" id="grow-play" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5l12 7-12 7z"/></svg>Grow from scratch</button>
+    </div>
+    <div class="stats">
+      <span>vertices <b id="grow-V">–</b></span>
+      <span>edges <b id="grow-E">–</b></span>
+      <span>degree of the two roots <b id="grow-deg">–</b></span>
+      <span class="hl">dimension <b id="grow-df">–</b></span>
+    </div>
+  </div>
+  <p class="note">Distances double at each step while edges multiply by 2<em class="v">b</em>, so the lattice has a fractal dimension between a line and a crowd. The two roots get busier and busier: their degree is <em class="v">b</em><sup><em class="v">L</em></sup>.</p>
+  <p class="refs"><span class="badge theorem">Theorem</span> Paper · §2.1–2.3, eqs. (1)–(3)</p>
+</section>
+
+<!-- 2 · Listen ------------------------------------------------------------ -->
+<section class="chapter wrap" id="listen">
+  <div class="chapter-head">
+    <span class="n">02</span>
+    <h2>Listen</h2>
+    <p class="lede">Every network has its own ways of vibrating: the eigenvectors of its Laplacian. Pick a note and watch the lattice move.</p>
+  </div>
+  <div class="stage">
+    <div class="canvas-box ratio-wide"><canvas id="listen-canvas" aria-label="A vibration mode of the lattice"></canvas>
+      <span class="overlay-label" id="listen-status">red and blue swing in opposite directions · grey stays still</span>
+    </div>
+    <div class="canvas-box strip"><canvas id="listen-strip" aria-label="The spectrum: one bar per distinct eigenvalue, height = how many modes"></canvas>
+      <span class="overlay-label">the spectrum · bar height = number of modes · click a bar</span>
+      <div class="tip" id="listen-tip"></div>
+    </div>
+    <div class="controls">
+      <div class="control"><label><em class="v">b</em></label>
+        <div class="seg" id="listen-b"><button data-v="2" aria-pressed="true">2</button><button data-v="3">3</button><button data-v="4">4</button></div>
+      </div>
+      <div class="control"><label for="listen-L"><em class="v">L</em></label><input type="range" id="listen-L" min="1" max="4" value="3"><output id="listen-L-out">3</output></div>
+      <button class="btn small" id="listen-another" type="button">Another mode, same note</button>
+      <button class="btn small" id="listen-hear" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9zM16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>Hear the spectrum</button>
+    </div>
+    <div class="stats">
+      <span>note <b id="listen-lam">–</b></span>
+      <span>modes on this note <b id="listen-mult">–</b></span>
+      <span class="hl">share of all modes <b id="listen-share">–</b></span>
+    </div>
+  </div>
+  <p class="note">One bar towers over the rest: <strong>λ = 2</strong>. Its modes move a handful of vertices and leave everything else perfectly still.</p>
+  <p class="refs"><span class="badge numerics">Numerics</span> diagonalized in your browser · Paper · Theorem 4.1, Fig. 2</p>
+</section>
+
+<!-- 3 · Trapped ----------------------------------------------------------- -->
+<section class="chapter wrap" id="trapped">
+  <div class="chapter-head">
+    <span class="n">03</span>
+    <h2>Trapped</h2>
+    <p class="lede">Why so much at λ = 2? Push two middle vertices of one diamond in opposite directions. Nothing else has to move.</p>
+  </div>
+  <div class="stage">
+    <div class="canvas-box ratio-wide"><canvas id="trap-canvas" aria-label="Click a diamond or a loop to trap a vibration"></canvas>
+      <span class="overlay-label" id="trap-hint">click a diamond</span>
+      <span class="overlay-label right mono" id="trap-res"></span>
+    </div>
+    <div class="controls">
+      <div class="seg" id="trap-mode"><button data-v="diamond" aria-pressed="true">Diamond mode</button><button data-v="loop">Loop mode</button></div>
+      <div class="control"><label><em class="v">b</em></label>
+        <div class="seg" id="trap-b"><button data-v="2">2</button><button data-v="3" aria-pressed="true">3</button><button data-v="4">4</button></div>
+      </div>
+      <div class="control"><label for="trap-L"><em class="v">L</em></label><input type="range" id="trap-L" min="1" max="3" value="3"><output id="trap-L-out">3</output></div>
+      <button class="btn small" id="trap-clear" type="button">Clear</button>
+    </div>
+    <div class="stats">
+      <span>diamond modes <b id="trap-diam">–</b></span>
+      <span>+ loop modes <b id="trap-loop">–</b></span>
+      <span class="hl">= modes at λ = 2 <b id="trap-total">–</b></span>
+    </div>
+  </div>
+  <p class="note">Each diamond traps <em class="v">b</em> − 1 such vibrations. Each independent loop one level down traps one more: flip the sign as you go around it. Count both and you get the multiplicity of λ = 2 exactly, at every size.</p>
+  <p class="refs"><span class="badge theorem">Theorem</span> Paper · §2.6, eqs. (9)–(10), (32)–(33), Theorem 4.1</p>
+</section>
+
+<!-- 4 · Zoom out ---------------------------------------------------------- -->
+<section class="chapter wrap" id="zoom">
+  <div class="chapter-head">
+    <span class="n">04</span>
+    <h2>Zoom out</h2>
+    <p class="lede">Erase the newest vertices and the lattice looks the same, only one level smaller. To keep the same vibration, the note has to move. Follow it.</p>
+  </div>
+  <div class="stage">
+    <div class="stage-grid">
+      <div class="canvas-box square"><canvas id="zoom-graph" aria-label="The lattice being decimated"></canvas>
+        <span class="overlay-label" id="zoom-level"></span>
+      </div>
+      <div class="canvas-box square"><canvas id="zoom-plane" aria-label="The renormalization map in the (α, β) plane"></canvas>
+        <span class="overlay-label">the note as a point (α, β)</span>
+        <span class="overlay-label bottom right legend-plane"><i class="ln dash"></i>the singular line</span>
+      </div>
+    </div>
+    <div class="zoom-msg" id="zoom-msg" aria-live="polite">&nbsp;</div>
+    <div class="controls">
+      <div class="control grow-1"><label for="zoom-lam">λ</label><input type="range" id="zoom-lam" min="0" max="1000" value="380"><output id="zoom-lam-out">–</output></div>
+      <div class="control"><label><em class="v">b</em></label>
+        <div class="seg" id="zoom-b"><button data-v="2" aria-pressed="true">2</button><button data-v="3">3</button></div>
+      </div>
+    </div>
+    <div class="controls">
+      <span class="control"><label>snap to a note</label></span>
+      <div class="chips" id="zoom-snaps"></div>
+    </div>
+    <div class="controls">
+      <button class="btn small primary" id="zoom-step" type="button">Zoom out once</button>
+      <button class="btn small" id="zoom-play" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5l12 7-12 7z"/></svg>Play all</button>
+      <button class="btn small" id="zoom-reset" type="button">Reset</button>
+    </div>
+  </div>
+  <p class="note">Each zoom-out is the same two-variable map Φ. A note is a λ whose point lands on the dashed line after some number of zoom-outs; once there it falls to (−1, 0) and then sits at (1, 0) forever.</p>
+  <p class="refs"><span class="badge theorem">Theorem</span> Paper · Theorem 3.1, eqs. (14), (17), Lemma 5.4, eq. (54)</p>
+</section>
+
+<!-- 5 · The ladder -------------------------------------------------------- -->
+<section class="chapter wrap" id="ladder">
+  <div class="chapter-head">
+    <span class="n">05</span>
+    <h2>The ladder</h2>
+    <p class="lede">Every note sits on a rung. Rung <em class="v">k</em> holds the notes that need <em class="v">k</em> zoom-outs: twice as many as the rung below, each <em class="v">b</em> times quieter.</p>
+  </div>
+  <div class="stage">
+    <div class="canvas-box ladder-box"><canvas id="ladder-canvas" aria-label="The singular ladder: roots of Q_k by rung"></canvas>
+      <div class="tip" id="ladder-tip"></div>
+    </div>
+    <div class="controls">
+      <div class="control"><label><em class="v">b</em></label>
+        <div class="seg" id="ladder-b"><button data-v="2">2</button><button data-v="3" aria-pressed="true">3</button><button data-v="4">4</button></div>
+      </div>
+    </div>
+    <div class="canvas-box idos-box"><canvas id="idos-canvas" aria-label="Fraction of modes below λ"></canvas>
+      <span class="overlay-label">fraction of all modes below λ</span>
+    </div>
+    <div class="controls">
+      <div class="control"><label for="idos-L">lattice size <em class="v">L</em></label><input type="range" id="idos-L" min="1" max="5" value="3"><output id="idos-L-out">3</output></div>
+    </div>
+    <div class="stats">
+      <span>jump at λ = 2 <b id="idos-jump">–</b></span>
+      <span>diamond modes alone would give <b id="idos-naive">–</b></span>
+      <span class="hl">infinite lattice <b id="idos-limit">–</b></span>
+    </div>
+  </div>
+  <p class="note">In the infinite lattice the spectrum is made of notes only, no smear. All the weight is on the ladder, and the bottom rung alone takes (<em class="v">b</em> − 1)/<em class="v">b</em>.</p>
+  <p class="refs"><span class="badge theorem">Theorem</span> Paper · Theorem 5.1, eqs. (45)–(47), Fig. 4</p>
+
+  <div class="twins" id="twins">
+    <h3>Twins that never touch</h3>
+    <p>Two rungs never share a note, yet they can come absurdly close. Here are two notes of <em class="v">b</em> = 3, digit by digit.</p>
+    <div class="seg" id="twins-pick"></div>
+    <div class="digits mono" id="twins-digits"></div>
+    <p class="refs"><span class="badge theorem">Theorem</span> never equal: Lemma 4.2 <span class="badge numerics">Numerics</span> digits from exact root isolation</p>
+  </div>
+</section>
+
+<!-- 6 · Shadows ----------------------------------------------------------- -->
+<section class="chapter wrap" id="shadows">
+  <div class="chapter-head">
+    <span class="n">06</span>
+    <h2>Shadows</h2>
+    <p class="lede">Keep only one coordinate of the map and you get a famous one-variable map. It is a tempting shortcut. It is also wrong.</p>
+  </div>
+  <div class="stage">
+    <div class="controls top">
+      <div class="seg" id="shadow-tab"><button data-v="cobweb" aria-pressed="true">The shadow map</button><button data-v="julia">Its Julia set</button><button data-v="slices">The real picture</button></div>
+      <div class="control"><label><em class="v">b</em></label>
+        <div class="seg" id="shadow-b"><button data-v="2" aria-pressed="true">2</button><button data-v="3">3</button><button data-v="4">4</button></div>
+      </div>
+    </div>
+    <div class="canvas-box ratio-wide"><canvas id="shadow-canvas" aria-label="Shadow map and spectral notes"></canvas>
+      <span class="overlay-label" id="shadow-label"></span>
+      <div class="tip" id="shadow-tip"></div>
+    </div>
+    <div class="shadow-caption" id="shadow-caption"></div>
+  </div>
+  <p class="refs" id="shadow-refs"></p>
+</section>
+
+<!-- ∞ · Butterfly --------------------------------------------------------- -->
+<section class="chapter wrap" id="butterfly">
+  <div class="chapter-head">
+    <span class="n">∞</span>
+    <h2>A butterfly in <em class="v">b</em></h2>
+    <p class="lede">Stack the spectra for <em class="v">b</em> = 2, 3, …, 12 on top of each other. The rungs become wings.</p>
+  </div>
+  <div class="stage">
+    <div class="canvas-box fly-box"><canvas id="fly-canvas" aria-label="Spectra of D_3 for b from 2 to 12"></canvas>
+      <span class="overlay-label">one row per <em class="v">b</em> · colour = number of modes</span>
+      <div class="tip" id="fly-tip"></div>
+    </div>
+    <div class="controls">
+      <div class="seg" id="fly-scale"><button data-v="log" aria-pressed="true">Whole spectrum</button><button data-v="lin">Close-up, λ ≤ 14</button></div>
+      <label class="check"><input type="checkbox" id="fly-curves" checked> rungs as curves</label>
+    </div>
+  </div>
+  <p class="refs"><span class="badge numerics">Numerics</span> exact spectra of <em class="v">D</em><sub>3</sub> · Paper · §5.6, Fig. 6</p>
+
+  <h3 class="beyond-title">Beyond the paper</h3>
+  <div class="cards">
+    <div class="card"><h3>Add a magnetic field</h3><p>Thread a flux through every loop and the hopping picks up a phase. On square lattices this draws Hofstadter’s butterfly. What does the diamond draw?</p></div>
+    <div class="card"><h3>Add disorder</h3><p>Random weights break the exact self-similarity. Do the trapped modes survive, and how wide does each note become? Open questions from §6.</p></div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer" id="cite">
+  <div class="wrap">
+    <p>Cite the paper:</p>
+<pre>@article{ladiana2026berker,
+  title   = {The Exact Laplacian Spectrum of the Berker--Ostlund Diamond Lattice},
+  author  = {Ladiana, Andrea},
+  journal = {Journal of Physics A: Mathematical and Theoretical},
+  year    = {2026},
+  doi     = {10.1088/1751-8121/aea3c9}
+}</pre>
+    <p>Exact spectra precomputed from the paper’s product formula and checked against direct diagonalization. Built by <a href="../">Andrea Ladiana</a>. Part of a series of interactive papers; see also <a href="../lenia/">Lenia in a heat bath</a>.</p>
+  </div>
+</footer>
+
+<script type="module" src="assets/js/main.js?v=20261029a"></script>
+</body>
+</html>
