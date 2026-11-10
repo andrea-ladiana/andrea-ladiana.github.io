@@ -233,7 +233,7 @@ const TYPE_RULES = {
 const TOPIC_RULES = {
     all: () => true,
     associative: e => /associative/i.test(e.keywords || '') || /associative|hopfield|dlam/i.test(e.title || ''),
-    statmech: e => /statistical mechanics/i.test(e.keywords || '') || /statistical-mechanical|ising|spin|thermodynamic/i.test(e.title || ''),
+    statmech: e => /statistical mechanics/i.test(e.keywords || '') || /statistical-mechanical|ising|spin|thermodynamic|entropy|l[eé]vy/i.test(e.title || ''),
     federated: e => /federated/i.test(e.keywords || '') || /federated|feddqkl/i.test(e.title || ''),
     graphs: e => /graph|fractal/i.test(e.keywords || '') || /laplacian|lattice/i.test(e.title || '')
 };
@@ -266,6 +266,7 @@ function linkLabel(url) {
     if (/sciencedirect\.com/i.test(url)) return 'ScienceDirect';
     if (/iopscience\.iop\.org/i.test(url)) return 'IOPscience';
     if (/doi\.org/i.test(url)) return 'DOI';
+    if (/github\.com/i.test(url)) return 'Code';
     return 'Link';
 }
 
@@ -313,6 +314,7 @@ function renderPublication(entry) {
     addLink(entry.url);
     if (entry.eprint) addLink(/^https?:/.test(entry.eprint) ? entry.eprint : `https://arxiv.org/abs/${entry.eprint}`, 'arXiv');
     addLink(doiUrl(entry), 'DOI');
+    if (entry.code) addLink(entry.code, 'Code');
 
     const tldr = entry.tldr ? `<p class="pub-tldr">${esc(entry.tldr)}</p>` : '';
     const abstract = entry.abstract

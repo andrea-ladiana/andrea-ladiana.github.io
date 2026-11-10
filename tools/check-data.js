@@ -32,7 +32,7 @@ for (const e of entries) {
     if (!e.journal && !e.booktitle) fail(`${where}: missing journal/booktitle`);
     if (!e.note || !/^\[.+\]$/.test(e.note)) fail(`${where}: note should look like {[Status]}`);
     if (!/\d{4}/.test(e.key)) fail(`${where}: key should contain the year`);
-    for (const field of ['url', 'eprint', 'doi']) {
+    for (const field of ['url', 'eprint', 'doi', 'code']) {
         if (e[field] && !/^https?:\/\//.test(e[field]) && field !== 'eprint') fail(`${where}: ${field} must start with http(s)://`);
     }
 }
