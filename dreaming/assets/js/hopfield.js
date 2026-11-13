@@ -1,6 +1,6 @@
 /*
  * The dreaming network in pattern space (Algorithm 1 of the paper), with the normalisation of
- * the reference code github.com/andrea-ladiana/dlam-mc-core:
+ * the reference code github.com/coscienza-research/dlam-mc-core:
  *   examples   eta = chi * xi,  P(chi = +1) = (1 + r)/2                                eq. (1)
  *   entropy    rho = (1 - r^2) / (M r^2)                                               eq. (2)
  *   stored     hat = mean(eta) / (r (1 + rho)),   C = hat hat^T / N
