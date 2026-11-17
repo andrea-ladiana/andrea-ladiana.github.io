@@ -8,7 +8,8 @@ Personal website. Plain HTML/CSS/JS, no build step.
 | --- | --- |
 | `index.html`, `style.css`, `script.js` | The home page |
 | `assets/js/bibtex.js` | BibTeX parser/cleaner (used by the page and by `tools/check-data.js`) |
-| `assets/js/graph-bg.js` | Animated graph background (canvas) |
+| `assets/js/dotnet.js` | The dot network: a Hopfield network (projector rule, Glauber dynamics) drawn on the page's dot grid; used by the hero, the Szilárd numerals and `404.html` |
+| `assets/js/minis.js` | Live previews in the "Papers you can play with" cards (Lenia, diamond-lattice eigenmodes, dreaming, pairs) |
 | `assets/fonts/` | Self-hosted Inter (SIL OFL, see `OFL.txt`) |
 | `biblio.bib` | **Publications**: edit this file, the page renders it |
 | `conferences.json` | **Conferences**: edit this file, the page renders it |
@@ -38,12 +39,12 @@ then open <http://localhost:8000>.
 
 - `*` after an author name marks the corresponding author.
 - `note = {[Published]}` / `{[Submitted]}` / `{[arXiv preprint]}` / `{[Workshop Proceedings]}` is the status badge and drives the "Type" filters.
-- `keywords = {Associative Networks, Statistical Mechanics}` drives the "Topic" filters.
+- `keywords = {Associative Networks, Statistical Mechanics}` drives the "Topic" filters, the tags on each paper and the research map. Every keyword becomes a filter with its count; its colour comes from the family it belongs to in `FAMILIES` (top of the publications part of `script.js`): add new keywords there to give them the right colour.
 - Optional: `tldr = {one-line summary}` and `abstract = {...}` add a summary line and an "Abstract" toggle to the card.
 - Lines starting with `%` are ignored (use them to hide an entry).
 - "BibTeX" buttons and the `.bib` download strip the site-only markers (`*`, status notes, `tldr`), turn DOI URLs into bare DOIs and add `eprint`/`archivePrefix` for arXiv links.
 
-**Conferences** (`conferences.json`): dates are ISO (`"start": "2026-01-19"`, optional `"end"`). Events whose last day is in the past move to the collapsible "Past" list automatically.
+**Conferences** (`conferences.json`): dates are ISO (`"start": "2026-01-19"`, optional `"end"`). They are drawn as a raster plot (one dot per week, one row per role, a "today" marker) and as cards; upcoming events come first, then the past ones, newest first.
 
 ## Checks
 
@@ -65,6 +66,10 @@ grep -rl "v=20261029a" dreaming | xargs sed -i "s/v=20261029a/v=NEW/g"
 grep -rl "v=20261029a" exponential-memory | xargs sed -i "s/v=20261029a/v=NEW/g"
 ```
 
-## Background animation
+## The dot network
 
-The graph background follows `prefers-reduced-motion` (a still frame instead of motion). The round button at the bottom-left of the page pauses/plays it and remembers the choice in `localStorage`.
+The page background is a CSS dot grid (`--cell`, 14px; 12px on phones) anchored at the document origin. The hero canvas lines its neurons up with that grid, so the pictures form out of the page's own dots. Inside the hero square the network stores eight pictures with the projector rule; outside it the neurons are held quiet and only flicker when heated (pointer, ambient sparks).
+
+Everything animated (hero, previews, Szilárd numerals, 404) follows `prefers-reduced-motion`: the networks show the final picture without dynamics, and the previews stay still. Animations pause when off screen or when the tab is hidden.
+
+Light/dark follows the system, and the moon/sun button stores the choice under `series-theme`, the same key used by the interactive papers.

@@ -4,35 +4,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>document.documentElement.classList.add('js'); try { const t = localStorage.getItem('series-theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}</script>
     <title>Page not found | Andrea Ladiana</title>
     <meta name="robots" content="noindex">
-    <meta name="theme-color" content="#1a1a1a">
+    <meta name="theme-color" content="#f5f4ef" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0d0c12" media="(prefers-color-scheme: dark)">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="stylesheet" href="/style.css?v=20261029g">
+    <link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/style.css?v=20261117a">
 </head>
 
 <body>
-    <div class="gradient-bg" aria-hidden="true">
-        <div class="noise"></div>
-    </div>
-    <canvas id="graph-bg" class="graph-bg" aria-hidden="true"></canvas>
-
-    <main class="container">
-        <header class="hero">
-            <div class="hero-content">
-                <p class="hero-eyebrow">Error 404</p>
-                <h1 class="name">Signal lost</h1>
-                <p class="intro-text">
-                    This page doesn't exist: the message wandered off to a node that isn't in the graph.
-                </p>
-                <p class="intro-text">
-                    <a href="/" class="link">Back to the home page &rarr;</a>
-                </p>
-            </div>
-        </header>
+    <main class="nf" id="main">
+        <canvas class="hero-net" id="nf-net" aria-hidden="true"></canvas>
+        <div class="nf-inner wrap">
+            <div class="nf-slot" id="nf-slot" role="img" aria-label="The dots of the page cooling down into the number 404"></div>
+            <p class="eyebrow">Error 404</p>
+            <h1>Signal lost</h1>
+            <p class="intro">This page doesn't exist. The network ran too hot to remember it, and it has just cooled down into the only thing it knows here.</p>
+            <a class="btn primary" href="/">Back to the home page</a>
+        </div>
     </main>
 
-    <script src="/assets/js/graph-bg.js?v=20261029" defer></script>
+    <script src="/assets/js/dotnet.js?v=20261117a" defer></script>
+    <script>
+        // Runs after the deferred engine: start from noise, cool down into "404"; the pointer heats it up again.
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!window.DotNet) return;
+            const canvas = document.getElementById('nf-net'), slot = document.getElementById('nf-slot'), main = document.getElementById('main');
+            const root = document.documentElement;
+            const draw = (g, W, H) => {
+                const fam = 'Inter, "Segoe UI", system-ui, sans-serif';
+                g.font = `800 100px ${fam}`;
+                let m = g.measureText('404');
+                const k = Math.min(0.94 * W / m.width, 0.86 * H / (m.actualBoundingBoxAscent + m.actualBoundingBoxDescent));
+                g.font = `800 ${100 * k}px ${fam}`;
+                m = g.measureText('404');
+                g.textAlign = 'center';
+                g.fillText('404', W / 2, H / 2 + (m.actualBoundingBoxAscent - m.actualBoundingBoxDescent) / 2);
+            };
+            const fonts = document.fonts ? document.fonts.load('800 100px Inter').catch(() => {}) : Promise.resolve();
+            fonts.then(() => {
+                const net = DotNet.create({
+                    canvas,
+                    align: 'page',
+                    cell: () => parseFloat(getComputedStyle(root).getPropertyValue('--cell')) || 14,
+                    slot: () => {
+                        const c = canvas.getBoundingClientRect(), s = slot.getBoundingClientRect();
+                        return { x: s.left - c.left, y: s.top - c.top, w: s.width, h: s.height };
+                    },
+                    pictures: [{ name: '404', draw }],
+                    alwaysOn: true
+                });
+                const start = () => { if (net.init(true)) net.cue(0, { Tg: 3, lambda: 0.4, auto: true }); };
+                let ready = false;
+                new ResizeObserver(() => { if (!ready) { ready = true; start(); } else net.relayout(); }).observe(main);
+                let px = null, py = null;
+                main.addEventListener('pointermove', e => {
+                    if (e.pointerType === 'touch') return;
+                    const r = canvas.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+                    const n = px === null ? 1 : Math.max(1, Math.ceil(Math.hypot(x - px, y - py) / 12));
+                    for (let i = 1; i <= n; i++) net.heatAt(px === null ? x : px + (x - px) * i / n, py === null ? y : py + (y - py) * i / n, 3);
+                    px = x; py = y;
+                });
+                main.addEventListener('pointerleave', () => { px = py = null; });
+                main.addEventListener('pointerdown', e => {
+                    if (e.target.closest('a')) return;
+                    const r = canvas.getBoundingClientRect();
+                    net.heatAt(e.clientX - r.left, e.clientY - r.top, 5);
+                });
+                matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => net.recolor());
+            });
+        });
+    </script>
 </body>
 
 </html>

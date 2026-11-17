@@ -1,14 +1,14 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script>document.documentElement.classList.add('js');</script>
+    <script>document.documentElement.classList.add('js'); try { const t = localStorage.getItem('series-theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}</script>
     <title>Andrea Ladiana | PhD Student in Mathematics, Sapienza University of Rome</title>
     <meta name="description"
         content="Personal website of Andrea Ladiana, PhD Student in Mathematics. Researching Heteroassociative Neural Networks, Hopfield Models, and Statistical Mechanics.">
-    <meta name="theme-color" content="#1a1a1a">
+    <meta name="theme-color" content="#f5f4ef" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0d0c12" media="(prefers-color-scheme: dark)">
     <meta name="google-site-verification" content="h4_lvbonIy-Myi1BwjT4lL30Hb9_FXrG5Ct0ZSgzLMA" />
     <link rel="canonical" href="https://andrea-ladiana.github.io/">
 
@@ -22,21 +22,22 @@
         content="PhD Student in Mathematics researching Associative Neural Networks, Hopfield Models, and Statistical Mechanics.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://andrea-ladiana.github.io/">
-    <meta property="og:image" content="https://andrea-ladiana.github.io/og-image.png">
+    <meta property="og:image" content="https://andrea-ladiana.github.io/og-image.png?v=20261118">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Andrea Ladiana, PhD Student in Mathematics, over a network of nodes exchanging signals">
+    <meta property="og:image:alt" content="Andrea Ladiana, PhD Student in Mathematics, next to an origami crane recalled by a network of dots">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Andrea Ladiana | PhD Student in Mathematics, Sapienza University of Rome">
     <meta name="twitter:description"
         content="PhD Student in Mathematics researching Associative Neural Networks and Statistical Mechanics.">
-    <meta name="twitter:image" content="https://andrea-ladiana.github.io/og-image.png">
+    <meta name="twitter:image" content="https://andrea-ladiana.github.io/og-image.png?v=20261118">
+    <meta name="twitter:image:alt" content="Andrea Ladiana, PhD Student in Mathematics, next to an origami crane recalled by a network of dots">
 
     <!-- Self-hosted font (no third-party requests) -->
     <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="stylesheet" href="style.css?v=20261029g">
+    <link rel="stylesheet" href="style.css?v=20261117a">
 
     <!-- Schema.org JSON-LD. The list of ScholarlyArticle items is added by script.js from biblio.bib -->
     <script type="application/ld+json">
@@ -78,457 +79,281 @@
     }
     </script>
 </head>
-
 <body>
-    <!-- Icon sprite: <svg class="icon"><use href="#i-name"/></svg> -->
-    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-        <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></symbol>
-        <symbol id="i-github" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></symbol>
-        <symbol id="i-researchgate" viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="19" height="19" rx="4.5"/><text x="12" y="16.2" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700" fill="currentColor" stroke="none">Rg</text></symbol>
-        <symbol id="i-scholar" viewBox="0 0 24 24"><path d="M22 9 12 4 2 9l10 5z"/><path d="M6 11.5V16c2.5 3 9.5 3 12 0v-4.5"/><path d="M22 9v6"/></symbol>
-        <symbol id="i-arxiv" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></symbol>
-        <symbol id="i-university" viewBox="0 0 24 24"><path d="M3 21h18M5 18v-7M9.5 18v-7M14.5 18v-7M19 18v-7M12 3 3 8h18z"/></symbol>
-        <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
-        <symbol id="i-external" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></symbol>
-        <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
-        <symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5m-7 7 7-7 7 7"/></symbol>
-        <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
-        <symbol id="i-filter" viewBox="0 0 24 24"><path d="M22 3H2l8 9.5V19l4 2v-8.5z"/></symbol>
-        <symbol id="i-hash" viewBox="0 0 24 24"><path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18"/></symbol>
-        <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol>
-        <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
-        <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
-        <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
-        <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
-        <symbol id="i-map-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
-        <symbol id="i-play" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m10 8 6 4-6 4z"/></symbol>
-        <symbol id="i-atom" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.5"/><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/></symbol>
-        <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
-        <symbol id="i-motion" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z"/></symbol>
-        <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></symbol>
-    </svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></symbol>
+  <symbol id="i-github" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.070 3.633 17.700 3.633 17.700c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.070 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.930 0-1.310.465-2.380 1.235-3.220-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.300 1.230.96-.267 1.980-.399 3-.405 1.020.006 2.040.138 3 .405 2.280-1.552 3.285-1.230 3.285-1.230.645 1.653.24 2.873.12 3.176.765.840 1.230 1.910 1.230 3.220 0 4.610-2.805 5.625-5.475 5.920.42.36.81 1.096.81 2.220 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></symbol>
+  <symbol id="i-researchgate" viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="19" height="19" rx="4.5"/><text x="12" y="16.2" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700" fill="currentColor" stroke="none">Rg</text></symbol>
+  <symbol id="i-orcid" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8.6 10.2v6.4M8.6 7.4v.01M11.6 16.6v-6.4h2.1a3.2 3.2 0 0 1 0 6.4z"/></symbol>
+  <symbol id="i-scholar" viewBox="0 0 24 24"><path d="M22 9 12 4 2 9l10 5z"/><path d="M6 11.5V16c2.5 3 9.5 3 12 0v-4.5"/><path d="M22 9v6"/></symbol>
+  <symbol id="i-arxiv" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></symbol>
+  <symbol id="i-university" viewBox="0 0 24 24"><path d="M3 21h18M5 18v-7M9.5 18v-7M14.5 18v-7M19 18v-7M12 3 3 8h18z"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14m-6-6 6 6 6-6"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5m-7 7 7-7 7 7"/></symbol>
+  <symbol id="i-ext" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
+  <symbol id="i-shuffle" viewBox="0 0 24 24"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></symbol>
+  <symbol id="i-reset" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></symbol>
+</svg>
 
-    <a class="skip-link" href="#main">Skip to content</a>
+<a class="skip" href="#main">Skip to content</a>
 
-    <div class="gradient-bg" aria-hidden="true">
-        <div class="noise"></div>
-    </div>
-    <canvas id="graph-bg" class="graph-bg" aria-hidden="true"></canvas>
+<header class="nav">
+  <nav class="nav-pill" aria-label="Main">
+    <a class="nav-brand" href="#top" aria-label="Back to the top">
+      <svg viewBox="0 0 12 12" aria-hidden="true"><circle cx="2" cy="2" r="1.3"/><circle cx="6" cy="2" r=".7"/><circle cx="10" cy="2" r="1.3"/><circle cx="2" cy="6" r=".7"/><circle cx="6" cy="6" r="1.3"/><circle cx="10" cy="6" r=".7"/><circle cx="2" cy="10" r="1.3"/><circle cx="6" cy="10" r=".7"/><circle cx="10" cy="10" r="1.3"/></svg>
+    </a>
+    <a class="lnk" href="#research">Research</a>
+    <a class="lnk" href="#publications">Publications</a>
+    <a class="lnk" href="#conferences">Conferences</a>
+    <a class="lnk" href="#projects">Papers to play</a>
+    <a class="lnk" href="#other-interests">Origami</a>
+    <a class="lnk" href="#szilard-commandments">Szilárd</a>
+    <button class="theme-btn" id="theme" type="button" aria-label="Switch to dark theme"><svg class="icon" aria-hidden="true"><use href="#i-moon"/></svg></button>
+  </nav>
+</header>
 
-    <!-- Sticky Navigation -->
-    <nav class="top-nav" aria-label="Main Navigation">
-        <a href="#research">Research</a>
-        <a href="#publications">Publications</a>
-        <a href="#conferences">Conferences</a>
-        <div class="nav-dropdown" id="projects-dropdown">
-            <button type="button" class="nav-dropdown-btn" id="projects-dropdown-btn" aria-expanded="false" aria-haspopup="true">
-                <span>Projects</span>
-                <svg class="icon nav-chevron" aria-hidden="true"><use href="#i-chevron-down"/></svg>
-            </button>
-            <div class="nav-dropdown-menu" id="projects-dropdown-menu" role="menu" aria-labelledby="projects-dropdown-btn">
-                <a href="lenia/" class="dropdown-item" role="menuitem">
-                    <div class="dropdown-item-header">
-                        <span class="dropdown-item-title">Lenia in a Bath</span>
-                        <svg class="icon dropdown-external-icon" aria-hidden="true"><use href="#i-external"/></svg>
-                    </div>
-                    <span class="dropdown-item-desc">Continuous Cellular Automaton Simulator</span>
-                </a>
-                <a href="diamond-spectrum/" class="dropdown-item" role="menuitem">
-                    <div class="dropdown-item-header">
-                        <span class="dropdown-item-title">The Diamond Lattice, Played</span>
-                        <svg class="icon dropdown-external-icon" aria-hidden="true"><use href="#i-external"/></svg>
-                    </div>
-                    <span class="dropdown-item-desc">Interactive paper: an exact fractal spectrum</span>
-                </a>
-                <a href="dreaming/" class="dropdown-item" role="menuitem">
-                    <div class="dropdown-item-header">
-                        <span class="dropdown-item-title">Networks that Dream</span>
-                        <svg class="icon dropdown-external-icon" aria-hidden="true"><use href="#i-external"/></svg>
-                    </div>
-                    <span class="dropdown-item-desc">Interactive paper: Hopfield networks that sleep</span>
-                </a>
-                <a href="exponential-memory/" class="dropdown-item" role="menuitem">
-                    <div class="dropdown-item-header">
-                        <span class="dropdown-item-title">A Memory Bigger than Its Brain</span>
-                        <svg class="icon dropdown-external-icon" aria-hidden="true"><use href="#i-external"/></svg>
-                    </div>
-                    <span class="dropdown-item-desc">Interactive paper: exponential hetero-associative memory</span>
-                </a>
-            </div>
+<main id="main">
+  <!-- ============================== HERO: the page's own dots are the network ============================== -->
+  <section class="hero" id="top" aria-label="Introduction">
+    <canvas class="hero-net" id="hero-net" aria-hidden="true"></canvas>
+    <div class="glow" aria-hidden="true"></div>
+    <div class="hero-grid wrap">
+      <div class="hero-text">
+        <p class="eyebrow">Hello world!</p>
+        <h1 class="name"><span>Andrea</span><span class="l2">Ladiana</span></h1>
+        <p class="role">PhD Student in Mathematics · Associative Neural Networks &amp; Statistical Mechanics</p>
+        <p class="intro">I'm a PhD Student in Mathematics at <a href="https://phd.uniroma1.it/web/ANDREA-LADIANA_nP2239069_IT.aspx" target="_blank" rel="noopener">Sapienza University of Rome</a> and member of the <a href="https://www.researchgate.net/lab/Agliari-Barra-Lab-CoScienza-Adriano-Barra" target="_blank" rel="noopener">Agliari-Barra Lab "CoScienza"</a>.</p>
+        <div class="btns">
+          <a class="btn primary" href="#research">Explore the research <svg class="icon" aria-hidden="true"><use href="#i-down"/></svg></a>
+          <a class="btn" href="#publications">Publications</a>
         </div>
-        <a href="#other-interests">Other interests</a>
-        <a href="#szilard-commandments">Ten Commandments</a>
-    </nav>
+        <ul class="socials" aria-label="Elsewhere">
+          <li><a href="mailto:andrea.ladiana@uniroma1.it" aria-label="Email" title="Email"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></a></li>
+          <li><a href="https://github.com/andrea-ladiana" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub"><svg class="icon" aria-hidden="true"><use href="#i-github"/></svg></a></li>
+          <li><a href="https://scholar.google.com/citations?user=8NSj9foAAAAJ" target="_blank" rel="noopener" aria-label="Google Scholar" title="Google Scholar"><svg class="icon" aria-hidden="true"><use href="#i-scholar"/></svg></a></li>
+          <li><a href="https://arxiv.org/search/?searchtype=author&amp;query=Ladiana%2C+A" target="_blank" rel="noopener" aria-label="arXiv" title="arXiv"><svg class="icon" aria-hidden="true"><use href="#i-arxiv"/></svg></a></li>
+          <li><a href="https://orcid.org/0009-0005-5078-9817" target="_blank" rel="noopener" aria-label="ORCID" title="ORCID"><svg class="icon" aria-hidden="true"><use href="#i-orcid"/></svg></a></li>
+          <li><a href="https://www.researchgate.net/profile/Andrea-Ladiana" target="_blank" rel="noopener" aria-label="ResearchGate" title="ResearchGate"><svg class="icon" aria-hidden="true"><use href="#i-researchgate"/></svg></a></li>
+          <li><a href="https://phd.uniroma1.it/web/ANDREA-LADIANA_nP2239069_IT.aspx" target="_blank" rel="noopener" aria-label="Institutional page" title="Institutional page"><svg class="icon" aria-hidden="true"><use href="#i-university"/></svg></a></li>
+        </ul>
+      </div>
 
-    <main class="container" id="main">
-        <header class="hero">
-            <div class="hero-content">
-                <p class="hero-eyebrow">Hello world!</p>
-                <h1 class="name">Andrea Ladiana</h1>
-                <p class="hero-subtitle">
-                    PhD Student in Mathematics · Associative Neural Networks &amp; Statistical Mechanics
-                </p>
-                <p class="intro-text">
-                    I'm a PhD Student in Mathematics at
-                    <a href="https://phd.uniroma1.it/web/ANDREA-LADIANA_nP2239069_IT.aspx" target="_blank" rel="noopener"
-                        class="link">Sapienza University of Rome</a> and member of the
-                    <a href="https://www.researchgate.net/lab/Agliari-Barra-Lab-CoScienza-Adriano-Barra" target="_blank" rel="noopener"
-                        class="link">Agliari-Barra Lab "CoScienza"</a>.
-                </p>
-                <div class="social-links">
-                    <a href="mailto:andrea.ladiana@uniroma1.it" title="Email" aria-label="Email"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></a>
-                    <a href="https://github.com/andrea-ladiana" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub"><svg class="icon" aria-hidden="true"><use href="#i-github"/></svg></a>
-                    <a href="https://www.researchgate.net/profile/Andrea-Ladiana?ev=hdr_xprf" target="_blank" rel="noopener"
-                        title="ResearchGate" aria-label="ResearchGate"><svg class="icon" aria-hidden="true"><use href="#i-researchgate"/></svg></a>
-                    <a href="https://orcid.org/0009-0005-5078-9817" target="_blank" rel="noopener" title="ORCID" aria-label="ORCID" class="orcid-link">
-                        <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid" aria-hidden="true">
-                            <path d="M256 128c0 70.7-57.3 128-128 128S0 198.7 0 128 57.3 0 128 0s128 57.3 128 128z"
-                                fill="#a6ce39" />
-                            <path
-                                d="M63.7 192h20v-97.1h-20V192zm10-114.6c-6 0-10.9 4.9-10.9 10.9s4.9 10.9 10.9 10.9 10.9-4.9 10.9-10.9-4.9-10.9-10.9-10.9zM196.4 142c0-26.1-18.7-41.9-46.3-41.9h-36.6V192h35.5c28.2 0 47.4-16.4 47.4-50zm-22.4 0c0 16.3-10.3 26.8-26.6 26.8h-15.5v-52.6h15.5c16.8 0 26.6 11.2 26.6 25.8z"
-                                fill="#fff" />
-                        </svg>
-                    </a>
-                    <a href="https://scholar.google.com/citations?user=8NSj9foAAAAJ" target="_blank" rel="noopener"
-                        title="Google Scholar" aria-label="Google Scholar"><svg class="icon" aria-hidden="true"><use href="#i-scholar"/></svg></a>
-                    <a href="https://arxiv.org/search/?searchtype=author&amp;query=Ladiana%2C+A" target="_blank" rel="noopener"
-                        title="arXiv" aria-label="arXiv"><svg class="icon" aria-hidden="true"><use href="#i-arxiv"/></svg></a>
-                    <a href="https://phd.uniroma1.it/web/ANDREA-LADIANA_nP2239069_IT.aspx" target="_blank" rel="noopener"
-                        title="Institutional Page" aria-label="Institutional Page"><svg class="icon" aria-hidden="true"><use href="#i-university"/></svg></a>
-                </div>
+      <figure class="hero-fig">
+        <div class="slot" id="slot" role="img" aria-label="A Hopfield network drawn with the page's dots, recalling a stored picture"></div>
+        <figcaption class="legend">
+          <p class="legend-text"><b>Fig. 1</b> Every dot on this page is a neuron. Eight pictures are stored in the <span id="hop-n">—</span> neurons of this square; the rest are held quiet. Hover to heat them up, <span class="hint-draw">draw a shape to ask for a memory</span>, or call one by name:</p>
+          <div class="mem-chips" id="mem-chips" role="group" aria-label="Recall a stored picture"></div>
+          <p class="legend-state" aria-live="polite"><span id="hop-state">recalling</span> <b id="hop-name">—</b> <span class="sep">·</span> overlap m = <b id="hop-m">0.000</b> <span class="sep">·</span> T = <b id="hop-t">0.30</b></p>
+        </figcaption>
+      </figure>
+    </div>
+    <a class="scroll-cue" href="#research" aria-label="Scroll to research"><svg class="icon" aria-hidden="true"><use href="#i-down"/></svg></a>
+  </section>
+
+  <!-- ============================== 01 RESEARCH ============================== -->
+  <section class="sec" id="research" aria-labelledby="research-title">
+    <div class="wrap">
+      <p class="idx reveal"><span>01</span> Research</p>
+      <h2 class="visually-hidden" id="research-title">Research Interests</h2>
+      <div class="research-grid">
+        <div class="research-text">
+          <p class="lead reveal">I am broadly interested in <mark class="m1">memory systems</mark> and <mark class="m3">collective behaviour</mark>. I work with models where many simple units, when connected in the right way, can store patterns, retrieve them, and support each other's computations.</p>
+          <p class="body-text reveal">This includes classical and modern <mark class="m1">associative networks</mark>, multi-layer architectures where different modules communicate, and abstract <mark class="m2">memory fields</mark> that can be analysed with tools from mathematics, statistical physics, and machine learning.</p>
+          <p class="body-text reveal">A recurring theme in my work is <mark class="m2">cooperation across modules</mark>: how several interacting memories can jointly denoise signals, disentangle overlapping information, or build a shared representation, and how this behaviour changes when the system is distributed, noisy, or evolving. I like to push these ideas beyond standard neural-network settings – towards <mark class="m4">biological and immune systems</mark>, where repertoires and populations behave like diffuse memories, and towards more exploratory applications involving <mark class="m4">biomes</mark> and complex interacting populations shaped by many local interactions over time.</p>
+        </div>
+        <figure class="map-fig reveal">
+          <div class="map" id="map">
+            <svg id="map-svg" role="group" aria-label="Map of research topics and the papers that connect them"></svg>
+            <div class="map-tip" id="map-tip" hidden></div>
+          </div>
+          <figcaption class="figcap"><b>Fig. 2</b> Topics (pills) and papers (dots), joined when a paper is about a topic. Drag anything; click a topic to filter the publications below.</figcaption>
+          <ul class="families" id="families" aria-label="Topic families"></ul>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== 02 PUBLICATIONS ============================== -->
+  <section class="sec" id="publications" aria-labelledby="publications-title">
+    <div class="wrap">
+      <p class="idx reveal"><span>02</span> Publications</p>
+      <div class="sec-head reveal">
+        <h2 class="h2" id="publications-title">Publications</h2>
+        <div class="head-actions">
+          <a class="pill-btn" href="https://scholar.google.com/citations?user=8NSj9foAAAAJ" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-scholar"/></svg> Scholar</a>
+          <a class="pill-btn" href="https://arxiv.org/search/?searchtype=author&amp;query=Ladiana%2C+A" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-arxiv"/></svg> arXiv</a>
+          <a class="pill-btn" id="bib-download" href="biblio.bib" download="andrea_ladiana_publications.bib" title="Download all entries as .bib"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg> .bib</a>
+        </div>
+      </div>
+      <div class="stats reveal" id="pub-stats" aria-label="Publication counts"></div>
+
+      <div class="filters reveal" role="group" aria-label="Search and filter publications">
+        <label class="search">
+          <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
+          <input type="search" id="pub-q" placeholder="Search titles, authors, venues…" autocomplete="off" spellcheck="false" aria-label="Search publications">
+          <button type="button" class="search-x" id="pub-q-x" aria-label="Clear search" hidden><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
+        </label>
+        <div class="frow"><span class="flabel">Type</span><div class="chipset" id="f-type"></div></div>
+        <div class="frow"><span class="flabel">Topic</span><div class="chipset" id="f-topic"></div></div>
+        <div class="fsum"><span id="pub-summary" role="status"></span><button type="button" class="link-btn" id="pub-reset" hidden>Reset filters</button></div>
+      </div>
+
+      <ol class="pubs" id="pubs" aria-label="Publications"><li class="pub-empty">Loading publications…</li></ol>
+      <p class="footnote"><span class="ca">*</span> corresponding author</p>
+      <noscript><p class="footnote">Publications are loaded with JavaScript. The full list is in <a href="biblio.bib">biblio.bib</a>.</p></noscript>
+    </div>
+  </section>
+
+  <!-- ============================== 03 CONFERENCES ============================== -->
+  <section class="sec" id="conferences" aria-labelledby="conferences-title">
+    <div class="wrap">
+      <p class="idx reveal"><span>03</span> Conferences</p>
+      <h2 class="h2 reveal" id="conferences-title">Conferences</h2>
+      <figure class="raster-fig reveal">
+        <div class="raster-scroll">
+          <div class="raster" id="raster"></div>
+        </div>
+        <figcaption class="figcap"><b>Fig. 3</b> A raster plot of meetings: one dot per week, one row per role. Lit dots are events; hover one to find it below.</figcaption>
+      </figure>
+      <p class="conf-status reveal" id="conf-status"></p>
+      <div class="conf-grid" id="conf-list"></div>
+      <noscript><p class="footnote">The list of conferences is loaded with JavaScript. The data is in <a href="conferences.json">conferences.json</a>.</p></noscript>
+    </div>
+  </section>
+
+  <!-- ============================== 04 INTERACTIVE PAPERS ============================== -->
+  <section class="sec" id="projects" aria-labelledby="projects-title">
+    <div class="wrap">
+      <p class="idx reveal"><span>04</span> Interactive papers</p>
+      <h2 class="h2 reveal" id="projects-title">Papers you can play with.</h2>
+      <p class="sub reveal">Each one is a paper rewritten as a page you can poke. The previews below are live, small versions of the real thing.</p>
+      <div class="cards">
+        <a class="card reveal" href="lenia/">
+          <div class="viz"><canvas data-mini="lenia" aria-hidden="true"></canvas><span class="viz-note" data-note="lenia">Orbium · R = 13 · hover to heat the bath</span></div>
+          <div class="card-body">
+            <span class="kicker">Live simulator · Cellular automata</span>
+            <h3>Lenia in a Bath</h3>
+            <p>An interactive cellular automaton continuous in space, time, and state. Features Chan's Lenia with a noise temperature θ and a probe field <em>h</em>, running in the browser with statistical mechanics instruments (Lyapunov exponents, lifetimes, and phase maps).</p>
+            <span class="go">Launch the simulator <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></span>
+          </div>
+        </a>
+        <a class="card reveal" href="diamond-spectrum/">
+          <div class="viz"><canvas data-mini="diamond" aria-hidden="true"></canvas><span class="viz-note" data-note="diamond">click for the next mode</span></div>
+          <div class="card-body">
+            <span class="kicker">Interactive paper · Spectral theory</span>
+            <h3>The Diamond Lattice, Played</h3>
+            <p>A walk through the exact Laplacian spectrum of the Berker–Ostlund diamond lattice: grow the fractal, listen to its vibrations, trap them by hand, and follow the renormalization map that writes the whole spectrum down.</p>
+            <span class="go">Open the paper <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></span>
+          </div>
+        </a>
+        <a class="card reveal" href="dreaming/">
+          <div class="viz"><canvas data-mini="dream" aria-hidden="true"></canvas><span class="viz-note" data-note="dream">noisy example → memory</span></div>
+          <div class="card-body">
+            <span class="kicker">Interactive paper · Associative memory</span>
+            <h3>Networks that Dream</h3>
+            <p>A Hopfield network that learns from noisy examples and sleeps on them: watch crowded memories interfere, let the network dream, and see it recall more from less data across three linked senses.</p>
+            <span class="go">Open the paper <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></span>
+          </div>
+        </a>
+        <a class="card reveal" href="exponential-memory/">
+          <div class="viz"><canvas data-mini="pairs" aria-hidden="true"></canvas><span class="viz-note" data-note="pairs">left half given · right half recalled</span></div>
+          <div class="card-body">
+            <span class="kicker">Interactive paper · Associative memory</span>
+            <h3>A Memory Bigger than Its Brain</h3>
+            <p>A multilayer network that stores pairs, with a capacity that grows exponentially in its size: ask with one half and get the other, then try it live on T-cell receptors and on sentences you type.</p>
+            <span class="go">Open the paper <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== 05 OTHER INTERESTS ============================== -->
+  <section class="sec" id="other-interests" aria-labelledby="interests-title">
+    <div class="wrap">
+      <p class="idx reveal"><span>05</span> Other interests</p>
+      <h2 class="visually-hidden" id="interests-title">Other interests</h2>
+      <div class="interests-grid">
+        <div class="interests-text">
+          <p class="lead reveal">I spend most of my free time folding paper.</p>
+          <p class="body-text reveal">My main hobby is <strong>origami</strong>, especially <strong>modular designs</strong> and floral models. I'm particularly fond of modular origami, constructions made from many repeated units that lock together into geometric structures (see, for example, the <a href="https://origami.kosmulski.org/types/modular" target="_blank" rel="noopener">origami by Michał Kosmulski</a>). I also admire the clean and structural approach of <strong>Tomoko Fuse</strong>, whose books on unit origami and geometric models helped shape how I think about paper as a medium for building mathematical objects.</p>
+          <p class="body-text reveal">On the more organic side, I love floral origami. One of my all-time favourite diagrams is the <strong>Pentagon Rose</strong> by <strong>Naomiki Sato</strong> (<a href="https://origamiusa.org/system/files/thefold/The_fold_19_Naomiki_Sato_Rose_Diagram.pdf" target="_blank" rel="noopener">diagram</a>), a rose built from a pentagonal base that manages to look surprisingly natural while still being very structured.</p>
+          <p class="body-text reveal">At some point I started trying to put these two worlds together and I am slowly writing a children's book about origami and mathematics (but more generally deals with the connection between the former and physics, biology, art, and culture). The idea is to show how symmetry, counting, and geometry hide inside folds, in a way that is playful rather than intimidating. It is very much a side project and progresses in bursts whenever time allows, but it remains one of the long-term things I'd like to complete.</p>
+        </div>
+        <figure class="fold-fig reveal">
+          <div class="fold-stage">
+            <svg id="fold-svg" viewBox="-130 -130 260 260" role="group" aria-label="A single origami vertex with four creases. Activate a crease to switch it between mountain and valley."></svg>
+          </div>
+          <div class="fold-panel">
+            <p class="fold-verdict" id="fold-verdict" aria-live="polite"></p>
+            <p class="fold-rules" id="fold-rules"></p>
+            <div class="fold-btns">
+              <button type="button" class="pill-btn" id="fold-new"><svg class="icon" aria-hidden="true"><use href="#i-shuffle"/></svg> New angles</button>
+              <button type="button" class="pill-btn" id="fold-reset"><svg class="icon" aria-hidden="true"><use href="#i-reset"/></svg> Reset</button>
             </div>
-        </header>
+          </div>
+          <figcaption class="figcap"><b>Fig. 5</b> One vertex of a crease pattern. Click a crease to turn a <span class="k-m">mountain</span> into a <span class="k-v">valley</span>. It folds flat only if mountains and valleys differ by two (Maekawa) and the smallest angle sits between one of each.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
 
-        <section id="research" class="glass-card">
-            <p class="section-kicker">Research</p>
-            <h2>Research Interests</h2>
-            <div class="text-content">
-                <p>
-                    I am broadly interested in <span class="keyword-tag">memory systems</span> and <span
-                        class="keyword-tag">collective behaviour</span>. I work with models where many
-                    simple units, when connected in the right way, can store patterns, retrieve them, and support each
-                    other's computations. This includes classical and modern <span class="keyword-tag">associative
-                        networks</span>, multi-layer
-                    architectures where different modules communicate, and abstract <span class="keyword-tag">memory
-                        fields</span> that can be analysed
-                    with tools from mathematics, statistical physics, and machine learning.
-                </p>
-                <p>
-                    A recurring theme in my work is <span class="keyword-tag">cooperation across modules</span>: how
-                    several interacting memories can
-                    jointly denoise signals, disentangle overlapping information, or build a shared representation, and
-                    how this behaviour changes when the system is distributed, noisy, or evolving. I like to push these
-                    ideas beyond standard neural-network settings – towards <span class="keyword-tag">biological and
-                        immune systems</span>, where
-                    repertoires and populations behave like diffuse memories, and towards more exploratory applications
-                    involving <span class="keyword-tag">biomes</span> and complex interacting populations shaped by many
-                    local interactions over time.
-                </p>
-            </div>
-        </section>
+  <!-- ============================== 06 SZILÁRD ============================== -->
+  <section class="band" id="szilard-commandments" aria-labelledby="szilard-title">
+    <div class="wrap band-grid">
+      <div class="band-side">
+        <p class="idx"><span>06</span> Ten Commandments</p>
+        <div class="numeral" aria-hidden="true"><canvas id="numeral-net"></canvas></div>
+        <p class="numeral-cap" aria-hidden="true">The network recalls the numeral of the commandment you are reading.</p>
+      </div>
+      <div class="band-main">
+        <h2 class="h2" id="szilard-title">The Ten Commandments of Leó Szilárd</h2>
+        <p class="band-intro">I like to close the page with <strong>"The Ten Commandments of Leó Szilárd"</strong>, a short list of personal principles written by the Hungarian-American physicist best known for his work on nuclear chain reactions and his reflections on science and responsibility.</p>
+        <blockquote>
+          <ol class="commandments" id="commandments">
+            <li>Recognize the connections of things and laws of conduct of men, so that you may know what you are doing.</li>
+            <li>Let your acts be directed toward a worthy goal, but do not ask if they will reach it; they are to be models and examples, not means to an end.</li>
+            <li>Speak to all men as you do to yourself, with no concern for the effect you make, so that you do not shut them out from your world; lest in isolation the meaning of life slips out of sight and you lose the belief in the perfection of creation.</li>
+            <li>Do not destroy what you cannot create.</li>
+            <li>Touch no dish, except that you are hungry.</li>
+            <li>Do not covet what you cannot have.</li>
+            <li>Do not lie without need.</li>
+            <li>Honor children. Listen reverently to their words and speak to them with infinite love.</li>
+            <li>Do your work for six years; but in the seventh, go into solitude or among strangers, so that the memory of your friends does not hinder you from being what you have become.</li>
+            <li>Lead your life with a gentle hand and be ready to leave whenever you are called.</li>
+          </ol>
+          <cite>Leó Szilárd, <em>The Voice of the Dolphins &amp; Other Stories</em></cite>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+</main>
 
-        <section id="publications" class="glass-card" aria-labelledby="publications-title">
-            <div class="pub-section-header">
-                <div>
-                    <p class="section-kicker">Publications</p>
-                    <h2 id="publications-title">Publications</h2>
-                </div>
-                <div class="pub-header-actions">
-                    <a href="https://scholar.google.com/citations?user=8NSj9foAAAAJ" target="_blank" rel="noopener" class="pub-download-btn">
-                        <svg class="icon" aria-hidden="true"><use href="#i-scholar"/></svg> Scholar
-                    </a>
-                    <a href="https://arxiv.org/search/?searchtype=author&amp;query=Ladiana%2C+A" target="_blank" rel="noopener" class="pub-download-btn">
-                        <svg class="icon" aria-hidden="true"><use href="#i-arxiv"/></svg> arXiv
-                    </a>
-                    <a href="biblio.bib" download="andrea_ladiana_publications.bib" id="bib-download" class="pub-download-btn" title="Download complete .bib file">
-                        <svg class="icon" aria-hidden="true"><use href="#i-download"/></svg> .bib
-                    </a>
-                </div>
-            </div>
-            <p class="pub-note"><span class="ca-star">*</span> indicates Corresponding Author</p>
+<footer class="foot">
+  <div class="wrap">
+    <p class="idx"><span>—</span> Get in touch</p>
+    <a class="big-mail" href="mailto:andrea.ladiana@uniroma1.it">andrea.ladiana<wbr>@uniroma1.it <svg class="icon" aria-hidden="true"><use href="#i-ext"/></svg></a>
+    <div class="foot-row">
+      <p>Department of Mathematics "G. Castelnuovo", Sapienza University of Rome</p>
+      <p class="foot-meta">Plain HTML, no cookies, no trackers. Every dot is a neuron.</p>
+      <a class="pill-btn" href="#top"><svg class="icon" aria-hidden="true"><use href="#i-up"/></svg> Top</a>
+    </div>
+  </div>
+</footer>
 
-            <!-- Publication search and filters -->
-            <div class="pub-filters-wrap" role="group" aria-label="Search and filter publications">
-                <div class="pub-search">
-                    <svg class="icon pub-search-icon" aria-hidden="true"><use href="#i-search"/></svg>
-                    <input type="search" id="pub-search" placeholder="Search publications…" aria-label="Search publications" autocomplete="off" spellcheck="false">
-                    <button type="button" class="pub-search-clear" id="pub-search-clear" aria-label="Clear search" hidden><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
-                </div>
-                <div class="pub-filter-row">
-                    <span class="pub-filter-label"><svg class="icon" aria-hidden="true"><use href="#i-filter"/></svg> Type:</span>
-                    <div class="pub-filter-group" id="filter-type-group">
-                        <button type="button" class="pub-filter-btn active" data-filter-type="all" aria-pressed="true">All <span class="pub-count"></span></button>
-                        <button type="button" class="pub-filter-btn" data-filter-type="journal" aria-pressed="false">Journals <span class="pub-count"></span></button>
-                        <button type="button" class="pub-filter-btn" data-filter-type="submitted" aria-pressed="false">Preprints / Submitted <span class="pub-count"></span></button>
-                        <button type="button" class="pub-filter-btn" data-filter-type="conference" aria-pressed="false">Conferences <span class="pub-count"></span></button>
-                        <button type="button" class="pub-filter-btn" data-filter-type="ca" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg> Corresponding <span class="pub-count"></span></button>
-                    </div>
-                </div>
-                <div class="pub-filter-row">
-                    <span class="pub-filter-label"><svg class="icon" aria-hidden="true"><use href="#i-hash"/></svg> Topic:</span>
-                    <div class="pub-filter-group" id="filter-topic-group">
-                        <button type="button" class="pub-filter-btn active" data-filter-topic="all" aria-pressed="true">All Topics</button>
-                        <button type="button" class="pub-filter-btn" data-filter-topic="associative" aria-pressed="false">Associative Networks <span class="pub-count"></span></button>
-                        <button type="button" class="pub-filter-btn" data-filter-topic="statmech" aria-pressed="false">Statistical Mechanics <span class="pub-count"></span></button>
-                        <button type="button" class="pub-filter-btn" data-filter-topic="federated" aria-pressed="false">Federated Learning <span class="pub-count"></span></button>
-                        <button type="button" class="pub-filter-btn" data-filter-topic="graphs" aria-pressed="false">Graph Theory <span class="pub-count"></span></button>
-                    </div>
-                </div>
-                <div class="pub-filter-footer">
-                    <span class="pub-summary" id="pub-summary" role="status"></span>
-                    <button type="button" class="pub-reset" id="pub-reset" hidden>Reset filters</button>
-                </div>
-            </div>
-
-            <div id="bibtex-container">
-                <!-- Publications are injected here by script.js -->
-                <p class="loading">Loading publications…</p>
-            </div>
-            <noscript><p class="pub-empty-msg">Publications are loaded with JavaScript. The full list is in <a href="biblio.bib">biblio.bib</a>.</p></noscript>
-        </section>
-
-        <section id="conferences" class="glass-card">
-            <p class="section-kicker">Conferences</p>
-            <h2>Conferences Organized</h2>
-            <div id="conferences-list"></div>
-
-            <details id="past-conferences" class="past-details" hidden>
-                <summary>Past Conferences</summary>
-                <div id="past-conferences-list" class="past-list"></div>
-            </details>
-
-            <h2 class="subsection-title">Speaker</h2>
-            <div id="speaker-conferences-list"></div>
-
-            <details id="past-speaker-conferences" class="past-details" hidden>
-                <summary>Past Speaker</summary>
-                <div id="past-speaker-conferences-list" class="past-list"></div>
-            </details>
-        </section>
-
-        <section id="projects" class="glass-card">
-            <p class="section-kicker">Interactive &amp; Computational</p>
-            <h2>Projects</h2>
-            <div class="projects-grid">
-                <a href="lenia/" class="project-card">
-                    <div class="project-card-visual" aria-hidden="true">
-                        <div class="lenia-visual-rings">
-                            <span class="ring r1"></span>
-                            <span class="ring r2"></span>
-                            <span class="ring r3"></span>
-                            <span class="soliton-core"></span>
-                        </div>
-                        <div class="visual-tag"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg> Live Simulator</div>
-                    </div>
-                    <div class="project-card-header">
-                        <span class="project-badge"><svg class="icon" aria-hidden="true"><use href="#i-atom"/></svg> Simulation</span>
-                        <span class="project-arrow"><svg class="icon" aria-hidden="true"><use href="#i-external"/></svg></span>
-                    </div>
-                    <h3 class="project-title">Lenia in a Bath</h3>
-                    <p class="project-desc">
-                        An interactive cellular automaton continuous in space, time, and state. Features Chan's Lenia with a noise temperature &theta; and a probe field <em>h</em>, running in the browser with statistical mechanics instruments (Lyapunov exponents, lifetimes, and phase maps).
-                    </p>
-                    <div class="project-tags">
-                        <span class="keyword-tag">Cellular Automata</span>
-                        <span class="keyword-tag">Statistical Mechanics</span>
-                        <span class="keyword-tag">Interactive Simulation</span>
-                    </div>
-                    <div class="project-cta">
-                        Launch Simulator <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
-                    </div>
-                </a>
-                <a href="diamond-spectrum/" class="project-card">
-                    <div class="project-card-visual" aria-hidden="true">
-                        <svg class="diamond-visual" viewBox="0 0 120 109">
-                            <path class="dv-edges" d="M11.1 54.7L8.0 34.0M8.0 34.0L23.0 19.4M11.1 54.7L26.0 40.1M26.0 40.1L23.0 19.4M23.0 19.4L40.5 8.0M40.5 8.0L60.0 15.5M23.0 19.4L42.5 26.9M42.5 26.9L60.0 15.5M11.1 54.7L28.6 43.2M28.6 43.2L48.1 50.8M11.1 54.7L30.6 62.2M30.6 62.2L48.1 50.8M48.1 50.8L45.0 30.1M45.0 30.1L60.0 15.5M48.1 50.8L63.1 36.2M63.1 36.2L60.0 15.5M60.0 15.5L79.5 8.0M79.5 8.0L97.0 19.4M60.0 15.5L77.5 26.9M77.5 26.9L97.0 19.4M97.0 19.4L112.0 34.0M112.0 34.0L108.9 54.7M97.0 19.4L94.0 40.1M94.0 40.1L108.9 54.7M60.0 15.5L75.0 30.1M75.0 30.1L71.9 50.8M60.0 15.5L56.9 36.2M56.9 36.2L71.9 50.8M71.9 50.8L91.4 43.2M91.4 43.2L108.9 54.7M71.9 50.8L89.4 62.2M89.4 62.2L108.9 54.7M11.1 54.7L30.6 47.2M30.6 47.2L48.1 58.6M11.1 54.7L28.6 66.1M28.6 66.1L48.1 58.6M48.1 58.6L63.1 73.2M63.1 73.2L60.0 93.8M48.1 58.6L45.0 79.3M45.0 79.3L60.0 93.8M11.1 54.7L26.0 69.2M26.0 69.2L23.0 89.9M11.1 54.7L8.0 75.4M8.0 75.4L23.0 89.9M23.0 89.9L42.5 82.4M42.5 82.4L60.0 93.8M23.0 89.9L40.5 101.4M40.5 101.4L60.0 93.8M60.0 93.8L56.9 73.2M56.9 73.2L71.9 58.6M60.0 93.8L75.0 79.3M75.0 79.3L71.9 58.6M71.9 58.6L89.4 47.2M89.4 47.2L108.9 54.7M71.9 58.6L91.4 66.1M91.4 66.1L108.9 54.7M60.0 93.8L77.5 82.4M77.5 82.4L97.0 89.9M60.0 93.8L79.5 101.4M79.5 101.4L97.0 89.9M97.0 89.9L94.0 69.2M94.0 69.2L108.9 54.7M97.0 89.9L112.0 75.4M112.0 75.4L108.9 54.7"/>
-                            <circle class="dv-mid" cx="60" cy="15.5" r="3.2"/><circle class="dv-mid" cx="60" cy="93.8" r="3.2"/>
-                            <circle class="dv-root" cx="11.1" cy="54.7" r="4.2"/><circle class="dv-root" cx="108.9" cy="54.7" r="4.2"/>
-                        </svg>
-                        <div class="visual-tag"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg> Interactive Paper</div>
-                    </div>
-                    <div class="project-card-header">
-                        <span class="project-badge"><svg class="icon" aria-hidden="true"><use href="#i-atom"/></svg> Spectral Theory</span>
-                        <span class="project-arrow"><svg class="icon" aria-hidden="true"><use href="#i-external"/></svg></span>
-                    </div>
-                    <h3 class="project-title">The Diamond Lattice, Played</h3>
-                    <p class="project-desc">
-                        A walk through the exact Laplacian spectrum of the Berker&ndash;Ostlund diamond lattice: grow the fractal, listen to its vibrations, trap them by hand, and follow the renormalization map that writes the whole spectrum down.
-                    </p>
-                    <div class="project-tags">
-                        <span class="keyword-tag">Graph Theory</span>
-                        <span class="keyword-tag">Renormalization</span>
-                        <span class="keyword-tag">Interactive Paper</span>
-                    </div>
-                    <div class="project-cta">
-                        Open the Paper <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
-                    </div>
-                </a>
-                <a href="dreaming/" class="project-card">
-                    <div class="project-card-visual" aria-hidden="true">
-                        <svg class="dream-visual" viewBox="-1 29 122 52">
-                            <rect class="dmv-frame" x="1.2" y="32.2" width="44.8" height="44.8" rx="2"/>
-                            <rect class="dmv-frame" x="73.2" y="32.2" width="44.8" height="44.8" rx="2"/>
-                            <path class="dmv-noisy" d="M2.0 33.0h3.1v3.1h-3.1zM16.4 33.0h3.1v3.1h-3.1zM27.2 33.0h3.1v3.1h-3.1zM34.4 33.0h3.1v3.1h-3.1zM30.8 36.6h3.1v3.1h-3.1zM12.8 40.2h3.1v3.1h-3.1zM20.0 40.2h3.1v3.1h-3.1zM23.6 40.2h3.1v3.1h-3.1zM38.0 40.2h3.1v3.1h-3.1zM16.4 43.8h3.1v3.1h-3.1zM27.2 43.8h3.1v3.1h-3.1zM30.8 43.8h3.1v3.1h-3.1zM41.6 43.8h3.1v3.1h-3.1zM16.4 47.4h3.1v3.1h-3.1zM27.2 47.4h3.1v3.1h-3.1zM30.8 47.4h3.1v3.1h-3.1zM41.6 47.4h3.1v3.1h-3.1zM2.0 51.0h3.1v3.1h-3.1zM12.8 51.0h3.1v3.1h-3.1zM16.4 51.0h3.1v3.1h-3.1zM20.0 51.0h3.1v3.1h-3.1zM30.8 51.0h3.1v3.1h-3.1zM9.2 54.6h3.1v3.1h-3.1zM12.8 54.6h3.1v3.1h-3.1zM27.2 54.6h3.1v3.1h-3.1zM9.2 58.2h3.1v3.1h-3.1zM12.8 58.2h3.1v3.1h-3.1zM16.4 58.2h3.1v3.1h-3.1zM20.0 58.2h3.1v3.1h-3.1zM27.2 58.2h3.1v3.1h-3.1zM30.8 58.2h3.1v3.1h-3.1zM5.6 61.8h3.1v3.1h-3.1zM16.4 61.8h3.1v3.1h-3.1zM27.2 61.8h3.1v3.1h-3.1zM34.4 61.8h3.1v3.1h-3.1zM38.0 61.8h3.1v3.1h-3.1zM12.8 65.4h3.1v3.1h-3.1zM16.4 65.4h3.1v3.1h-3.1zM27.2 65.4h3.1v3.1h-3.1zM30.8 65.4h3.1v3.1h-3.1zM34.4 65.4h3.1v3.1h-3.1zM5.6 72.6h3.1v3.1h-3.1zM20.0 72.6h3.1v3.1h-3.1zM23.6 72.6h3.1v3.1h-3.1zM41.6 72.6h3.1v3.1h-3.1z"/>
-                            <path class="dmv-moon" transform="translate(48 41) scale(.8)" d="M20 4.5A12 12 0 1 0 27.5 21 9.5 9.5 0 0 1 20 4.5z"/>
-                            <path class="dmv-clean" d="M84.8 40.2h3.1v3.1h-3.1zM88.4 40.2h3.1v3.1h-3.1zM92.0 40.2h3.1v3.1h-3.1zM95.6 40.2h3.1v3.1h-3.1zM99.2 40.2h3.1v3.1h-3.1zM84.8 43.8h3.1v3.1h-3.1zM88.4 43.8h3.1v3.1h-3.1zM99.2 43.8h3.1v3.1h-3.1zM102.8 43.8h3.1v3.1h-3.1zM84.8 47.4h3.1v3.1h-3.1zM88.4 47.4h3.1v3.1h-3.1zM99.2 47.4h3.1v3.1h-3.1zM102.8 47.4h3.1v3.1h-3.1zM84.8 51.0h3.1v3.1h-3.1zM88.4 51.0h3.1v3.1h-3.1zM99.2 51.0h3.1v3.1h-3.1zM102.8 51.0h3.1v3.1h-3.1zM84.8 54.6h3.1v3.1h-3.1zM88.4 54.6h3.1v3.1h-3.1zM92.0 54.6h3.1v3.1h-3.1zM95.6 54.6h3.1v3.1h-3.1zM99.2 54.6h3.1v3.1h-3.1zM102.8 54.6h3.1v3.1h-3.1zM84.8 58.2h3.1v3.1h-3.1zM88.4 58.2h3.1v3.1h-3.1zM99.2 58.2h3.1v3.1h-3.1zM102.8 58.2h3.1v3.1h-3.1zM84.8 61.8h3.1v3.1h-3.1zM88.4 61.8h3.1v3.1h-3.1zM99.2 61.8h3.1v3.1h-3.1zM102.8 61.8h3.1v3.1h-3.1zM106.4 61.8h3.1v3.1h-3.1zM84.8 65.4h3.1v3.1h-3.1zM88.4 65.4h3.1v3.1h-3.1zM102.8 65.4h3.1v3.1h-3.1zM106.4 65.4h3.1v3.1h-3.1z"/>
-                        </svg>
-                        <div class="visual-tag"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg> Interactive Paper</div>
-                    </div>
-                    <div class="project-card-header">
-                        <span class="project-badge"><svg class="icon" aria-hidden="true"><use href="#i-atom"/></svg> Associative Memory</span>
-                        <span class="project-arrow"><svg class="icon" aria-hidden="true"><use href="#i-external"/></svg></span>
-                    </div>
-                    <h3 class="project-title">Networks that Dream</h3>
-                    <p class="project-desc">
-                        A Hopfield network that learns from noisy examples and sleeps on them: watch crowded memories interfere, let the network dream, and see it recall more from less data across three linked senses.
-                    </p>
-                    <div class="project-tags">
-                        <span class="keyword-tag">Hopfield Networks</span>
-                        <span class="keyword-tag">Statistical Mechanics</span>
-                        <span class="keyword-tag">Interactive Paper</span>
-                    </div>
-                    <div class="project-cta">
-                        Open the Paper <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
-                    </div>
-                </a>
-                <a href="exponential-memory/" class="project-card">
-                    <div class="project-card-visual" aria-hidden="true">
-                        <svg class="dream-visual exp-visual" viewBox="-1 29 122 52">
-                            <rect class="dmv-frame" x="1.2" y="32.2" width="44.8" height="44.8" rx="2"/>
-                            <rect class="dmv-frame" x="73.2" y="32.2" width="44.8" height="44.8" rx="2"/>
-                            <path class="dmv-clean" d="M17.0 39.2h3.8v3.8h-3.8zM21.4 39.2h3.8v3.8h-3.8zM25.8 39.2h3.8v3.8h-3.8zM12.6 43.6h3.8v3.8h-3.8zM30.2 43.6h3.8v3.8h-3.8zM12.6 48.0h3.8v3.8h-3.8zM30.2 48.0h3.8v3.8h-3.8zM12.6 52.4h3.8v3.8h-3.8zM17.0 52.4h3.8v3.8h-3.8zM21.4 52.4h3.8v3.8h-3.8zM25.8 52.4h3.8v3.8h-3.8zM30.2 52.4h3.8v3.8h-3.8zM12.6 56.8h3.8v3.8h-3.8zM30.2 56.8h3.8v3.8h-3.8zM12.6 61.2h3.8v3.8h-3.8zM30.2 61.2h3.8v3.8h-3.8zM12.6 65.6h3.8v3.8h-3.8zM30.2 65.6h3.8v3.8h-3.8z"/>
-                            <path class="xmv-curve" d="M50 70C58 69.5 63 66 66 58S68.5 44 69.5 38"/>
-                            <path class="dmv-clean" d="M89.0 48.0h3.8v3.8h-3.8zM93.4 48.0h3.8v3.8h-3.8zM97.8 48.0h3.8v3.8h-3.8zM102.2 52.4h3.8v3.8h-3.8zM89.0 56.8h3.8v3.8h-3.8zM93.4 56.8h3.8v3.8h-3.8zM97.8 56.8h3.8v3.8h-3.8zM102.2 56.8h3.8v3.8h-3.8zM84.6 61.2h3.8v3.8h-3.8zM102.2 61.2h3.8v3.8h-3.8zM89.0 65.6h3.8v3.8h-3.8zM93.4 65.6h3.8v3.8h-3.8zM97.8 65.6h3.8v3.8h-3.8zM102.2 65.6h3.8v3.8h-3.8z"/>
-                        </svg>
-                        <div class="visual-tag"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg> Interactive Paper</div>
-                    </div>
-                    <div class="project-card-header">
-                        <span class="project-badge"><svg class="icon" aria-hidden="true"><use href="#i-atom"/></svg> Associative Memory</span>
-                        <span class="project-arrow"><svg class="icon" aria-hidden="true"><use href="#i-external"/></svg></span>
-                    </div>
-                    <h3 class="project-title">A Memory Bigger than Its Brain</h3>
-                    <p class="project-desc">
-                        A multilayer network that stores pairs, with a capacity that grows exponentially in its size: ask with one half and get the other, then try it live on T-cell receptors and on sentences you type.
-                    </p>
-                    <div class="project-tags">
-                        <span class="keyword-tag">Associative Memory</span>
-                        <span class="keyword-tag">Statistical Mechanics</span>
-                        <span class="keyword-tag">Interactive Paper</span>
-                    </div>
-                    <div class="project-cta">
-                        Open the Paper <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
-                    </div>
-                </a>
-            </div>
-        </section>
-
-        <section id="other-interests" class="glass-card extras-section">
-            <p class="section-kicker">Other interests</p>
-            <h2>Other interests</h2>
-            <div class="text-content">
-                <p>
-                    I spend most of my free time folding paper.
-                </p>
-                <p>
-                    My main hobby is <strong>origami</strong>, especially
-                    <strong>modular designs</strong> and floral
-                    models. I'm particularly fond of modular origami, constructions
-                    made from many repeated units that lock
-                    together into geometric structures (see, for example, the <a
-                        href="https://origami.kosmulski.org/types/modular" target="_blank" rel="noopener">origami by
-                        Michał Kosmulski</a>). I also admire the clean and structural
-                    approach of <strong>Tomoko
-                        Fuse</strong>,
-                    whose books on unit origami and geometric models helped shape
-                    how I think about paper as a medium for
-                    building mathematical objects.
-                </p>
-                <p>
-                    On the more organic side, I love floral origami. One of my
-                    all-time favourite diagrams is the
-                    <strong>Pentagon Rose</strong> by <strong>Naomiki Sato</strong>
-                    (<a href="https://origamiusa.org/system/files/thefold/The_fold_19_Naomiki_Sato_Rose_Diagram.pdf"
-                        target="_blank" rel="noopener">diagram</a>), a rose built
-                    from a pentagonal base
-                    that manages to look surprisingly natural while still being very
-                    structured.
-                </p>
-                <p>
-                    At some point I started trying to put these two worlds together
-                    and I am slowly
-                    writing a children's book about origami and mathematics (but
-                    more generally deals with the connection
-                    between the former and physics, biology, art, and culture). The
-                    idea is to show how
-                    symmetry, counting, and geometry hide inside folds, in a way
-                    that is playful rather than intimidating.
-                    It is very much a side project and progresses in bursts whenever
-                    time allows, but it remains one of the
-                    long-term things I'd like to complete.
-                </p>
-            </div>
-        </section>
-
-        <section id="szilard-commandments" class="glass-card szilard-commandments">
-            <p class="section-kicker">Ten Commandments</p>
-            <h2>The Ten Commandments of Leó Szilárd</h2>
-            <div class="text-content">
-                <p>
-                    I like to close the page with <strong>"The Ten
-                        Commandments of Leó Szilárd"</strong>, a short
-                    list of personal principles written by the Hungarian-American
-                    physicist best known for his work on
-                    nuclear chain reactions and his reflections on science and
-                    responsibility.
-                </p>
-                <blockquote>
-                    <ol class="commandments">
-                        <li>Recognize the connections of things and laws of conduct
-                            of men, so that you may know what
-                            you are doing.</li>
-                        <li>Let your acts be directed toward a worthy goal, but do
-                            not ask if they will reach it; they
-                            are to be models and examples, not means to an end.</li>
-                        <li>Speak to all men as you do to yourself, with no concern
-                            for the effect you make, so that you
-                            do not shut them out from your world; lest in isolation
-                            the meaning of life slips out of
-                            sight and you lose the belief in the perfection of
-                            creation.</li>
-                        <li>Do not destroy what you cannot create.</li>
-                        <li>Touch no dish, except that you are hungry.</li>
-                        <li>Do not covet what you cannot have.</li>
-                        <li>Do not lie without need.</li>
-                        <li>Honor children. Listen reverently to their words and
-                            speak to them with infinite love.</li>
-                        <li>Do your work for six years; but in the seventh, go into
-                            solitude or among strangers, so that
-                            the memory of your friends does not hinder you from
-                            being what you have become.</li>
-                        <li>Lead your life with a gentle hand and be ready to leave
-                            whenever you are called.</li>
-                    </ol>
-                    <cite class="quote-source">Leó
-                        Szilárd, <em>The Voice of the Dolphins &amp; Other
-                            Stories</em></cite>
-                </blockquote>
-            </div>
-        </section>
-    </main>
-
-    <!-- Background animation toggle (state handled by assets/js/graph-bg.js) -->
-    <button type="button" id="bg-toggle" class="bg-toggle" aria-label="Pause background animation" title="Pause background animation">
-        <svg class="icon" aria-hidden="true"><use href="#i-pause"/></svg>
-    </button>
-
-    <!-- Floating Back to Top Button -->
-    <button id="back-to-top" class="back-to-top" aria-label="Back to top" title="Back to top">
-        <svg class="icon" aria-hidden="true"><use href="#i-arrow-up"/></svg>
-    </button>
-
-    <script src="assets/js/bibtex.js?v=20261029d" defer></script>
-    <script src="assets/js/graph-bg.js?v=20261029d" defer></script>
-    <script src="script.js?v=20261110a" defer></script>
+<script src="assets/js/bibtex.js?v=20261117a" defer></script>
+<script src="assets/js/dotnet.js?v=20261117a" defer></script>
+<script src="assets/js/minis.js?v=20261117a" defer></script>
+<script src="script.js?v=20261117a" defer></script>
 </body>
-
 </html>
