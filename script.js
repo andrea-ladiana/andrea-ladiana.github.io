@@ -118,7 +118,7 @@
         recolorers.push(() => net.recolor());
 
         /* ---- pointer: heat anywhere in the hero, draw inside the slot */
-        let px = null, py = null, drawing = false, drawMode = false, endTimer = 0, drew = false;
+        let px = null, py = null, drawing = false, heating = false, drawMode = false, endTimer = 0, drew = false;
         const local = e => { const r = canvas.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
 
         function setDrawMode(on) {
@@ -147,28 +147,38 @@
             if (!net.ready) return;
             const [x, y] = local(e);
             if (drawing) { paintLine(px ?? x, py ?? y, x, y); px = x; py = y; return; }
-            if (e.pointerType === 'touch') return;
-            const R = 3;
+            // a finger only heats while it is pressed inside the square (outside it, it scrolls the page)
+            if (e.pointerType === 'touch' && !heating) return;
+            const R = heating ? 3.5 : 3;
             if (px !== null) heatLine(px, py, x, y, R); else net.heatAt(x, y, R);
             px = x; py = y;
         });
-        heroEl.addEventListener('pointerleave', () => { if (!drawing) px = py = null; });
+        heroEl.addEventListener('pointerleave', () => { if (!drawing && !heating) px = py = null; });
         heroEl.addEventListener('pointerdown', e => {
             if (!net.ready || e.target.closest('a, button')) return;
             const [x, y] = local(e);
-            const inSlot = e.target === slot;
-            if (inSlot && (e.pointerType !== 'touch' || drawMode) && e.button === 0) {
+            if (e.target === slot && e.button === 0) {
                 e.preventDefault();
                 slot.setPointerCapture(e.pointerId);
+                px = x; py = y;
+                if (e.pointerType === 'touch' && !drawMode) {
+                    // press and drag with a finger: keep heating the neurons along the path
+                    heating = true;
+                    net.heatAt(x, y, 4.5);
+                    return;
+                }
                 clearTimeout(endTimer);
                 if (net.mode !== 'sketch') net.beginSketch();
                 drawing = true; drew = true; slot.dataset.hint = '';
-                px = x; py = y; net.paint(x, y, 1.15);
+                net.paint(x, y, 1.15);
                 return;
             }
             net.heatAt(x, y, e.pointerType === 'touch' ? 4.5 : 3);
         });
+        // iOS Safari: belt and braces on top of touch-action: none, so a drag in the square never scrolls
+        slot.addEventListener('touchmove', e => { if (drawing || heating) e.preventDefault(); }, { passive: false });
         const stop = () => {
+            if (heating) { heating = false; px = py = null; return; }
             if (!drawing) return;
             drawing = false; px = py = null;
             clearTimeout(endTimer);

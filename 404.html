@@ -11,7 +11,7 @@
     <meta name="theme-color" content="#0d0c12" media="(prefers-color-scheme: dark)">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="stylesheet" href="/style.css?v=20261117a">
+    <link rel="stylesheet" href="/style.css?v=20261118a">
 </head>
 
 <body>
@@ -59,9 +59,9 @@
                 const start = () => { if (net.init(true)) net.cue(0, { Tg: 3, lambda: 0.4, auto: true }); };
                 let ready = false;
                 new ResizeObserver(() => { if (!ready) { ready = true; start(); } else net.relayout(); }).observe(main);
-                let px = null, py = null;
+                let px = null, py = null, finger = false;
                 main.addEventListener('pointermove', e => {
-                    if (e.pointerType === 'touch') return;
+                    if (e.pointerType === 'touch' && !finger) return;
                     const r = canvas.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
                     const n = px === null ? 1 : Math.max(1, Math.ceil(Math.hypot(x - px, y - py) / 12));
                     for (let i = 1; i <= n; i++) net.heatAt(px === null ? x : px + (x - px) * i / n, py === null ? y : py + (y - py) * i / n, 3);
@@ -70,9 +70,14 @@
                 main.addEventListener('pointerleave', () => { px = py = null; });
                 main.addEventListener('pointerdown', e => {
                     if (e.target.closest('a')) return;
-                    const r = canvas.getBoundingClientRect();
-                    net.heatAt(e.clientX - r.left, e.clientY - r.top, 5);
+                    const r = canvas.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+                    net.heatAt(x, y, 5);
+                    // a finger pressed on the number keeps heating while it drags
+                    if (e.pointerType === 'touch' && e.target === slot) { finger = true; px = x; py = y; }
                 });
+                const lift = () => { finger = false; px = py = null; };
+                main.addEventListener('pointerup', lift);
+                main.addEventListener('pointercancel', lift);
                 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => net.recolor());
             });
         });

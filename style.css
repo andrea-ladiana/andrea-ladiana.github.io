@@ -111,14 +111,16 @@ ul, ol { list-style: none; }
 
 /* the slot is just a transparent placeholder: the dots that form the pictures belong to the page */
 .hero-fig { position: relative; }
-.slot { position: relative; width: 100%; aspect-ratio: 1; cursor: crosshair; touch-action: pan-y; --t: 16px; --tc: var(--line-2);
+.slot { position: relative; width: 100%; aspect-ratio: 1; cursor: crosshair; touch-action: none; --t: 16px; --tc: var(--line-2);
   background:
     linear-gradient(var(--tc), var(--tc)) left top / var(--t) 1px no-repeat, linear-gradient(var(--tc), var(--tc)) left top / 1px var(--t) no-repeat,
     linear-gradient(var(--tc), var(--tc)) right top / var(--t) 1px no-repeat, linear-gradient(var(--tc), var(--tc)) right top / 1px var(--t) no-repeat,
     linear-gradient(var(--tc), var(--tc)) left bottom / var(--t) 1px no-repeat, linear-gradient(var(--tc), var(--tc)) left bottom / 1px var(--t) no-repeat,
     linear-gradient(var(--tc), var(--tc)) right bottom / var(--t) 1px no-repeat, linear-gradient(var(--tc), var(--tc)) right bottom / 1px var(--t) no-repeat;
   }
-.slot.drawing { touch-action: none; --tc: var(--c1); }
+.slot.drawing { --tc: var(--c1); }
+.on-touch { display: none; }
+@media (hover: none) { .on-hover { display: none; } .on-touch { display: inline; } }
 .slot::after { content: attr(data-hint); position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); font: 500 13px/1 var(--mono); color: var(--c1); background: color-mix(in srgb, var(--bg) 86%, transparent); padding: 8px 12px; border-radius: 999px; opacity: 0; transition: opacity .25s; pointer-events: none; white-space: nowrap; }
 .slot[data-hint]:not([data-hint=""])::after { opacity: 1; }
 .legend { margin-top: 18px; font-size: 13.5px; line-height: 1.5; color: var(--muted); }
@@ -343,7 +345,6 @@ mark.m4 { --hl: color-mix(in srgb, var(--c4) 26%, transparent); }
 .band-side { position: sticky; top: 92px; }
 .numeral { position: relative; aspect-ratio: 4 / 3; }
 .numeral canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.numeral-cap { margin-top: 12px; font: 12.5px/1.5 var(--mono); color: var(--b-ink-2); max-width: 34ch; }
 .band .h2 { max-width: 14ch; }
 .band-intro { color: var(--b-ink-2); max-width: 58ch; margin-bottom: 34px; }
 .band-intro strong { color: var(--b-ink); }
@@ -368,7 +369,7 @@ mark.m4 { --hl: color-mix(in srgb, var(--c4) 26%, transparent); }
 .nf { position: relative; isolation: isolate; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding: 64px 0 80px; }
 .nf .hero-net { position: absolute; inset: 0; }
 .nf-inner { position: relative; z-index: 1; display: grid; justify-items: center; text-align: center; gap: 4px; }
-.nf-slot { width: min(560px, 88vw); aspect-ratio: 2.2; margin-bottom: 26px; }
+.nf-slot { width: min(560px, 88vw); aspect-ratio: 2.2; margin-bottom: 26px; touch-action: none; }
 .nf h1 { font-size: clamp(40px, 7vw, 76px); line-height: 1; letter-spacing: -.05em; font-weight: 680; margin: 14px 0 12px; }
 .nf .intro { margin: 0 auto 26px; }
 
@@ -395,8 +396,8 @@ mark.m4 { --hl: color-mix(in srgb, var(--c4) 26%, transparent); }
   .stat:nth-child(n+3) { border-top: 1px solid var(--line); }
   .band-grid { grid-template-columns: 1fr; gap: 0; }
   .band-side { top: 64px; z-index: 2; display: grid; grid-template-columns: 150px minmax(0, 1fr); align-items: center; gap: 14px; padding: 6px 0 10px; margin: 0 -4px 24px; background: var(--b-bg); box-shadow: 0 14px 18px -10px var(--b-bg); }
-  .band-side .idx { grid-column: 1 / -1; margin-bottom: 4px; }
-  .numeral-cap { margin: 0; }
+  .band-side .idx { grid-column: 2; grid-row: 1; margin: 0; }
+  .numeral { grid-column: 1; grid-row: 1; }
 }
 @media (max-width: 600px) {
   body { font-size: 16px; }
